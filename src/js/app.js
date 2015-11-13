@@ -163,4 +163,18 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 }
             })
             .otherwise({redirectTo: '/'});
+    }])
+    .run(['$rootScope', 'Kong', '$location', function($rootScope, Kong, $location) {
+        $rootScope.initialized = false;
+        Kong.checkConfig(Kong.config.url, Kong.config.port).then(function() {
+            console.log(Kong);
+            $rootScope.app = Kong;
+            $rootScope.initialized = true;
+        }, function() {
+            Kong.config.url = null;
+            Kong.config.port = null;
+            $rootScope.app = Kong;
+            $rootScope.initialized = true;
+            $location.path("/config");
+        })
     }]);

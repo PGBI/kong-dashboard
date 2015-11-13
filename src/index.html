@@ -76,7 +76,8 @@
         <a href="#" data-activates="slide-out" class="button-collapse app-slide-out"><i class="material-icons">menu</i></a>
     </nav>
 
-    <main ng-view></main>
+    <main ng-view ng-show="initialized"></main>
+    <app-loader ng-hide="initialized"></app-loader>
 
     <footer ng-show="app.config.url && app.config.port" class="fade ng-hide-animate">
         <div class="container">
