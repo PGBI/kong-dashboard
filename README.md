@@ -31,4 +31,4 @@ You will need:
     
 ## Use
 
-You can now browse your kong dashboard at http://localhost:8000
+You can now browse your kong dashboard at http://localhost:8080
