@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app" ng-strict-di>
+<head>
+    <meta charset="UTF-8">
+    <title>Kong Dashboard</title>
+    <link rel="stylesheet" href="/css/app.min.css" >
+</head>
+<body>
+    <app-route-loading-indicator></app-route-loading-indicator>
+
+    <nav class="top_nav fade ng-hide-animate" ng-show="app.config.url && app.config.port">
+        <ul class="right hide-on-med-and-down">
+            <li>
+                <a href="#/">
+                    <i class="material-icons">home</i>
+                    Home
+                </a>
+            </li>
+            <li>
+                <a href="#/apis">
+                    <i class="material-icons">apps</i>
+                    APIs
+                </a>
+            </li>
+            <li>
+                <a href="#/consumers">
+                    <i class="material-icons">account_box</i>
+                    Consumers
+                </a>
+            </li>
+            <li>
+                <a href="#/plugins">
+                    <i class="material-icons">extension</i>
+                    Plugins
+                </a>
+            </li>
+            <li>
+                <a href="#/config">
+                    <i class="material-icons">settings</i>
+                    Settings
+                </a>
+            </li>
+        </ul>
+        <ul id="slide-out" class="side-nav">
+            <li>
+                <a href="#/">
+                    <i class="material-icons">home</i>
+                    Home
+                </a>
+            </li>
+            <li>
+                <a href="#/apis">
+                    <i class="material-icons">apps</i>
+                    APIs
+                </a>
+            </li>
+            <li>
+                <a href="#/consumers">
+                    <i class="material-icons">account_box</i>
+                    Consumers
+                </a>
+            </li>
+            <li>
+                <a href="#/plugins">
+                    <i class="material-icons">extension</i>
+                    Plugins
+                </a>
+            </li>
+            <li>
+                <a href="#/config">
+                    <i class="material-icons">settings</i>
+                    Settings
+                </a>
+            </li>
+        </ul>
+        <a href="#" data-activates="slide-out" class="button-collapse app-slide-out"><i class="material-icons">menu</i></a>
+    </nav>
+
+    <main ng-view></main>
+
+    <footer ng-show="app.config.url && app.config.port" class="fade ng-hide-animate">
+        <div class="container">
+            <p class="grey-text text-lighten-4 right">
+                Current kong node:
+                <em>
+                    {{app.config.url}}:{{app.config.port}}
+                    (<a class="white-text" href="#/config" style="text-decoration:underline">Edit</a>)
+                </em>
+            </p>
+        </div>
+    </footer>
+
+    <script src="/js/app.min.js"></script>
+</body>
+</html>

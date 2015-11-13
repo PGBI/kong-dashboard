@@ -1,0 +1,87 @@
+<div class="container">
+    <a href="#/plugins/add" class="btn-floating btn-large waves-effect waves-light right" ng-show="plugins.length >= 1">
+        <i class="material-icons">add</i>
+    </a>
+
+    <h3 class="header" ng-hide="owner_type">Plugins</h3>
+    <h3 class="header" ng-show="owner_type=='API'">
+        Plugins of API "<a href="#/apis/{{owner.id}}">{{owner.name}}</a>"
+    </h3>
+    <h3 class="header" ng-show="owner_type==='Consumer'">
+        Plugins of consumer "<a href="#/consumers/{{owner.id}}">{{owner.username}}</a>"
+    </h3>
+
+    <p class="flow-text center" ng-show="plugins.length < 1 && !owner_type" style="margin-top:50px;">
+        There are no plugin configured yet.
+    </p>
+    <p class="flow-text center" ng-show="plugins.length < 1 && owner_type=='API'" style="margin-top:50px;">
+        This API doesn't have any plugin configured yet.
+    </p>
+    <p class="flow-text center" ng-show="plugins.length < 1 && owner_type=='Consumer'" style="margin-top:50px;">
+        This Consumer doesn't have any plugin configured yet.
+    </p>
+
+    <p class="center" ng-show="plugins.length < 1">
+        <a href="#/plugins/add" class="waves-effect waves-light btn">
+            <i class="material-icons left">add_box</i>
+            Add Plugin
+        </a>
+    </p>
+
+    <table class="bordered" ng-show="plugins.length >= 1">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>API</th>
+            <th>Consumer</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="plugin in plugins">
+            <td>{{plugin.name}}</td>
+            <td>
+                <a href="#/apis/{{plugin.api_id}}">{{plugin.api_name}}</a>
+            </td>
+            <td>
+                <a ng-if="plugin.consumer_id" href="#/consumers/{{plugin.consumer_id}}">{{plugin.consumer_username}}</a>
+                <span ng-if="!plugin.consumer_id">All</span>
+            </td>
+            <td>
+                <div class="switch">
+                    <label>
+                        Off
+                        <input type="checkbox" ng-checked="plugin.enabled" ng-model="plugin.enabled" ng-click="updatePluginStatus(plugin.id, plugin.enabled)">
+                        <span class="lever"></span>
+                        On
+                    </label>
+                </div>
+            </td>
+            <td>{{plugin.created_at | date}}</td>
+            <td class="right">
+                <a class="btn-floating waves-effect waves-light" href="#/plugins/{{plugin.id}}">
+                    <i class="material-icons">mode_edit</i>
+                </a>
+                <a class="btn-floating waves-effect waves-light red modal-trigger" ng-click="showDeleteModal(plugin.name, plugin.id)">
+                    <i class="material-icons">delete</i>
+                </a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Structure -->
+<div id="deletePlugin" class="modal">
+    <div class="modal-content">
+        <h5>Do you really want to delete the plugin "{{current.name}}"?</h5>
+    </div>
+    <div class="modal-footer">
+        <a class="waves-effect waves-green btn" ng-click="abortDelete()">Noooooo!</a>
+        <a class="waves-effect waves-red btn red" ng-click="performDelete()" style="margin-right:10px">Yes</a>
+    </div>
+</div>

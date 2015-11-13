@@ -1,0 +1,62 @@
+<div class="container">
+    <h3 class="header">{{title}}</h3>
+
+    <div class="row">
+        <div class="col s5">
+            <div class="card-panel teal">
+                <p class="white-text">
+                    The API object describes an API that's being exposed by Kong. In order to do that Kong needs to know
+                    how to retrieve the API when a consumer is calling it. This can be achieved either
+                    by specifying a custom DNS address or a specific URL path.
+                </p>
+
+                <p class="white-text">
+                    Then, Kong needs to know what is the final target URL of the API where the requests will be proxied.
+                </p>
+                <p class="white-text">
+                    Checkout <a href="https://getkong.org/docs/0.5.x/admin-api/#add-api" target="_blank">Kong documentation</a> for the meaning of these parameters.
+                </p>
+            </div>
+        </div>
+        <form name="addAPI" class="col s7" novalidate ng-submit="save()">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="name" ng-model="api.name" type="text" class="validate" ng-class="{invalid: error.name}">
+                    <label for="name" ng-class="{active:api.name}">Name</label>
+                    <app-field-error error="error.name"></app-field-error>
+                </div>
+                <div class="input-field col s12">
+                    <input id="request_host" ng-model="api.request_host" type="text" class="validate" ng-class="{invalid: error.request_host}">
+                    <label for="request_host" ng-class="{active:api.request_host}">Request host</label>
+                    <app-field-error error="error.request_host"></app-field-error>
+                </div>
+                <div class="input-field col s12">
+                    <input id="request_path"  ng-model="api.request_path" type="text" class="validate" ng-class="{invalid: error.request_path}">
+                    <label for="request_path" ng-class="{active:api.request_path}">Request path</label>
+                    <app-field-error error="error.request_path"></app-field-error>
+                </div>
+                <div class="input-field col s12">
+                    <input id="upstream_url"  ng-model="api.upstream_url" type="text" class="validate" ng-class="{invalid: error.upstream_url}">
+                    <label for="upstream_url" ng-class="{active:api.upstream_url}">Upstream url</label>
+                    <app-field-error error="error.upstream_url"></app-field-error>
+                </div>
+                <p class="col s6">
+                    <input type="checkbox" ng-model="api.strip_request_path" class="filled-in validate" id="strip_request_path" ng-true-value="true" ng-false-value="false" />
+                    <label for="strip_request_path">Strip request path</label>
+                    <app-field-error error="error.strip_request_path"></app-field-error>
+                </p>
+                <p class="col s6">
+                    <input type="checkbox"  ng-model="api.preserve_host" class="filled-in validate" id="preserve_host" ng-true-value="true" ng-false-value="false" />
+                    <label for="preserve_host">Preserve host</label>
+                    <app-field-error error="error.preserve_host"></app-field-error>
+                </p>
+                <div class="input-field col s12">
+                    <button type="submit" class="waves-effect waves-light btn right">
+                        {{action}}
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" ng-model="api.id" value="{{api.id}}" />
+        </form>
+    </div>
+</div>

@@ -1,0 +1,134 @@
+<div class="container">
+    <h3 class="header">{{mode==='create' ? 'Add plugin' : 'Edit plugin'}}</h3>
+
+    <div class="row">
+        <div class="col s5">
+            <div class="card-panel teal">
+                <p class="white-text">
+                    When adding a Plugin on top of an API, every request made by a client will be evaluated by
+                    the Plugin's configuration you setup
+                </p>
+                <p class="white-text">
+                    You can checkout the kong documentation to see the <a hre="https://getkong.org/plugins/" target="_blank">
+                    list of available plugins</a>, as well as their configuration settings.
+                </p>
+            </div>
+        </div>
+        <form name="addPlugin" class="col s7" novalidate ng-submit="save()">
+            <div class="row">
+                <div class="input-field col s12">
+                    <label class="active">Api</label>
+                    <select materialize-select
+                            ng-model="plugin.api_id"
+                            ng-options="api.id as api.name for api in apis.data"
+                            ng-disabled="{{mode==='edit'}}"
+                            >
+                        <option value="" disabled ng-selected="{{mode==='create'}}">Choose API</option>
+                    </select>
+                </div>
+
+                <div class="input-field col s12">
+                    <label class="active">Plugin</label>
+                    <select materialize-select
+                            ng-model="plugin.name"
+                            ng-change="loadSchema()"
+                            ng-options="p for p in enabled_plugins"
+                            ng-disabled="{{mode==='edit'}}"
+                            >
+                        <option value="" disabled ng-selected="{{mode==='create'}}">Choose Plugin</option>
+                    </select>
+                </div>
+
+                <div class="input-field col s12 center-align" ng-show="plugin_schema_loading">
+                    <div class="preloader-wrapper active">
+                        <div class="spinner-layer">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div>
+                            <div class="gap-patch">
+                                <div class="circle"></div>
+                            </div>
+                            <div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-field col s12" ng-hide="!plugin_schema_loaded || plugin_schema.no_consumer">
+                    <label class="active">Apply to</label>
+                    <select materialize-select
+                            ng-model="plugin.consumer_id"
+                            ng-options="consumer.id as consumer.username for consumer in consumers.data"
+                            ng-disabled="{{mode==='edit'}}"
+                            >
+                        <option value="" selected>All consumers</option>
+                    </select>
+                </div>
+
+                <!-- anything but checkbox first -->
+                <div ng-show="plugin_schema_loaded" ng-repeat="(field, attr) in plugin_schema.fields" ng-if="isPublic(field) && attr.type!=='boolean'">
+                    <div ng-if="attr.type!=='table'" class="input-field col s12">
+                        <input ng-if="attr.type==='string'" type="text"      id="{{field}}" ng-model="plugin.config[field]" class="validate" />
+                        <input ng-if="attr.type==='number'" type="number"    id="{{field}}" ng-model="plugin.config[field]" class="validate" />
+                        <input ng-if="attr.type==='array' && !attr.enum"  type="text"      id="{{field}}" ng-model="plugin.config[field]" class="validate" />
+                        <input ng-if="attr.type==='url'"    type="text"      id="{{field}}" ng-model="plugin.config[field]" class="validate" />
+                        <label for="{{field}}" ng-class="{active:attr.enum || plugin.config[field]}" >{{field | underscoresToWords}}</label>
+
+                        <select ng-if="attr.enum && mode==='create'" materialize-select multiple id="{{field}}" ng-model="plugin.config[field]" ng-options="value for value in attr.enum">
+                            <option value="" disabled selected>Pick options</option>
+                        </select>
+                        <select ng-if="attr.enum && mode==='edit'" class="browser-default" style="height:auto" multiple id="{{field}}" ng-model="plugin.config[field]" ng-options="value for value in attr.enum">
+                        </select>
+
+                        <app-field-error error="error['config.' + field]"></app-field-error>
+                    </div>
+
+                    <div ng-if="attr.type==='table' && attr.schema.flexible" class="input-field col s12" ng-repeat="(sub_field, sub_attr) in plugin.config[field]">
+                        <div style="position:absolute; right:0;">
+                            <a class="btn-floating waves-effect waves-light red">
+                                <i class="material-icons">remove</i>
+                            </a>
+                        </div>
+                        <input type="text" id="flex" ng-model="" ng-value="sub_field" />
+                        <label for="flex">{{field | firstLetterUp}} name</label>
+                    </div>
+                    <div ng-if="attr.type==='table' && attr.schema.flexible" class="input-field col s12">
+                        <div style="position:absolute; right:0;">
+                            <a class="btn-floating waves-effect waves-light" ng-click="addFormObject(field, attr.schema.fields)">
+                                <i class="material-icons">add</i>
+                            </a>
+                        </div>
+                        <input type="text" id="flex" ng-model="newObj[field]" />
+                        <label for="flex">{{field | firstLetterUp}} name {{newObj[field]}}</label>
+                    </div>
+
+                    <div ng-if="attr.type==='table' && !attr.schema.flexible" class="input-field col s12" ng-repeat="(sub_field, sub_attr) in attr.schema.fields">
+                        <input ng-if="sub_attr.type==='string'" type="text"      id="{{field + '-' + sub_field}}" ng-model="plugin.config[field + '.' + sub_field]" class="validate" />
+                        <input ng-if="sub_attr.type==='number'" type="number"    id="{{field + '-' + sub_field}}" ng-model="plugin.config[field + '.' + sub_field]" class="validate" />
+                        <input ng-if="sub_attr.type==='array' && !sub_attr.enum"  type="text"      id="{{field + '-' + sub_field}}" ng-model="plugin.config[field + '.' + sub_field]" class="validate" />
+                        <input ng-if="sub_attr.type==='url'"    type="text"      id="{{field + '-' + sub_field}}" ng-model="plugin.config[field + '.' + sub_field]" class="validate" />
+                        <label for="{{field + '-' + sub_field}}" >{{field + ' - ' + sub_field | underscoresToWords}}</label>
+                        <select ng-if="sub_attr.enum" multiple materialize-select multiple id="{{field + '-' + sub_field}}" ng-model="plugin.config[field + '.' + sub_field]" ng-options="value for value in sub_attr.enum">
+                            <option value="" disabled selected>Pick option</option>
+                        </select>
+                        <app-field-error error="error['config.' + field + '.' + sub_field]"></app-field-error>
+                    </div>
+                </div>
+
+                <!-- checkboxes if any -->
+                <p class="col s6" ng-show="plugin_schema_loaded" ng-repeat="(field, attr) in plugin_schema.fields" ng-if="isPublic(field) && attr.type==='boolean'">
+                    <input type="checkbox" id="{{field}}" ng-model="plugin.config[field]" class="filled-in" ng-true-value="true" ng-false-value="false" />
+                    <label for="{{field}}">{{field | underscoresToWords}} </label>
+                    <app-field-error error="error['config.' + field]"></app-field-error>
+                </p>
+
+                <div class="input-field col s12" ng-show="plugin_schema_loaded">
+                    <button type="submit" class="waves-effect waves-light btn right">
+                        {{mode === 'create' ? "Create" : "Edit"}}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

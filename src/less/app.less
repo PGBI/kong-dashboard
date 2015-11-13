@@ -1,0 +1,99 @@
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(../font/material-design-icons/MaterialIcons-Regular.woff2) format('woff2'),
+    url(../font/material-design-icons/MaterialIcons-Regular.ttf) format('truetype'),
+    url(../font/material-design-icons/MaterialIcons-Regular.woff) format('woff');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
+    vertical-align:middle;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight:300;
+}
+
+.header {
+    color: #ee6e73;
+    font-weight: 300;
+    margin-top:50px;
+    margin-bottom:50px;
+}
+
+a {
+    cursor: pointer;
+}
+
+.loadingIndicator {
+    position:absolute;
+    top:0;
+    left:0;
+    padding:2px 5px;
+    color:white;
+}
+
+.white-text > a {
+    color: white;
+    text-decoration:underline;
+}
+
+.fade.ng-hide {
+    opacity: 0;
+    position:relative;
+    top: -5000px;
+}
+.fade.ng-hide-remove, .fade.ng-hide-add {
+    display: block !important;
+    position: static;
+}
+.fade.ng-hide-remove {
+    transition: all linear 1000ms;
+    position: static;
+}
+
+.fade.ng-hide-add {
+    transition: all linear 500ms;
+    position: static;
+}
+
+.errors ul {
+    margin:0;
+    list-style-position: inside;
+
+    li {
+        list-style-type: circle;
+    }
+}
+
+footer {
+    background-color: #ee6e73;
+}

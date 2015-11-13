@@ -1,0 +1,19 @@
+<div class="container">
+    <h3 class="col s12 header center-align">Kong node configuration</h3>
+    <div class="row">
+        <form ng-submit="update()" name="configForm" class="col s8 offset-s2 row" novalidate>
+
+            <div class="input-field col s6">
+                <input ng-model="config.url" placeholder="http://localhost" id="kong_url" type="text">
+                <label for="kong_url" class="active">Kong node URL</label>
+            </div>
+            <div class="input-field col s6">
+                <input ng-model="config.port" placeholder="8001" id="kong_port" type="text">
+                <label for="kong_port" class="active">Kong node Port</label>
+            </div>
+            <div class="input-field col s12">
+                <button type="submit" class="waves-effect waves-green btn right">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
