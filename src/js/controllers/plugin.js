@@ -36,6 +36,7 @@ angular.module('app').controller("PluginController", ["$scope", "Kong", "$locati
     };
 
     $scope.save = function () {
+        transformEmptyValues($scope.plugin.config, $scope.plugin_schema.fields, 0);
         if (!$scope.plugin.api_id) {
             Alert.error("You must select an API.");
             return;
@@ -49,7 +50,6 @@ angular.module('app').controller("PluginController", ["$scope", "Kong", "$locati
 
         Kong.put(endpoint, data).then(function (response) {
             Alert.success('Plugin saved!');
-            $route.reload();
         }, function (response) {
             $scope.error = response.data;
         });
@@ -58,10 +58,18 @@ angular.module('app').controller("PluginController", ["$scope", "Kong", "$locati
     $scope.newObj = {};
 
     $scope.addFormObject = function(field, schema) {
-        //console.log(field); --> limits
-        //console.log(schema); --> {day: {type:number}, minute: {type:number}}
-        //console.log($scope.newObj[field]); --> test
-        // output = $scope.limits.test = {day:null, minute: null}
+        if (!$scope.newObj[field] || $scope.newObj[field] == '') {
+            return;
+        }
+        if (!$scope.plugin.config[field]) {
+            $scope.plugin.config[field] = {};
+        }
+        $scope.plugin.config[field][$scope.newObj[field]] = {};
+        angular.forEach(schema, function(field_attrs, field_name) {
+            var default_value = field_attrs.default ? field_attrs.default : '';
+            $scope.plugin.config[field][$scope.newObj[field]][field_name] = default_value;
+        });
+        $scope.newObj[field] = '';
     };
 
     function populatePluginWithDefaultValues() {
@@ -73,5 +81,19 @@ angular.module('app').controller("PluginController", ["$scope", "Kong", "$locati
                 }
             }
         });
+    }
+
+    function transformEmptyValues(obj, schema, depth) {
+        angular.forEach(obj, function(value, key) {
+            if (angular.isObject(value)) {
+                transformEmptyValues(obj[key], schema[key].fields, depth+1);
+            } else {
+                if (value === '') {
+                    if (depth > 0) {
+                        delete obj[key];
+                    }
+                }
+            }
+        })
     }
 }]);

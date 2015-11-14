@@ -74,7 +74,6 @@ angular.module('app')
                 if (!url || !port) {
                     deferred.reject('Not reachable');
                 } else {
-                    console.log(url);
                     $http({
                         url: url + ':' + port,
                         method: 'GET',
