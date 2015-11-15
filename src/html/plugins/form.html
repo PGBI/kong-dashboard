@@ -69,16 +69,25 @@
                 <!-- anything but checkbox first -->
                 <div ng-show="plugin_schema_loaded" ng-repeat="(field, attr) in plugin_schema.fields" ng-if="isPublic(field) && attr.type!=='boolean'">
                     <div ng-if="attr.type!=='table'" class="input-field col s12">
-                        <input ng-if="attr.type==='string'" type="text"      id="{{field}}" ng-model="plugin.config[field]" class="validate" />
-                        <input ng-if="attr.type==='number'" type="text"    id="{{field}}" ng-model="plugin.config[field]" class="validate" />
-                        <input ng-if="attr.type==='array' && !attr.enum"  type="text"      id="{{field}}" ng-model="plugin.config[field]" class="validate" />
-                        <input ng-if="attr.type==='url'"    type="text"      id="{{field}}" ng-model="plugin.config[field]" class="validate" />
+                        <input ng-if="attr.type==='string'" type="text" id="{{field}}" ng-model="plugin.config[field]" class="validate" />
+                        <input ng-if="attr.type==='number'" type="text" id="{{field}}" ng-model="plugin.config[field]" class="validate" />
+                        <input ng-if="attr.type==='array' && !attr.enum" type="text" id="{{field}}" ng-model="plugin.config[field]" class="validate" />
+                        <input ng-if="attr.type==='url'"    type="text" id="{{field}}" ng-model="plugin.config[field]" class="validate" />
                         <label for="{{field}}" ng-class="{active:attr.enum || plugin.config[field]}" >{{field | underscoresToWords}}</label>
 
-                        <select ng-if="attr.enum && mode==='create'" materialize-select multiple id="{{field}}" ng-model="plugin.config[field]" ng-options="value for value in attr.enum">
+                        <select ng-if="attr.type==='array' && attr.enum && mode==='create'"
+                                materialize-select multiple id="{{field}}"
+                                ng-model="plugin.config[field]"
+                                ng-options="value for value in attr.enum">
                             <option value="" disabled selected>Pick options</option>
                         </select>
-                        <select ng-if="attr.enum && mode==='edit'" class="browser-default" style="height:auto" multiple id="{{field}}" ng-model="plugin.config[field]" ng-options="value for value in attr.enum">
+                        <select ng-if="attr.type==='array' && attr.enum && mode==='edit'" class="browser-default" style="height:auto" multiple id="{{field}}" ng-model="plugin.config[field]" ng-options="value for value in attr.enum">
+                        </select>
+
+                        <select ng-if="!attr.type && attr.enum" materialize-select id="{{field}}"
+                                ng-model="plugin.config[field]"
+                                ng-options="value for value in attr.enum">
+                            <option value="" disabled selected>Pick option</option>
                         </select>
 
                         <app-field-error error="error['config.' + field]"></app-field-error>
@@ -87,7 +96,7 @@
                     <div ng-if="attr.type==='table' && attr.schema.flexible" ng-repeat="(sub_field, sub_attr) in plugin.config[field] track by $index">
                         <div class="input-field col s12">
                             <div style="position:absolute; right:0;">
-                                <a class="btn-floating waves-effect waves-light red">
+                                <a class="btn-floating waves-effect waves-light red" ng-click="removeFormObject(field, sub_field)">
                                     <i class="material-icons">remove</i>
                                 </a>
                             </div>
@@ -100,7 +109,6 @@
                             <app-field-error error="error['config.'+field+'.'+sub_field+'.'+sub_sub_field]"></app-field-error>
                         </div>
                     </div>
-
                     <div ng-if="attr.type==='table' && attr.schema.flexible" class="input-field col s12">
                         <div style="position:absolute; right:0;">
                             <a class="btn-floating waves-effect waves-light" ng-click="addFormObject(field, attr.schema.fields)">
@@ -113,12 +121,12 @@
                     </div>
 
                     <div ng-if="attr.type==='table' && !attr.schema.flexible" class="input-field col s12" ng-repeat="(sub_field, sub_attr) in attr.schema.fields">
-                        <input ng-if="sub_attr.type==='string'" type="text"      id="{{field + '-' + sub_field}}" ng-model="plugin.config[field + '.' + sub_field]" class="validate" />
-                        <input ng-if="sub_attr.type==='number'" type="text"    id="{{field + '-' + sub_field}}" ng-model="plugin.config[field + '.' + sub_field]" class="validate" />
-                        <input ng-if="sub_attr.type==='array' && !sub_attr.enum"  type="text"      id="{{field + '-' + sub_field}}" ng-model="plugin.config[field + '.' + sub_field]" class="validate" />
-                        <input ng-if="sub_attr.type==='url'"    type="text"      id="{{field + '-' + sub_field}}" ng-model="plugin.config[field + '.' + sub_field]" class="validate" />
-                        <label for="{{field + '-' + sub_field}}" >{{field + ' - ' + sub_field | underscoresToWords}}</label>
-                        <select ng-if="sub_attr.enum" multiple materialize-select multiple id="{{field + '-' + sub_field}}" ng-model="plugin.config[field + '.' + sub_field]" ng-options="value for value in sub_attr.enum">
+                        <input ng-if="sub_attr.type==='string'" type="text"      id="{{field + '-' + sub_field}}" ng-model="plugin.config[field][sub_field]" class="validate" />
+                        <input ng-if="sub_attr.type==='number'" type="text"    id="{{field + '-' + sub_field}}" ng-model="plugin.config[field][sub_field]" class="validate" />
+                        <input ng-if="sub_attr.type==='array' && !sub_attr.enum"  type="text"      id="{{field + '-' + sub_field}}" ng-model="plugin.config[field][sub_field]" class="validate" />
+                        <input ng-if="sub_attr.type==='url'"    type="text"      id="{{field + '-' + sub_field}}" ng-model="plugin.config[field][sub_field]" class="validate" />
+                        <label for="{{field + '-' + sub_field}}"  ng-class="{active:sub_attr.enum || plugin.config[field][sub_field]}">{{field + ' - ' + sub_field | underscoresToWords}}</label>
+                        <select ng-if="sub_attr.enum" multiple materialize-select multiple id="{{field + '-' + sub_field}}" ng-model="plugin.config[field][sub_field]" ng-options="value for value in sub_attr.enum">
                             <option value="" disabled selected>Pick option</option>
                         </select>
                         <app-field-error error="error['config.'+field+'.'+sub_field]"></app-field-error>

@@ -21,7 +21,11 @@ angular.module('app')
             },
             put: function (endpoint, data) {
                 var deferred = $q.defer();
-                $http.put(factory.config.url + ':' + factory.config.port + endpoint, data).then(function (response) {
+                $http({
+                    method: 'PUT',
+                    url: factory.config.url + ':' + factory.config.port + endpoint,
+                    data: data,
+                }).then(function (response) {
                     deferred.resolve(response.data);
                 }, function (response) {
                     factory.handleError(response, deferred, endpoint);
