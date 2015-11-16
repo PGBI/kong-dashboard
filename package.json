@@ -1,6 +1,11 @@
 {
   "name": "kong_dashboard",
   "version": "1.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PGBI/kong-dashboard.git"
+  },
   "devDependencies": {
     "bower": "~1.6.5",
     "del": "~2.0.2",
