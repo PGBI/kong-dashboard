@@ -15,17 +15,17 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
 
         $routeProvider
             .when('/', {
-                templateUrl: '/html/home.html',
+                templateUrl: 'html/home.html',
                 resolve: {
                     isAppReady: isAppReady
                 }
             })
             .when('/config', {
-                templateUrl: '/html/config.html',
+                templateUrl: 'html/config.html',
                 controller: 'ConfigController'
             })
             .when('/apis', {
-                templateUrl: '/html/apis/index.html',
+                templateUrl: 'html/apis/index.html',
                 controller: 'ApisController',
                 resolve: {
                     isAppReady: isAppReady,
@@ -35,7 +35,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 }
             })
             .when('/apis/add', {
-                templateUrl: '/html/apis/form.html',
+                templateUrl: 'html/apis/form.html',
                 controller: 'ApiController',
                 resolve: {
                     isAppReady: isAppReady,
@@ -43,7 +43,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 }
             })
             .when('/apis/:id', {
-                templateUrl: '/html/apis/form.html',
+                templateUrl: 'html/apis/form.html',
                 controller: 'ApiController',
                 resolve: {
                     isAppReady: isAppReady,
@@ -54,7 +54,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 }
             })
             .when('/apis/:api_id/plugins', {
-                templateUrl: '/html/plugins/index.html',
+                templateUrl: 'html/plugins/index.html',
                 controller: 'PluginsController',
                 resolve: {
                     isAppReady: isAppReady,
@@ -69,7 +69,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 }
             })
             .when('/consumers/:consumer_id/plugins', {
-                templateUrl: '/html/plugins/index.html',
+                templateUrl: 'html/plugins/index.html',
                 controller: 'PluginsController',
                 resolve: {
                     isAppReady: isAppReady,
@@ -84,7 +84,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 }
             })
             .when('/plugins', {
-                templateUrl: '/html/plugins/index.html',
+                templateUrl: 'html/plugins/index.html',
                 controller: 'PluginsController',
                 resolve: {
                     isAppReady: isAppReady,
@@ -95,7 +95,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 }
             })
             .when('/plugins/add', {
-                templateUrl: '/html/plugins/form.html',
+                templateUrl: 'html/plugins/form.html',
                 controller: 'PluginController',
                 resolve: {
                     isAppReady: isAppReady,
@@ -114,7 +114,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 }
             })
             .when('/plugins/:id', {
-                templateUrl: '/html/plugins/form.html',
+                templateUrl: 'html/plugins/form.html',
                 controller: 'PluginController',
                 resolve: {
                     isAppReady: isAppReady,
@@ -134,7 +134,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 }
             })
             .when('/consumers', {
-                templateUrl: '/html/consumers/index.html',
+                templateUrl: 'html/consumers/index.html',
                 controller: 'ConsumersController',
                 resolve: {
                     isAppReady: isAppReady,
@@ -144,7 +144,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 }
             })
             .when('/consumers/add', {
-                templateUrl: '/html/consumers/form.html',
+                templateUrl: 'html/consumers/form.html',
                 controller: 'ConsumerController',
                 resolve: {
                     isAppReady: isAppReady,
@@ -152,7 +152,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 }
             })
             .when('/consumers/:id', {
-                templateUrl: '/html/consumers/form.html',
+                templateUrl: 'html/consumers/form.html',
                 controller: 'ConsumerController',
                 resolve: {
                     isAppReady: isAppReady,
