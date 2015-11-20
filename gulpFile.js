@@ -3,7 +3,7 @@ var webserver = require('gulp-webserver');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var del = require('del');
-var less = require('gulp-less');
+var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var path = require('path');
 var rename = require('gulp-rename');
@@ -24,7 +24,7 @@ gulp.task('default', function() {
 gulp.task('serve', function() {
     gulp.watch('./bower_components/**/*.js', ['uglify_js']);
     gulp.watch('./src/**/*.js', ['uglify_js']);
-    gulp.watch('./src/**/*.less', ['less']);
+    gulp.watch('./src/**/*.scss', ['scss']);
     gulp.watch('./src/**/*.html', ['copy']);
 
     gulp.src('public')
@@ -38,7 +38,7 @@ gulp.task('serve', function() {
 
 gulp.task('build', ['clean'], function() {
     gulp.start('uglify_js');
-    gulp.start('less');
+    gulp.start('scss');
     gulp.start('copy');
 });
 
@@ -46,11 +46,11 @@ gulp.task('clean', function() {
     return del(['./public/**/*']);
 });
 
-gulp.task('less', function() {
-    return gulp.src(['./src/less/**/*.less', './bower_components/Materialize/dist/css/materialize.min.css'])
+gulp.task('scss', function() {
+    return gulp.src(['./src/scss/**/*.scss'])
         .pipe(concat('app.min.css'))
         .pipe(plumber(plumberOptions))
-        .pipe(less())
+        .pipe(sass())
         .pipe(minifyCss())
         .pipe(gulp.dest('./public/css'))
 });
