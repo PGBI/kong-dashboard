@@ -33,18 +33,35 @@ You will need:
 
 ## Installation
 
-### Clone this repository
+### Global installation
 
-    git clone https://github.com/PGBI/kong-dashboard.git
-    
-### Install dependencies
+```bash
+# Install kong-dashboard
+npm install -g kong-dashboard
 
-    npm install
-    npm run build
+# Launch Kong Dashboard
+kong-dashboard start
 
-### Launch Kong Dashboard
+# To launch kong dashboard on a custom port
+kong-dashboard start -p [port]
+```
 
-    npm run serve
+### Local installation
+
+```bash
+# Install with git and npm...
+git clone https://github.com/PGBI/kong-dashboard.git
+npm install
+
+# ... or with npm only
+npm install kong-dashboard
+
+# Launch Kong Dashboard
+npm start
+
+# To launch kong dashboard on a custom port
+npm start -- -p [port]
+```
     
 ## Use
 

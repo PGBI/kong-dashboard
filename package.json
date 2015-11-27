@@ -1,25 +1,29 @@
 {
-  "name": "kong_dashboard",
+  "name": "kong-dashboard",
+  "description": "Web UI for managing Kong gateway",
+  "keywords": "UI, kong, gateway",
   "version": "1.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/PGBI/kong-dashboard.git"
   },
-  "devDependencies": {
+  "dependencies": {
     "bower": "~1.6.5",
-    "del": "~2.0.2",
-    "gulp": "~3.9.0",
-    "gulp-concat": "~2.6.0",
-    "gulp-minify-css": "^1.2.1",
-    "gulp-plumber": "~1.0.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "~1.4.2",
-    "gulp-webserver": "^0.9.1",
-    "gulp-sass": "~2.1.0"
+    "concat": "^1.0.0",
+    "fs-extra": "^0.26.2",
+    "glob": "^6.0.1",
+    "minimist": "^1.2.0",
+    "node-sass": "^3.4.2",
+    "rimraf": "^2.4.4",
+    "serve": "^1.4.0",
+    "uglify-js": "^2.6.1"
+  },
+  "bin": {
+    "kong-dashboard": "./bin/kong-dashboard.js"
   },
   "scripts": {
-    "build": "./node_modules/bower/bin/bower --config.analytics=false install && ./node_modules/gulp/bin/gulp.js build",
-    "serve": "./node_modules/gulp/bin/gulp.js serve"
+    "install": "node ./bin/kong-dashboard build",
+    "start": "node ./bin/kong-dashboard start"
   }
 }
