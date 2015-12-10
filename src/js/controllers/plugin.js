@@ -129,7 +129,7 @@ angular.module('app').controller("PluginController", ["$scope", "Kong", "$locati
                 }
             } else if (attrs.type === 'array') {
                 if (!obj.hasOwnProperty(key) || obj[key] === '' || angular.equals(obj[key], {})) {
-                    obj[key] = "";
+                    delete obj[key]; // Fix issue #11
                 }
             } else if (attrs.type === 'string' || attrs.type === 'url') {
                 if (angular.isString(obj[key]) && obj[key] === '') {
