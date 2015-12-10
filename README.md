@@ -62,7 +62,22 @@ npm start
 # To launch kong dashboard on a custom port
 npm start -- -p [port]
 ```
-    
+
+### Docker installation
+
+```bash
+# Build docker image from source...
+git clone https://github.com/PGBI/kong-dashboard.git
+cd kong-dashboard
+docker build -t kong-dashboard .
+
+# Launch Kong Dashboard
+docker run -d -p 8080:8080 kong-dashboard
+
+# To launch kong dashboard on a custom port
+docker run -d -p [port]:8080 kong-dashboard
+```
+
 ## Use
 
 You can now browse your kong dashboard at http://localhost:8080
