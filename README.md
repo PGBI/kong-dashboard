@@ -33,49 +33,44 @@ You will need:
 
 ## Installation
 
-### Global installation
+### Npm installation
 
 ```bash
-# Install kong-dashboard
+# Install Kong Dashboard
 npm install -g kong-dashboard
 
-# Launch Kong Dashboard
+# Start Kong Dashboard
 kong-dashboard start
 
-# To launch kong dashboard on a custom port
+# To start Kong Dashboard on a custom port
 kong-dashboard start -p [port]
 ```
 
-### Local installation
+### Installation from sources
 
 ```bash
-# Install with git and npm...
+# Pull repository
 git clone https://github.com/PGBI/kong-dashboard.git
+cd kong-dashboard
+
+# Build Kong Dashboard
 npm install
 
-# ... or with npm only
-npm install kong-dashboard
-
-# Launch Kong Dashboard
+# Start Kong Dashboard
 npm start
 
-# To launch kong dashboard on a custom port
+# To start Kong Dashboard on a custom port
 npm start -- -p [port]
 ```
 
 ### Docker installation
 
 ```bash
-# Build docker image from source...
-git clone https://github.com/PGBI/kong-dashboard.git
-cd kong-dashboard
-docker build -t kong-dashboard .
+# Start Kong Dashboard
+docker run -d -p 8080:8080 pgbi/kong-dashboard
 
-# Launch Kong Dashboard
-docker run -d -p 8080:8080 kong-dashboard
-
-# To launch kong dashboard on a custom port
-docker run -d -p [port]:8080 kong-dashboard
+# Start Kong Dashboard on a custom port
+docker run -d -p [port]:8080 pgbi/kong-dashboard
 ```
 
 ## Use
