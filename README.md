@@ -33,7 +33,7 @@ You will need:
 
 ## Installation
 
-### Npm installation
+### With Npm
 
 ```bash
 # Install Kong Dashboard
@@ -46,7 +46,7 @@ kong-dashboard start
 kong-dashboard start -p [port]
 ```
 
-### Installation from sources
+### From sources
 
 ```bash
 # Pull repository
@@ -63,7 +63,7 @@ npm start
 npm start -- -p [port]
 ```
 
-### Docker installation
+### With Docker
 
 ```bash
 # Start Kong Dashboard
@@ -71,6 +71,25 @@ docker run -d -p 8080:8080 pgbi/kong-dashboard
 
 # Start Kong Dashboard on a custom port
 docker run -d -p [port]:8080 pgbi/kong-dashboard
+```
+
+
+### With Vagrant
+
+```bash
+# Pull repository
+git clone https://github.com/PGBI/kong-dashboard.git
+cd kong-dashboard
+
+# Start VM
+vagrant up
+
+# Ssh into VM
+vagrant ssh
+
+# Start Kong dashboard
+cd /vagrant
+npm start
 ```
 
 ## Use
