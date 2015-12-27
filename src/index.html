@@ -8,7 +8,7 @@
 <body>
     <app-route-loading-indicator></app-route-loading-indicator>
 
-    <nav class="top_nav fade ng-hide-animate" ng-show="app.config.url && app.config.port">
+    <nav class="top_nav fade ng-hide-animate" ng-show="app.config.url">
         <ul class="right hide-on-med-and-down">
             <li>
                 <a href="#/">
@@ -79,12 +79,12 @@
     <main ng-view ng-show="initialized"></main>
     <app-loader ng-hide="initialized"></app-loader>
 
-    <footer ng-show="app.config.url && app.config.port" class="fade ng-hide-animate">
+    <footer ng-show="app.config.url" class="fade ng-hide-animate">
         <div class="container">
             <p class="grey-text text-lighten-4 right">
                 Current kong node:
                 <em>
-                    {{app.config.url}}:{{app.config.port}}
+                    {{app.config.url}}
                     (<a class="white-text" href="#/config" style="text-decoration:underline">Edit</a>)
                 </em>
             </p>

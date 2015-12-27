@@ -4,15 +4,15 @@
 angular.module('app')
     .factory('Kong', ['$http', '$q', '$cookies', 'Alert', function ($http, $q, $cookies, Alert) {
         var config = $cookies.getObject('config');
-        if (!config || !config.url || !config.port) {
-            config = {url: null, port: null};
+        if (!config || !config.url) {
+            config = {url: null};
         }
 
         var factory = {
             config: config,
             get: function (endpoint) {
                 var deferred = $q.defer();
-                $http.get(factory.config.url + ':' + factory.config.port + endpoint).then(function (response) {
+                $http.get(factory.config.url + endpoint).then(function (response) {
                     deferred.resolve(response.data);
                 }, function (response) {
                     factory.handleError(response, deferred, endpoint);
@@ -23,7 +23,7 @@ angular.module('app')
                 var deferred = $q.defer();
                 $http({
                     method: 'PUT',
-                    url: factory.config.url + ':' + factory.config.port + endpoint,
+                    url: factory.config.url + endpoint,
                     data: data,
                 }).then(function (response) {
                     deferred.resolve(response.data);
@@ -34,7 +34,7 @@ angular.module('app')
             },
             patch: function (endpoint, data) {
                 var deferred = $q.defer();
-                $http.patch(factory.config.url + ':' + factory.config.port + endpoint, data).then(function (response) {
+                $http.patch(factory.config.url + endpoint, data).then(function (response) {
                     deferred.resolve(response.data);
                 }, function (response) {
                     factory.handleError(response, deferred, endpoint);
@@ -43,7 +43,7 @@ angular.module('app')
             },
             delete: function (endpoint) {
                 var deferred = $q.defer();
-                $http.delete(factory.config.url + ':' + factory.config.port + endpoint).then(function (response) {
+                $http.delete(factory.config.url + endpoint).then(function (response) {
                     deferred.resolve(response);
                 }, function (response) {
                     factory.handleError(response, deferred, endpoint);
@@ -52,7 +52,7 @@ angular.module('app')
             },
             post: function (endpoint, data) {
                 var deferred = $q.defer();
-                $http.post(factory.config.url + ':' + factory.config.port + endpoint, data).then(function (response) {
+                $http.post(factory.config.url + endpoint, data).then(function (response) {
                     deferred.resolve(response.data);
                 }, function (response) {
                     factory.handleError(response, deferred, endpoint);
@@ -73,13 +73,13 @@ angular.module('app')
                     deferred.reject(response);
                 }
             },
-            checkConfig: function (url, port) {
+            checkConfig: function (url) {
                 var deferred = $q.defer();
-                if (!url || !port) {
+                if (!url) {
                     deferred.reject('Not reachable');
                 } else {
                     $http({
-                        url: url + ':' + port,
+                        url: url,
                         method: 'GET',
                         timeout: 5000
                     }).then(function (response) {
@@ -94,11 +94,11 @@ angular.module('app')
                 }
                 return deferred.promise;
             },
-            setConfig: function (url, port) {
+            setConfig: function (url) {
+                console.log($http.defaults.headers.common);
                 var deferred = $q.defer();
-                factory.checkConfig(url, port).then(function () {
+                factory.checkConfig(url).then(function () {
                     factory.config.url = url;
-                    factory.config.port = port;
                     $cookies.putObject('config', factory.config, {
                         expires: new Date(new Date().getTime() + 1000 * 24 * 3600 * 60) // remember 60 days
                     });

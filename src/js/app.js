@@ -7,7 +7,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
             if (appStarted) {
                 return true;
             }
-            if (!Kong.config.url || !Kong.config.port) {
+            if (!Kong.config.url) {
                 $location.path('/config');
                 return false;
             }
@@ -166,12 +166,11 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
     }])
     .run(['$rootScope', 'Kong', '$location', function($rootScope, Kong, $location) {
         $rootScope.initialized = false;
-        Kong.checkConfig(Kong.config.url, Kong.config.port).then(function() {
+        Kong.checkConfig(Kong.config.url).then(function() {
             $rootScope.app = Kong;
             $rootScope.initialized = true;
         }, function() {
             Kong.config.url = null;
-            Kong.config.port = null;
             $rootScope.app = Kong;
             $rootScope.initialized = true;
             $location.path("/config");
