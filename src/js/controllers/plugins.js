@@ -45,7 +45,6 @@ angular.module('app').controller("PluginsController", ["pluginsCollection", "$sc
                 Alert.success('Plugin disabled');
             }
         }, function(response) {
-            console.log(response);
             Alert.error('Sorry, we got confused. Please refresh the page.');
         });
     }

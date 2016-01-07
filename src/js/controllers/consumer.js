@@ -47,7 +47,6 @@ angular.module('app').controller("ConsumerController", ["$scope", "Kong", "$loca
     };
 
     $scope.postNewExtension = function(type) {
-        console.log(type);
         var endpoint = type.replace(/\_/g, '-');
         Kong.post('/consumers/' + $scope.consumer.id + '/' + endpoint, $scope['new_' + type]).then(function() {
             $scope.error = {};
@@ -55,10 +54,8 @@ angular.module('app').controller("ConsumerController", ["$scope", "Kong", "$loca
             loadExtensions(endpoint);
             $scope.hideForm(type);
         }, function(response) {
-            console.log(response);
             $scope.error = {};
             $scope.error['new_' + type] = response.data;
-            console.log($scope);
         });
     };
 

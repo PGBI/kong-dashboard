@@ -3,10 +3,10 @@
  */
 angular.module('app')
     .factory('Kong', ['$http', '$q', '$cookies', 'Alert', function ($http, $q, $cookies, Alert) {
-        var config = $cookies.getObject('config');
-        if (!config || !config.url) {
-            config = {url: null};
-        }
+        var config = {
+            url : $cookies.getObject('config.url'),
+            auth : { type : "no_auth" }
+        };
 
         var factory = {
             config: config,
@@ -66,14 +66,19 @@ angular.module('app')
                     }
                     deferred.reject(response);
                 } else {
-                    console.log(endpoint);
-                    console.log(response);
                     Alert.error("Oops, something wrong happened. Please refresh the page.");
                     response.data = {};
                     deferred.reject(response);
                 }
             },
-            checkConfig: function (url) {
+            checkConfig: function (config) {
+                var url = config.url;
+                if (config.auth.type === 'basic_auth') {
+                    var auth_string = btoa(config.auth.username + ':' + config.auth.password);
+                    $http.defaults.headers.common['Authorization'] = 'Basic ' + auth_string;
+                } else {
+                    delete $http.defaults.headers.common['Authorization'];
+                }
                 var deferred = $q.defer();
                 if (!url) {
                     deferred.reject('Not reachable');
@@ -81,25 +86,30 @@ angular.module('app')
                     $http({
                         url: url,
                         method: 'GET',
-                        timeout: 5000
+                        timeout: 5000,
                     }).then(function (response) {
                         if (response.data.tagline && response.data.tagline == "Welcome to Kong") {
                             deferred.resolve();
                         } else {
                             deferred.reject('Not Kong');
                         }
-                    }, function () {
-                        deferred.reject('Not reachable');
+                    }, function (response) {
+                        if (response.status == 401) {
+                            deferred.reject('Auth required');
+                        } else if (response.status == 403) {
+                            deferred.reject('Forbidden');
+                        } else {
+                            deferred.reject('Not reachable');
+                        }
                     });
                 }
                 return deferred.promise;
             },
-            setConfig: function (url) {
-                console.log($http.defaults.headers.common);
+            setConfig: function (config) {
                 var deferred = $q.defer();
-                factory.checkConfig(url).then(function () {
-                    factory.config.url = url;
-                    $cookies.putObject('config', factory.config, {
+                factory.checkConfig(config).then(function () {
+                    factory.config = config;
+                    $cookies.putObject('config.url', factory.config.url, {
                         expires: new Date(new Date().getTime() + 1000 * 24 * 3600 * 60) // remember 60 days
                     });
                     deferred.resolve();
