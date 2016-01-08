@@ -22,6 +22,10 @@
                     <label for="username" ng-class="{active:consumer.username}">Username</label>
                     <app-field-error error="error.username"></app-field-error>
                 </div>
+                <div class="input-field col s12" ng-show="consumer.id">
+                    <input id="consumer_id" type="text" value="{{consumer.id}}" disabled>
+                    <label for="consumer_id" class="active">Id</label>
+                </div>
                 <div class="input-field col s12">
                     <input id="custom_id" ng-model="consumer.custom_id" type="text" class="validate"
                            ng-class="{invalid: error.custom_id}">
