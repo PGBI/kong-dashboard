@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "bower": "~1.6.5",
-    "concat": "^1.0.0",
     "fs-extra": "^0.26.2",
     "glob": "^6.0.1",
     "minimist": "^1.2.0",
