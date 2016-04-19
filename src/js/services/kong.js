@@ -88,7 +88,7 @@ angular.module('app')
                         method: 'GET',
                         timeout: 5000,
                     }).then(function (response) {
-                        if (response.data.tagline && response.data.tagline == "Welcome to Kong") {
+                        if (response.data.tagline && angular.isString(response.data.tagline) && response.data.tagline.toLowerCase() == "welcome to kong") {
                             deferred.resolve();
                         } else {
                             deferred.reject('Not Kong');
