@@ -1,5 +1,5 @@
 angular.module('app').controller("PluginController", ["$scope", "Kong", "$location", "$routeParams", "plugins", "apis", "consumers", "plugin", "Alert", function ($scope, Kong, $location, $routeParams, plugins, apis, consumers, plugin, Alert) {
-    $scope.enabled_plugins = plugins.enabled_plugins;
+    $scope.enabled_plugins = Object.keys(plugins.enabled_plugins);
     $scope.plugin = plugin ? angular.copy(plugin) : {};
 
     $scope.error = {};
