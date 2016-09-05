@@ -90,13 +90,6 @@ cd kong-dashboard
 
 # Start VM
 vagrant up
-
-# Ssh into VM
-vagrant ssh
-
-# Start Kong dashboard
-cd /vagrant
-npm start
 ```
 
 ## Use
