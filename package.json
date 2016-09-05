@@ -13,7 +13,7 @@
     "fs-extra": "^0.26.2",
     "glob": "^6.0.1",
     "minimist": "^1.2.0",
-    "node-sass": "^3.4.2",
+    "node-sass": "^3.9.0",
     "rimraf": "^2.4.4",
     "serve": "^1.4.0",
     "uglify-js": "^2.6.1"

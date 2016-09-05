@@ -2,13 +2,12 @@
   "name": "Kong dashboard",
   "private": true,
   "dependencies": {
-    "Materialize": "materialize#0.97.2",
+    "Materialize": "materialize#0.97.7",
     "angular": "1.4.7",
     "angular-route": "1.4.7",
     "angular-cookies": "1.4.7",
     "angular-animate": "1.4.7",
-    "angular-sanitize": "1.4.7",
-    "material-design-icons": "2.0.0"
+    "angular-sanitize": "1.4.7"
   },
   "ignore": [
     "**/.*",
