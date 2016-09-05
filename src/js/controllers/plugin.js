@@ -1,5 +1,12 @@
 angular.module('app').controller("PluginController", ["$scope", "Kong", "$location", "$routeParams", "plugins", "apis", "consumers", "plugin", "Alert", function ($scope, Kong, $location, $routeParams, plugins, apis, consumers, plugin, Alert) {
-    $scope.enabled_plugins = Object.keys(plugins.enabled_plugins);
+
+    if (plugins.enabled_plugins instanceof Array) {
+        $scope.enabled_plugins = plugins.enabled_plugins;
+    } else {
+        // Happens with kong 0.9.0. See issue #52
+        $scope.enabled_plugins = Object.keys(plugins.enabled_plugins);
+    }
+
     $scope.plugin = plugin ? angular.copy(plugin) : {};
 
     $scope.error = {};
