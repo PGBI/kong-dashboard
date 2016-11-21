@@ -2,7 +2,7 @@
  * This factory handles CRUD requests to the backend API.
  */
 angular.module('app')
-    .factory('Kong', ['$http', '$q', '$cookies', 'Alert', function ($http, $q, $cookies, Alert) {
+    .factory('Kong', ['$http', '$q', '$cookies', 'Request', 'Alert', function ($http, $q, $cookies, Request, Alert) {
         var config = {
             url : $cookies.getObject('config.url'),
             auth : { type : "no_auth" }
@@ -12,7 +12,7 @@ angular.module('app')
             config: config,
             get: function (endpoint) {
                 var deferred = $q.defer();
-                $http.get(factory.config.url + endpoint).then(function (response) {
+                Request.get(factory.config.url + endpoint).then(function (response) {
                     deferred.resolve(response.data);
                 }, function (response) {
                     factory.handleError(response, deferred, endpoint);
@@ -21,7 +21,7 @@ angular.module('app')
             },
             put: function (endpoint, data) {
                 var deferred = $q.defer();
-                $http({
+                Request({
                     method: 'PUT',
                     url: factory.config.url + endpoint,
                     data: data,
@@ -34,7 +34,7 @@ angular.module('app')
             },
             patch: function (endpoint, data) {
                 var deferred = $q.defer();
-                $http.patch(factory.config.url + endpoint, data).then(function (response) {
+                Request.patch(factory.config.url + endpoint, data).then(function (response) {
                     deferred.resolve(response.data);
                 }, function (response) {
                     factory.handleError(response, deferred, endpoint);
@@ -43,7 +43,7 @@ angular.module('app')
             },
             delete: function (endpoint) {
                 var deferred = $q.defer();
-                $http.delete(factory.config.url + endpoint).then(function (response) {
+                Request.delete(factory.config.url + endpoint).then(function (response) {
                     deferred.resolve(response);
                 }, function (response) {
                     factory.handleError(response, deferred, endpoint);
@@ -52,7 +52,7 @@ angular.module('app')
             },
             post: function (endpoint, data) {
                 var deferred = $q.defer();
-                $http.post(factory.config.url + endpoint, data).then(function (response) {
+                Request.post(factory.config.url + endpoint, data).then(function (response) {
                     deferred.resolve(response.data);
                 }, function (response) {
                     factory.handleError(response, deferred, endpoint);
@@ -83,7 +83,7 @@ angular.module('app')
                 if (!url) {
                     deferred.reject('Not reachable');
                 } else {
-                    $http({
+                    Request({
                         url: url,
                         method: 'GET',
                         timeout: 5000,

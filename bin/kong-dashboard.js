@@ -17,5 +17,6 @@ if (argv._[0] === 'build') {
 
 if (argv._[0] === 'start') {
     var port = argv.p ? argv.p : 8080;
-    dashboard.serve(port);
+    var auth = argv.a;
+    dashboard.serve(port, auth);
 }

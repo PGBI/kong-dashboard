@@ -51,6 +51,13 @@ kong-dashboard start
 
 # To start Kong Dashboard on a custom port
 kong-dashboard start -p [port]
+
+# To start Kong Dashboard with basic auth
+kong-dashboard start -a user=password
+
+# You can set basic auth user with environment variables
+# Do not set -a parameter or this will be overwritten
+set kong-dashboard-name=admin&& set kong-dashboard-pass=password&& kong-dashboard start
 ```
 
 ### From sources
@@ -94,4 +101,4 @@ vagrant up
 
 ## Use
 
-You can now browse your kong dashboard at http://localhost:8080
+You can now browse your kong dashboard at http://localhost:8080/dashboard/
