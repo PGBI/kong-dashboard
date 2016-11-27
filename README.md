@@ -73,8 +73,8 @@ npm install
 # Start Kong Dashboard
 npm start
 
-# To start Kong Dashboard on a custom port
-npm start -- -p [port]
+# To start Kong Dashboard on a custom port or with basic auth
+npm start -- [-p port] [-a user=password]
 ```
 
 ### With Docker
