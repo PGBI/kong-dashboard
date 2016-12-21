@@ -1,5 +1,9 @@
 angular.module('app').controller("ConsumersController", ["consumersCollection", "$scope", "Kong", "$route", function (consumersCollection, $scope, Kong, $route) {
     $scope.consumers = consumersCollection.data;
+    $scope.total = consumersCollection.total; 
+    $scope.next = consumersCollection.next;
+    $scope.size = $route.current.params.size;
+    $scope.offset = encodeURIComponent(consumersCollection.offset);
     $scope.showDeleteModal = function (username, id) {
         $scope.current = {username: username, id: id};
         $('#deleteConsumer').openModal();
@@ -14,4 +18,3 @@ angular.module('app').controller("ConsumersController", ["consumersCollection", 
         });
     }
 }]);
-

@@ -138,8 +138,15 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 controller: 'ConsumersController',
                 resolve: {
                     isAppReady: isAppReady,
-                    consumersCollection: ['Kong', function (Kong) {
-                        return Kong.get('/consumers');
+                    consumersCollection: ['Kong', '$route', function (Kong, $route) {
+                        var url = '/consumers?';
+                        if ($route.current.params.offset) {
+                           url += 'offset=' + encodeURIComponent($route.current.params.offset);
+                        }
+                        if ($route.current.params.size) {
+                            url += '&size=' + $route.current.params.size;
+                        }
+                        return Kong.get(url);
                     }]
                 }
             })
