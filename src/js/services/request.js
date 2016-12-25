@@ -6,34 +6,31 @@ angular.module('app')
       var kongNodeURLHeader = 'Kong-Node-URL';
 
       function request (options) {
-        options = addKongNodeURLHeader(options.url, options);
-        options.url = getRelativePath(options.url);
+        setOptions(options);
         return $http(options);
       };
 
       ['get', 'delete', 'head', 'jsonp'].forEach(function (method) {
         request[method] = function (url, options) {
-          options = addKongNodeURLHeader(url, options || {});
-          return $http[method](getRelativePath(url), options);
+          setOptions(options);
+          return $http[method](options.url, options);
         };
       });
 
       ['post', 'put', 'patch'].forEach(function (method) {
         request[method] = function (url, data, options) {
-          options = addKongNodeURLHeader(url, options || {});
-          return $http[method](getRelativePath(url), data, options);
+          setOptions(options);
+          return $http[method](options.url, data, options);
         };
       });
 
       // utils
-      function addKongNodeURLHeader (url, options) {
+      function setOptions(options) {
         options.headers = options.headers || {};
-        options.headers[kongNodeURLHeader] = url.match(/^(https?:)?\/\/[^\/]*/)[0];
-        return options;
-      }
-
-      function getRelativePath (url) {
-        return url.replace(/^(https?:)?\/\/[^\/]*/, '') || '/';
+        options.timeout = options.timeout || 5000;
+        options.headers[kongNodeURLHeader] = options.kong_url;
+        options.url = '/proxy' + options.endpoint;
+        options.timeout = 5000;
       }
 
       return request;

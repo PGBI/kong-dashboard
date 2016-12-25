@@ -10,101 +10,66 @@ angular.module('app')
 
         var factory = {
             config: config,
-            get: function (endpoint) {
-                var deferred = $q.defer();
-                Request.get(factory.config.url + endpoint).then(function (response) {
-                    deferred.resolve(response.data);
-                }, function (response) {
-                    factory.handleError(response, deferred, endpoint);
-                });
-                return deferred.promise;
-            },
-            put: function (endpoint, data) {
-                var deferred = $q.defer();
-                Request({
-                    method: 'PUT',
-                    url: factory.config.url + endpoint,
-                    data: data,
-                }).then(function (response) {
-                    deferred.resolve(response.data);
-                }, function (response) {
-                    factory.handleError(response, deferred, endpoint);
-                });
-                return deferred.promise;
-            },
-            patch: function (endpoint, data) {
-                var deferred = $q.defer();
-                Request.patch(factory.config.url + endpoint, data).then(function (response) {
-                    deferred.resolve(response.data);
-                }, function (response) {
-                    factory.handleError(response, deferred, endpoint);
-                });
-                return deferred.promise;
-            },
-            delete: function (endpoint) {
-                var deferred = $q.defer();
-                Request.delete(factory.config.url + endpoint).then(function (response) {
-                    deferred.resolve(response);
-                }, function (response) {
-                    factory.handleError(response, deferred, endpoint);
-                });
-                return deferred.promise;
-            },
-            post: function (endpoint, data) {
-                var deferred = $q.defer();
-                Request.post(factory.config.url + endpoint, data).then(function (response) {
-                    deferred.resolve(response.data);
-                }, function (response) {
-                    factory.handleError(response, deferred, endpoint);
-                });
-                return deferred.promise;
-            },
+
             handleError: function (response, deferred, endpoint) {
-                if (response.data && response.status != 500) {
+                if (response && response.data) {
                     if (response.data.message) {
                         Alert.error(response.data.message);
+                        deferred.reject();
+                    } else {
+                        deferred.reject(response);
                     }
-                    deferred.reject(response);
                 } else {
+                    console.log(response);
                     Alert.error("Oops, something wrong happened. Please refresh the page.");
-                    response.data = {};
-                    deferred.reject(response);
+                    deferred.reject();
                 }
             },
+
             checkConfig: function (config) {
                 var url = config.url;
                 if (config.auth.type === 'basic_auth') {
                     var auth_string = btoa(config.auth.username + ':' + config.auth.password);
-                    $http.defaults.headers.common['Authorization'] = 'Basic ' + auth_string;
+                    $http.defaults.headers.common['x-kong-authorization'] = 'Basic ' + auth_string;
                 } else {
-                    delete $http.defaults.headers.common['Authorization'];
+                    delete $http.defaults.headers.common['x-kong-authorization'];
                 }
                 var deferred = $q.defer();
                 if (!url) {
-                    deferred.reject('Not reachable');
-                } else {
+                    deferred.reject('You must provide Kong node url.');
+                    return deferred.promise;
+                }
+
+                try {
                     Request({
-                        url: url,
-                        method: 'GET',
-                        timeout: 5000,
+                        kong_url: url,
+                        endpoint: '/',
+                        method: 'GET'
                     }).then(function (response) {
-                        if (response.data.tagline && angular.isString(response.data.tagline) && response.data.tagline.toLowerCase() == "welcome to kong") {
+                        if (
+                            response && response.data && response.data.tagline
+                            && angular.isString(response.data.tagline)
+                            && response.data.tagline.toLowerCase() == "welcome to kong"
+                        ) {
                             deferred.resolve();
                         } else {
-                            deferred.reject('Not Kong');
+                            response.data = {message: "That's not the url of a Kong node."};
+                            deferred.reject(response);
                         }
                     }, function (response) {
-                        if (response.status == 401) {
-                            deferred.reject('Auth required');
-                        } else if (response.status == 403) {
-                            deferred.reject('Forbidden');
-                        } else {
-                            deferred.reject('Not reachable');
+                        if (response.status == 511) {
+                            response.data = {message: 'Kong API requires authentication.'};
+                        } else if (response.status == 404) {
+                            response.data = {message: "Can't connect to Kong server."};
                         }
+                        deferred.reject(response);
                     });
+                } catch (err) {
+                    deferred.reject(err);
                 }
                 return deferred.promise;
             },
+
             setConfig: function (config) {
                 var deferred = $q.defer();
                 factory.checkConfig(config).then(function () {
@@ -114,10 +79,52 @@ angular.module('app')
                     });
                     deferred.resolve();
                 }, function (response) {
-                    deferred.reject(response);
+                    factory.handleError(response, deferred);
                 });
                 return deferred.promise;
             }
         };
+
+        ['get', 'delete', 'head'].forEach(function (method) {
+            factory[method] = function (endpoint) {
+                var deferred = $q.defer();
+                try {
+                    Request({
+                        kong_url: factory.config.url,
+                        endpoint: endpoint,
+                        method: method
+                    }).then(function (response) {
+                        deferred.resolve(response.data);
+                    }, function (response) {
+                        factory.handleError(response, deferred, endpoint);
+                    });
+                } catch(err) {
+                    factory.handleError(err, deferred, endpoint);
+                }
+                return deferred.promise;
+            };
+        });
+
+        ['post', 'put', 'patch'].forEach(function (method) {
+            factory[method] = function (endpoint, data) {
+                var deferred = $q.defer();
+                try {
+                    Request({
+                        kong_url: factory.config.url,
+                        endpoint: endpoint,
+                        method: method,
+                        data: data,
+                    }).then(function (response) {
+                        deferred.resolve(response.data);
+                    }, function (response) {
+                        factory.handleError(response, deferred, endpoint);
+                    });
+                } catch(err) {
+                    factory.handleError(err, deferred, endpoint);
+                }
+                return deferred.promise;
+            };
+        });
+
         return factory;
     }]);
