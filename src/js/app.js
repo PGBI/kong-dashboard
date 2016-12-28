@@ -86,7 +86,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
             .when('/plugins', {
                 templateUrl: 'html/plugins/index.html',
                 controller: 'PluginsController',
-                resolve: {
+                resolve: { 
                     isAppReady: isAppReady,
                     pluginsCollection: ['Kong', function (Kong) {
                         return Kong.get('/plugins');
@@ -109,7 +109,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                         return Kong.get('/apis');
                     }],
                     consumers: ['Kong', '$location', function(Kong) {
-                        return Kong.get('/consumers');
+                        return Kong.get('/consumers?size=-1');
                     }]
                 }
             })

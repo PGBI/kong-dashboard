@@ -5,7 +5,8 @@ angular.module('app')
     .factory('Kong', ['$http', '$q', '$cookies', 'Alert', function ($http, $q, $cookies, Alert) {
         var config = {
             url : $cookies.getObject('config.url'),
-            auth : { type : "no_auth" }
+            auth : { type : "no_auth" },
+            gelato : $cookies.getObject('config.gelato')
         };
 
         var factory = {
@@ -81,7 +82,7 @@ angular.module('app')
                 }
                 var deferred = $q.defer();
                 if (!url) {
-                    deferred.reject('Not reachable');
+                    deferred.reject('No URL');
                 } else {
                     $http({
                         url: url,
@@ -115,6 +116,9 @@ angular.module('app')
                     deferred.resolve();
                 }, function (response) {
                     deferred.reject(response);
+                });
+                $cookies.putObject('config.gelato', config.gelato, {
+                    expires: new Date(new Date().getTime() + 1000 * 24 * 3600 * 60) // remember 60 days
                 });
                 return deferred.promise;
             }

@@ -4,6 +4,7 @@ angular.module('app').controller("ConsumersController", ["consumersCollection", 
     $scope.next = consumersCollection.next;
     $scope.size = $route.current.params.size;
     $scope.offset = encodeURIComponent(consumersCollection.offset);
+    $scope.gelato = Kong.config.gelato;
     $scope.showDeleteModal = function (username, id) {
         $scope.current = {username: username, id: id};
         $('#deleteConsumer').openModal();
