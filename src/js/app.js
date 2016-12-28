@@ -29,8 +29,15 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 controller: 'ApisController',
                 resolve: {
                     isAppReady: isAppReady,
-                    initialData: ['Kong', '$location', function (Kong) {
-                        return Kong.get('/apis');
+                    initialData: ['Kong', '$route', function (Kong, $route) {
+                        var url = '/apis?';
+                        if ($route.current.params.offset) {
+                           url += 'offset=' + encodeURIComponent($route.current.params.offset);
+                        }
+                        if ($route.current.params.size) {
+                            url += '&size=' + $route.current.params.size;
+                        }
+                        return Kong.get(url);
                     }]
                 }
             })
@@ -88,8 +95,15 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 controller: 'PluginsController',
                 resolve: { 
                     isAppReady: isAppReady,
-                    pluginsCollection: ['Kong', function (Kong) {
-                        return Kong.get('/plugins');
+                    pluginsCollection: ['Kong', '$route', function (Kong, $route) {
+                        var url = '/plugins?';
+                        if ($route.current.params.offset) {
+                           url += 'offset=' + encodeURIComponent($route.current.params.offset);
+                        }
+                        if ($route.current.params.size) {
+                            url += '&size=' + $route.current.params.size;
+                        }
+                        return Kong.get(url);
                     }],
                     owner: function() { return {};}
                 }

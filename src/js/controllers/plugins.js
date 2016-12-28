@@ -9,6 +9,10 @@ angular.module('app').controller("PluginsController", ["pluginsCollection", "$sc
     $scope.owner = $owner;
 
     $scope.plugins = pluginsCollection.data;
+    $scope.total = pluginsCollection.total;
+    $scope.next = pluginsCollection.next;
+    $scope.size = $route.current.params.size;
+    $scope.offset = encodeURIComponent(pluginsCollection.offset);
 
     angular.forEach($scope.plugins, function(plugin) {
         Kong.get('/apis/' + plugin.api_id).then(function(api) {
