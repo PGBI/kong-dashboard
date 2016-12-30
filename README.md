@@ -57,7 +57,7 @@ kong-dashboard start -a user=password
 
 # You can set basic auth user with environment variables
 # Do not set -a parameter or this will be overwritten
-set kong-dashboard-name=admin&& set kong-dashboard-pass=password&& kong-dashboard start
+set kong-dashboard-name=admin && set kong-dashboard-pass=password && kong-dashboard start
 ```
 
 ### From sources
@@ -85,6 +85,9 @@ docker run -d -p 8080:8080 pgbi/kong-dashboard
 
 # Start Kong Dashboard on a custom port
 docker run -d -p [port]:8080 pgbi/kong-dashboard
+
+# Start Kong Dashboard with basic auth
+docker run -d -p 8080:8080 pgbi/kong-dashboard npm start -- -a user=password
 ```
 
 
@@ -101,4 +104,4 @@ vagrant up
 
 ## Use
 
-You can now browse your kong dashboard at http://localhost:8080/dashboard/
+You can now browse your kong dashboard at http://localhost:8080
