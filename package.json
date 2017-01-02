@@ -34,6 +34,11 @@
   },
   "scripts": {
     "install": "node ./bin/kong-dashboard build",
-    "start": "node ./bin/kong-dashboard start"
+    "start": "node ./bin/kong-dashboard start",
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
   }
 }

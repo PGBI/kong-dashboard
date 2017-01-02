@@ -2,7 +2,6 @@
 *.iml
 .dockerignore
 Dockerfile
-bower_components/
 node_modules/
 public/
 screenshots/
