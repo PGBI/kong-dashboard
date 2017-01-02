@@ -16,6 +16,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
         $routeProvider
             .when('/', {
                 templateUrl: 'html/home.html',
+                controller: 'HomeController',
                 resolve: {
                     isAppReady: isAppReady
                 }
