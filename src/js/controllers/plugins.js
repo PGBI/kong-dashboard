@@ -1,4 +1,4 @@
-angular.module('app').controller("PluginsController", ["pluginsCollection", "$scope", "Kong", "$route", "$routeParams", "owner", "Alert", function (pluginsCollection, $scope, Kong, $route, $routeParams, $owner, Alert) {
+angular.module('app').controller("PluginsController", ["pluginsCollection", "$scope", "Kong", "$route", "$location", "$routeParams", "owner", "Alert", function (pluginsCollection, $scope, Kong, $route, $location, $routeParams, $owner, Alert) {
     if ($routeParams.api_id) {
         $scope.owner_type = 'API';
     } else if ($routeParams.consumer_id) {
@@ -12,7 +12,8 @@ angular.module('app').controller("PluginsController", ["pluginsCollection", "$sc
     $scope.total = pluginsCollection.total;
     $scope.next = pluginsCollection.next;
     $scope.size = $route.current.params.size;
-    $scope.offset = encodeURIComponent(pluginsCollection.offset);
+    $scope.offset = pluginsCollection.next ? /offset=([^&]+)/.exec(pluginsCollection.next)[1] : null;
+    $scope.location = $location;
 
     angular.forEach($scope.plugins, function(plugin) {
         Kong.get('/apis/' + plugin.api_id).then(function(api) {

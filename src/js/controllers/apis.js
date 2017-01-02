@@ -3,7 +3,8 @@ angular.module('app').controller("ApisController", ["initialData", "$scope", "Ko
     $scope.total = initialData.total;
     $scope.next = initialData.next;
     $scope.size = $route.current.params.size;
-    $scope.offset = encodeURIComponent(initialData.offset);
+    $scope.offset = initialData.next ? /offset=([^&]+)/.exec(initialData.next)[1] : null;
+    
     $scope.showDeleteModal = function (name, id) {
         $scope.current = {name: name, id: id};
         $('#deleteAPI').openModal();

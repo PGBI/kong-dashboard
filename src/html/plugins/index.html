@@ -30,9 +30,9 @@
     </p>
 
      <p class="right" ng-show="next" style="margin-top:50px;">
-        <a href="#/plugins?offset={{offset}}&size={{size}}" class="waves-effect waves-light btn">
+        <a href="#{{location.path()}}?offset={{offset}}&size={{size}}" class="waves-effect waves-light btn">
             <i class="material-icons left">navigate_next</i>
-            Go to next page 
+            Go to next page
         </a>
     </p>
 
@@ -44,7 +44,7 @@
     </p>
 
     <p class="center" ng-show="plugins.length == 0 && total > 0">
-        <a href="#/plugins?size={{size}}" class="waves-effect waves-light btn">
+        <a href="#{{location.path()}}?size={{size}}" class="waves-effect waves-light btn">
             <i class="material-icons left">skip_previous</i>
             Go to first page
         </a>
