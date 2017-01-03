@@ -5,14 +5,36 @@
 
     <h3 class="header">APIs</h3>
 
-    <p class="flow-text center" ng-show="apis.length < 1" style="margin-top:50px;">
+    <p class="flow-text center" ng-show="total == 0" style="margin-top:50px;">
         You haven't created any API in Kong yet.
     </p>
 
-    <p class="center" ng-show="apis.length < 1">
+    <p class="flow-text center" ng-show="apis.length == 0 && total > 0" style="margin-top:50px;">
+        You have reached the end of the list. 
+    </p>
+
+    <p class="flow-text left" ng-show="apis.length > 0" style="margin-top:50px;">
+        Showing {{apis.length}} Apis / {{total}}
+    </p>
+
+     <p class="right" ng-show="next" style="margin-top:50px;">
+        <a href="#/apis?offset={{offset}}&size={{size}}" class="waves-effect waves-light btn">
+            <i class="material-icons left">navigate_next</i>
+            Go to next page
+        </a>
+    </p>
+
+    <p class="center" ng-show="total == 0">
         <a href="#/apis/add" class="waves-effect waves-light btn">
             <i class="material-icons left">add_box</i>
             Add API
+        </a>
+    </p>
+
+    <p class="center" ng-show="apis.length == 0 && total > 0">
+        <a href="#/apis?size={{size}}" class="waves-effect waves-light btn">
+            <i class="material-icons left">skip_previous</i>
+            Go to first page
         </a>
     </p>
 

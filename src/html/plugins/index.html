@@ -11,20 +11,42 @@
         Plugins of consumer "<a href="#/consumers/{{owner.id}}">{{owner.username}}</a>"
     </h3>
 
-    <p class="flow-text center" ng-show="plugins.length < 1 && !owner_type" style="margin-top:50px;">
+    <p class="flow-text center" ng-show="total == 0 && !owner_type" style="margin-top:50px;">
         There are no plugin configured yet.
     </p>
-    <p class="flow-text center" ng-show="plugins.length < 1 && owner_type=='API'" style="margin-top:50px;">
+    <p class="flow-text center" ng-show="total == 0 && owner_type=='API'" style="margin-top:50px;">
         This API doesn't have any plugin configured yet.
     </p>
-    <p class="flow-text center" ng-show="plugins.length < 1 && owner_type=='Consumer'" style="margin-top:50px;">
+    <p class="flow-text center" ng-show="total == 0 && owner_type=='Consumer'" style="margin-top:50px;">
         This Consumer doesn't have any plugin configured yet.
     </p>
 
-    <p class="center" ng-show="plugins.length < 1">
+    <p class="flow-text center" ng-show="plugins.length == 0 && total > 0" style="margin-top:50px;">
+        You have reached the end of the list. 
+    </p>
+
+    <p class="flow-text left" ng-show="plugins.length > 0" style="margin-top:50px;">
+        Showing {{plugins.length}} Plugins / {{total}}
+    </p>
+
+     <p class="right" ng-show="next" style="margin-top:50px;">
+        <a href="#{{location.path()}}?offset={{offset}}&size={{size}}" class="waves-effect waves-light btn">
+            <i class="material-icons left">navigate_next</i>
+            Go to next page
+        </a>
+    </p>
+
+    <p class="center" ng-show="total == 0">
         <a href="#/plugins/add" class="waves-effect waves-light btn">
             <i class="material-icons left">add_box</i>
             Add Plugin
+        </a>
+    </p>
+
+    <p class="center" ng-show="plugins.length == 0 && total > 0">
+        <a href="#{{location.path()}}?size={{size}}" class="waves-effect waves-light btn">
+            <i class="material-icons left">skip_previous</i>
+            Go to first page
         </a>
     </p>
 

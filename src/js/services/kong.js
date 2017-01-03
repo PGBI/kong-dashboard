@@ -5,7 +5,8 @@ angular.module('app')
     .factory('Kong', ['$http', '$q', '$cookies', 'Request', 'Alert', function ($http, $q, $cookies, Request, Alert) {
         var config = {
             url : $cookies.getObject('config.url'),
-            auth : { type : "no_auth" }
+            auth : { type : "no_auth" },
+            gelato : $cookies.getObject('config.gelato')
         };
 
         var factory = {
@@ -36,7 +37,7 @@ angular.module('app')
                 }
                 var deferred = $q.defer();
                 if (!url) {
-                    deferred.reject('You must provide Kong node url.');
+                    deferred.reject('No URL');
                     return deferred.promise;
                 }
 
@@ -80,6 +81,9 @@ angular.module('app')
                     deferred.resolve();
                 }, function (response) {
                     factory.handleError(response, deferred);
+                });
+                $cookies.putObject('config.gelato', config.gelato, {
+                    expires: new Date(new Date().getTime() + 1000 * 24 * 3600 * 60) // remember 60 days
                 });
                 return deferred.promise;
             }

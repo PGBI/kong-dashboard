@@ -5,8 +5,10 @@ angular.module('app').controller("ConfigController", ["$scope", "Kong", "Alert",
 
     $scope.update = function() {
         if (!$scope.config.url) {
-            Alert.error("You need to indicate the url and port of the Kong node you want to manage.");
-            return;
+            $scope.config.url = "http://localhost:8001";
+        }
+        if ($scope.config.url.toLowerCase().indexOf("http") == -1) {
+            $scope.config.url = "http://" + $scope.config.url;
         }
 
         Kong.setConfig($scope.config).then(function() {
