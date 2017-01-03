@@ -18,6 +18,7 @@
     "fs-extra": "^1.0.0",
     "glob": "^7.1.1",
     "http-proxy": "^1.16.2",
+    "jquery": "^3.1.1",
     "koa": "^1.2.4",
     "koa-add-trailing-slashes": "^1.1.0",
     "koa-basic-auth": "^1.1.2",
@@ -34,6 +35,11 @@
   },
   "scripts": {
     "install": "node ./bin/kong-dashboard build",
-    "start": "node ./bin/kong-dashboard start"
+    "start": "node ./bin/kong-dashboard start",
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
   }
 }
