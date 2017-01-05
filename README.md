@@ -1,7 +1,5 @@
 # Kong Dashboard
 
-[![](https://badge.imagelayers.io/pgbi/kong-dashboard:latest.svg)](https://imagelayers.io/?images=pgbi/kong-dashboard:latest 'Get your own badge on imagelayers.io')
-
 [**Kong**](https://getkong.org/) is a scalable, open source API Layer (also known as a API Gateway, or API Middleware).
 Kong runs in front of any RESTful API and provide functionalities
 and services such as requests routing, authentication, rate limiting, etc.
@@ -78,6 +76,8 @@ npm start -- [-p port] [-a user=password]
 ```
 
 ### With Docker
+
+[![](https://images.microbadger.com/badges/image/pgbi/kong-dashboard.svg)](https://microbadger.com/images/pgbi/kong-dashboard "Get your own image badge on microbadger.com")
 
 ```bash
 # Start Kong Dashboard
