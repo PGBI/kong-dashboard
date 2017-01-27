@@ -29,7 +29,7 @@ angular.module('app')
         options.headers = options.headers || {};
         options.timeout = options.timeout || 5000;
         options.headers[kongNodeURLHeader] = options.kong_url;
-        options.url = '/proxy' + options.endpoint;
+        options.url = './proxy' + options.endpoint;
         options.timeout = 5000;
       }
 
