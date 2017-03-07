@@ -5,14 +5,36 @@
 
     <h3 class="header">Consumers</h3>
 
-    <p class="flow-text center" ng-show="consumers.length < 1" style="margin-top:50px;">
+    <p class="flow-text center" ng-show="total == 0" style="margin-top:50px;">
         You haven't defined any Consumers in Kong yet.
     </p>
 
-    <p class="center" ng-show="consumers.length < 1">
+    <p class="flow-text center" ng-show="consumers.length == 0 && total > 0" style="margin-top:50px;">
+        You have reached the end of the list. 
+    </p>
+
+    <p class="flow-text left" ng-show="consumers.length > 0" style="margin-top:50px;">
+        Showing {{consumers.length}} Consumers / {{total}}
+    </p>
+
+    <p class="right" ng-show="next" style="margin-top:50px;">
+        <a href="#/consumers?offset={{offset}}&size={{size}}" class="waves-effect waves-light btn">
+            <i class="material-icons left">navigate_next</i>
+            Go to next page
+        </a>
+    </p>
+
+    <p class="center" ng-show="total == 0">
         <a href="#/consumers/add" class="waves-effect waves-light btn">
             <i class="material-icons left">add_box</i>
             Add Consumer
+        </a>
+    </p>
+
+     <p class="center" ng-show="consumers.length == 0 && total > 0">
+        <a href="#/consumers?size={{size}}" class="waves-effect waves-light btn">
+            <i class="material-icons left">skip_previous</i>
+            Go to first page
         </a>
     </p>
 
@@ -28,8 +50,10 @@
 
         <tbody>
         <tr ng-repeat="consumer in consumers">
-            <td>{{consumer.username}}</td>
-            <td>{{consumer.custom_id}}</td>
+            <td>{{consumer.username}} <p ng-show="!consumer.username">nope</p></td>
+            <td><a ng-show="gelato" href="https://gelato.io/app/developers/{{consumer.custom_id}}">{{consumer.custom_id}}</a>
+                <p ng-show="!gelato">{{consumer.custom_id}}</p>
+                <p ng-show="!consumer.custom_id">nope</p></td>
             <td>{{consumer.created_at | date}}</td>
             <td class="right">
                 <a class="btn-floating waves-effect waves-light" href="#/consumers/{{consumer.id}}">

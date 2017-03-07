@@ -26,8 +26,14 @@
         </div>
         <div class="col s4 home-block">
             <h5>Contribute</h5>
-            <p>Kong dashboard project is hosted on github.</p>
-            <p>Any contribution is appreciated!</p>
+            <p>Kong Dashboard is an open source project hosted on github.</p>
+            <p>Special thanks to 5 top contributors:</p>
+            <div class="chip" ng-repeat="contributor in contributors">
+                <a href="{{ contributor.html_url }}">
+                    <img src="{{ contributor.avatar_url }}" alt="{{ contributor.login }} avatar">
+                    {{ contributor.login }}
+                </a>
+            </div>
         </div>
     </div>
     <div class="row">

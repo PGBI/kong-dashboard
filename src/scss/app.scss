@@ -1,31 +1,4 @@
-@import './bower_components/Materialize/sass/materialize.scss';
-@font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src: url(../font/material-design-icons/MaterialIcons-Regular.woff2) format('woff2'),
-    url(../font/material-design-icons/MaterialIcons-Regular.ttf) format('truetype'),
-    url(../font/material-design-icons/MaterialIcons-Regular.woff) format('woff');
-}
-
-.material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: 'liga';
-    vertical-align:middle;
-}
+@import './node_modules/materialize-css/sass/materialize.scss';
 
 body {
     display: flex;
@@ -46,6 +19,11 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 300;
     margin-top:50px;
     margin-bottom:50px;
+}
+
+nav i.material-icons {
+    vertical-align: middle;
+    display: inline-block;
 }
 
 a {
