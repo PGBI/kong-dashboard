@@ -1,4 +1,4 @@
-FROM mhart/alpine-node
+FROM mhart/alpine-node:7.5.0
 
 COPY . /data
 WORKDIR /data
