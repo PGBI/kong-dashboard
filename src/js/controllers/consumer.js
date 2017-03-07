@@ -3,6 +3,7 @@ angular.module('app').controller("ConsumerController", ["$scope", "Kong", "$loca
         $scope.consumer = consumer;
         $scope.title = "Edit Consumer";
         $scope.action = "Save";
+        $scope.location = $location;
         loadExtensions('jwt');
         loadExtensions('basic-auth');
         loadExtensions('oauth2');

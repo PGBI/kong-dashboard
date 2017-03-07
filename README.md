@@ -1,12 +1,14 @@
 # Kong Dashboard
 
-[![](https://badge.imagelayers.io/pgbi/kong-dashboard:latest.svg)](https://imagelayers.io/?images=pgbi/kong-dashboard:latest 'Get your own badge on imagelayers.io')
-
-[**Kong**](https://getkong.org/) is a scalable, open source API Layer (also known as a API Gateway, or API Middleware). 
+[**Kong**](https://getkong.org/) is a scalable, open source API Layer (also known as a API Gateway, or API Middleware).
 Kong runs in front of any RESTful API and provide functionalities
 and services such as requests routing, authentication, rate limiting, etc.
 
 **Kong dashboard** is a UI tool that will let you manage your Kong Gateway setup.
+
+## Compatibility
+
+Current version of Kong dashboard is compatible with Kong 0.6.x, 0.7.x, 0.8.x and 0.9.x.
 
 ## Presentation
 
@@ -47,6 +49,13 @@ kong-dashboard start
 
 # To start Kong Dashboard on a custom port
 kong-dashboard start -p [port]
+
+# To start Kong Dashboard with basic auth
+kong-dashboard start -a user=password
+
+# You can set basic auth user with environment variables
+# Do not set -a parameter or this will be overwritten
+set kong-dashboard-name=admin && set kong-dashboard-pass=password && kong-dashboard start
 ```
 
 ### From sources
@@ -62,11 +71,13 @@ npm install
 # Start Kong Dashboard
 npm start
 
-# To start Kong Dashboard on a custom port
-npm start -- -p [port]
+# To start Kong Dashboard on a custom port or with basic auth
+npm start -- [-p port] [-a user=password]
 ```
 
 ### With Docker
+
+[![](https://images.microbadger.com/badges/image/pgbi/kong-dashboard.svg)](https://microbadger.com/images/pgbi/kong-dashboard "Get your own image badge on microbadger.com")
 
 ```bash
 # Start Kong Dashboard
@@ -74,6 +85,9 @@ docker run -d -p 8080:8080 pgbi/kong-dashboard
 
 # Start Kong Dashboard on a custom port
 docker run -d -p [port]:8080 pgbi/kong-dashboard
+
+# Start Kong Dashboard with basic auth
+docker run -d -p 8080:8080 pgbi/kong-dashboard npm start -- -a user=password
 ```
 
 
@@ -86,13 +100,6 @@ cd kong-dashboard
 
 # Start VM
 vagrant up
-
-# Ssh into VM
-vagrant ssh
-
-# Start Kong dashboard
-cd /vagrant
-npm start
 ```
 
 ## Use
