@@ -103,7 +103,10 @@ vagrant up
 ```
 ## Configuration
 
-The "Kong node URL" is not "http://localhost:8001". It will be your machine/LAN IP, for example: "http://192.168.x.x:8001"
+When browsing Kong-Dashboard, you will be asked to provide the URL of your Kong node.
+
+If you're hosting Kong on your local machine, the "Kong node URL" is not "http://localhost:8001".
+It will be your machine/LAN IP, for example: "http://192.168.x.x:8001"
 
 ## Use
 
