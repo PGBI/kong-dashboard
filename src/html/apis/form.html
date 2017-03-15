@@ -26,14 +26,14 @@
                     <app-field-error error="error.name"></app-field-error>
                 </div>
                 <div class="input-field col s12">
-                    <input id="request_host" ng-model="api.request_host" type="text" class="validate" ng-class="{invalid: error.request_host}">
-                    <label for="request_host" ng-class="{active:api.request_host}">Request host</label>
-                    <app-field-error error="error.request_host"></app-field-error>
+                    <input id="hosts" ng-model="api.hosts" type="text" class="validate" ng-class="{invalid: error.hosts}">
+                    <label for="hosts" ng-class="{active:api.hosts}">Hosts</label>
+                    <app-field-error error="error.hosts"></app-field-error>
                 </div>
                 <div class="input-field col s12">
-                    <input id="request_path"  ng-model="api.request_path" type="text" class="validate" ng-class="{invalid: error.request_path}">
-                    <label for="request_path" ng-class="{active:api.request_path}">Request path</label>
-                    <app-field-error error="error.request_path"></app-field-error>
+                    <input id="uris"  ng-model="api.uris" type="text" class="validate" ng-class="{invalid: error.uris}">
+                    <label for="uris" ng-class="{active:api.uris}">Uris</label>
+                    <app-field-error error="error.uris"></app-field-error>
                 </div>
                 <div class="input-field col s12">
                     <input id="upstream_url"  ng-model="api.upstream_url" type="text" class="validate" ng-class="{invalid: error.upstream_url}">
@@ -41,9 +41,9 @@
                     <app-field-error error="error.upstream_url"></app-field-error>
                 </div>
                 <p class="col s6">
-                    <input type="checkbox" ng-model="api.strip_request_path" class="filled-in validate" id="strip_request_path" ng-true-value="true" ng-false-value="false" />
-                    <label for="strip_request_path">Strip request path</label>
-                    <app-field-error error="error.strip_request_path"></app-field-error>
+                    <input type="checkbox" ng-model="api.strip_uri" class="filled-in validate" id="strip_uri" ng-true-value="true" ng-false-value="false" />
+                    <label for="strip_uri">Strip request path</label>
+                    <app-field-error error="error.strip_uri"></app-field-error>
                 </p>
                 <p class="col s6">
                     <input type="checkbox"  ng-model="api.preserve_host" class="filled-in validate" id="preserve_host" ng-true-value="true" ng-false-value="false" />

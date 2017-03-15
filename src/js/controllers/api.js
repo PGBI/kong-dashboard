@@ -6,6 +6,9 @@ angular.module('app').controller("ApiController", ["$scope", "Kong", "$location"
     } else {
         $scope.title = "Add an API";
         $scope.action = "Create";
+        $scope.api = {
+            strip_uri: true
+        };
     }
 
     $scope.save = function () {
