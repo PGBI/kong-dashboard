@@ -1,4 +1,11 @@
-angular.module('app').controller("PluginController", ["$scope", "Kong", "$location", "$routeParams", "plugins", "apis", "consumers", "plugin", "Alert", function ($scope, Kong, $location, $routeParams, plugins, apis, consumers, plugin, Alert) {
+angular.module('app').controller("PluginController", ["$scope", "Kong", "$location", "$routeParams", "plugins", "apis", "consumers", "plugin", "Alert", function ($scope, Kong, $location, $routeParams, plugins, apis, consumers, plugin, Alert)
+{
+    $scope.api_id_required = false;
+    // Kong before version 0.9.x didn't allow to define cross-apis plugins.
+    var kong_version = Kong.config.kong_version.split('.');
+    if (kong_version[0] == 0 && kong_version[1] < 9) {
+        $scope.api_id_required = true;
+    }
 
     if (plugins.enabled_plugins instanceof Array) {
         $scope.enabled_plugins = plugins.enabled_plugins;
@@ -46,11 +53,16 @@ angular.module('app').controller("PluginController", ["$scope", "Kong", "$locati
     }
 
     $scope.save = function () {
-        beforeSave($scope.plugin.config, $scope.plugin_schema.fields);
         if (!$scope.plugin.api_id) {
-            Alert.error("You must select an API.");
-            return;
+            if ($scope.api_id_required) {
+                Alert.error("You must select an API.");
+                return;
+            } else {
+                // Kong 0.9.x will fail if the body payload contains {api_id: null}
+                delete $scope.plugin.api_id;
+            }
         }
+        beforeSave($scope.plugin.config, $scope.plugin_schema.fields);
         if (!$scope.plugin.name) {
             Alert.error("You must choose a plugin.");
             return;

@@ -17,13 +17,13 @@
         <form name="addPlugin" class="col s7" novalidate ng-submit="save()">
             <div class="row">
                 <div class="input-field col s12">
-                    <label class="active">Api</label>
+                    <label class="active">Which API(s) should this plugin apply to?</label>
                     <select materialize-select
                             ng-model="plugin.api_id"
                             ng-options="api.id as api.name for api in apis.data"
                             ng-disabled="{{mode==='edit'}}"
                             >
-                        <option value="" disabled ng-selected="{{mode==='create'}}">Choose API</option>
+                        <option value="" ng-disabled="api_id_required" ng-selected="{{mode==='create'}}">{{ api_id_required ? "Choose API" : "All" }}</option>
                     </select>
                 </div>
 

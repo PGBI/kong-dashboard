@@ -30,7 +30,7 @@ angular.module('app')
         options.timeout = options.timeout || 5000;
         options.headers[kongNodeURLHeader] = options.kong_url;
         options.url = './proxy' + options.endpoint;
-        options.timeout = 5000;
+        options.timeout = 30000;
       }
 
       return request;

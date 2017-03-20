@@ -52,6 +52,7 @@ angular.module('app')
                             && angular.isString(response.data.tagline)
                             && response.data.tagline.toLowerCase() == "welcome to kong"
                         ) {
+                            config.kong_version = response.data.version;
                             deferred.resolve();
                         } else {
                             response.data = {message: "That's not the url of a Kong node."};

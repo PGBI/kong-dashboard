@@ -16,9 +16,11 @@ angular.module('app').controller("PluginsController", ["pluginsCollection", "$sc
     $scope.location = $location;
 
     angular.forEach($scope.plugins, function(plugin) {
-        Kong.get('/apis/' + plugin.api_id).then(function(api) {
-            plugin.api_name = api.name;
-        });
+        if (plugin.api_id) {
+            Kong.get('/apis/' + plugin.api_id).then(function(api) {
+                plugin.api_name = api.name;
+            });
+        }
         if (plugin.consumer_id) {
             Kong.get('/consumers/' + plugin.consumer_id).then(function(consumer) {
                 plugin.consumer_username = consumer.username;
