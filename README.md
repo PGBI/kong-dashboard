@@ -6,9 +6,12 @@ and services such as requests routing, authentication, rate limiting, etc.
 
 **Kong dashboard** is a UI tool that will let you manage your Kong Gateway setup.
 
-## Compatibility
+## Compatibility matrix
 
-Current version of Kong dashboard is compatible with Kong 0.6.x, 0.7.x, 0.8.x and 0.9.x.
+| Kong version | Kong-Dashboard version |
+|---------------------------|-----------|
+| 0.6.x, 0.7.x, 0.8.x, 0.9.x|1.x.x      |
+
 
 ## Presentation
 
