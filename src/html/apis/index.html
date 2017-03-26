@@ -42,8 +42,8 @@
         <thead>
         <tr>
             <th>Name</th>
-            <th>Request host</th>
-            <th>Request path</th>
+            <th>Hosts</th>
+            <th>Uris</th>
             <th>Upstream url</th>
             <th>Created</th>
             <th></th>
@@ -53,8 +53,8 @@
         <tbody>
         <tr ng-repeat="api in apis">
             <td>{{api.name}}</td>
-            <td>{{api.request_host}}</td>
-            <td>{{api.request_path}}</td>
+            <td>{{api.hosts.join(',')}}</td>
+            <td>{{api.uris.join(',')}}</td>
             <td>{{api.upstream_url}}</td>
             <td>{{api.created_at | date}}</td>
             <td class="right">
