@@ -10,7 +10,8 @@ and services such as requests routing, authentication, rate limiting, etc.
 
 | Kong version | Kong-Dashboard version |
 |---------------------------|-----------|
-| 0.6.x, 0.7.x, 0.8.x, 0.9.x|1.x.x      |
+| 0.6.x, 0.7.x, 0.8.x, 0.9.x| 1.x.x     |
+| 0.10.x                    | 2.x.x
 
 
 ## Presentation
