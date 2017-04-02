@@ -10,7 +10,7 @@
     </p>
 
     <p class="flow-text center" ng-show="apis.length == 0 && total > 0" style="margin-top:50px;">
-        You have reached the end of the list. 
+        You have reached the end of the list.
     </p>
 
     <p class="flow-text left" ng-show="apis.length > 0" style="margin-top:50px;">
@@ -42,8 +42,9 @@
         <thead>
         <tr>
             <th>Name</th>
-            <th>Hosts</th>
-            <th>Uris</th>
+            <th>Host(s)</th>
+            <th>Uri(s)</th>
+            <th>Method(s)</th>
             <th>Upstream url</th>
             <th>Created</th>
             <th></th>
@@ -53,8 +54,36 @@
         <tbody>
         <tr ng-repeat="api in apis">
             <td>{{api.name}}</td>
-            <td>{{api.hosts.join(',')}}</td>
-            <td>{{api.uris.join(',')}}</td>
+            <td ng-if="api.hosts.length == 1">
+                {{ api.hosts[0] }}
+            </td>
+            <td ng-if="api.hosts.length != 1">
+                <ul class="browser-default">
+                    <li ng-repeat="host in api.hosts">
+                        {{ host }}
+                    </li>
+                </ul>
+            </td>
+            <td ng-if="api.uris.length == 1">
+                {{ api.uris[0] }}
+            </td>
+            <td ng-if="api.uris.length != 1">
+                <ul class="browser-default">
+                    <li ng-repeat="uri in api.uris">
+                        {{ uri }}
+                    </li>
+                </ul>
+            </td>
+            <td ng-if="api.methods.length == 1">
+                {{ api.methods[0] }}
+            </td>
+            <td ng-if="api.methods.length != 1">
+                <ul class="browser-default">
+                    <li ng-repeat="method in api.methods">
+                        {{ method }}
+                    </li>
+                </ul>
+            </td>
             <td>{{api.upstream_url}}</td>
             <td>{{api.created_at | date}}</td>
             <td class="right">
