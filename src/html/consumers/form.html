@@ -177,7 +177,16 @@
                         <td>{{c.name}}</td>
                         <td>{{c.client_id}}</td>
                         <td>{{c.client_secret}}</td>
-                        <td>{{c.redirect_uri}}</td>
+                        <td ng-if="c.redirect_uri.length == 1">
+                            {{ c.redirect_uri[0] }}
+                        </td>
+                        <td ng-if="c.redirect_uri.length != 1">
+                            <ul class="browser-default">
+                                <li ng-repeat="uri in c.redirect_uri">
+                                    {{ uri }}
+                                </li>
+                            </ul>
+                        </td>
                         <td>{{c.created_at | date}}</td>
                         <td>
                             <a class="btn-floating waves-effect waves-light red modal-trigger"
