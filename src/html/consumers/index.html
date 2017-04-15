@@ -1,44 +1,27 @@
-<div class="container">
+<div class="container" infinite-scroll="loadMore()" infinite-scroll-distance="5" infinite-scroll-use-document-bottom="true">
     <a href="#/consumers/add" class="btn-floating btn-large waves-effect waves-light right" ng-show="consumers.length >= 1">
         <i class="material-icons">add</i>
     </a>
 
     <h3 class="header">Consumers</h3>
 
-    <p class="flow-text center" ng-show="total == 0" style="margin-top:50px;">
-        You haven't defined any Consumers in Kong yet.
+    <p class="flow-text center" ng-show="total === null" style="margin-top:50px;">
+        <app-loader></app-loader>
     </p>
 
-    <p class="flow-text center" ng-show="consumers.length == 0 && total > 0" style="margin-top:50px;">
-        You have reached the end of the list. 
-    </p>
+    <div class ng-show="total === 0">
+        <p class="flow-text center">
+            You haven't defined any Consumers in Kong yet.
+        </p>
+        <p class="center">
+            <a href="#/consumers/add" class="waves-effect waves-light btn">
+                <i class="material-icons left">add_box</i>
+                Add Consumer
+            </a>
+        </p>
+    </div>
 
-    <p class="flow-text left" ng-show="consumers.length > 0" style="margin-top:50px;">
-        Showing {{consumers.length}} Consumers / {{total}}
-    </p>
-
-    <p class="right" ng-show="next" style="margin-top:50px;">
-        <a href="#/consumers?offset={{offset}}&size={{size}}" class="waves-effect waves-light btn">
-            <i class="material-icons left">navigate_next</i>
-            Go to next page
-        </a>
-    </p>
-
-    <p class="center" ng-show="total == 0">
-        <a href="#/consumers/add" class="waves-effect waves-light btn">
-            <i class="material-icons left">add_box</i>
-            Add Consumer
-        </a>
-    </p>
-
-     <p class="center" ng-show="consumers.length == 0 && total > 0">
-        <a href="#/consumers?size={{size}}" class="waves-effect waves-light btn">
-            <i class="material-icons left">skip_previous</i>
-            Go to first page
-        </a>
-    </p>
-
-    <table class="bordered" ng-show="consumers.length >= 1">
+    <table class="bordered" ng-show="total > 0">
         <thead>
         <tr>
             <th>Username</th>
