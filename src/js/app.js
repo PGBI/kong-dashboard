@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitize'])
+var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitize', 'infinite-scroll'])
     .config(['$routeProvider', function ($routeProvider) {
 
         var appStarted = false;
@@ -29,17 +29,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 templateUrl: 'html/apis/index.html',
                 controller: 'ApisController',
                 resolve: {
-                    isAppReady: isAppReady,
-                    initialData: ['Kong', '$route', function (Kong, $route) {
-                        var url = '/apis?';
-                        if ($route.current.params.offset) {
-                           url += 'offset=' + encodeURIComponent($route.current.params.offset);
-                        }
-                        if ($route.current.params.size) {
-                            url += '&size=' + $route.current.params.size;
-                        }
-                        return Kong.get(url);
-                    }]
+                    isAppReady: isAppReady
                 }
             })
             .when('/apis/add', {
@@ -66,17 +56,6 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 controller: 'PluginsController',
                 resolve: {
                     isAppReady: isAppReady,
-                    pluginsCollection: ['Kong', '$route', '$location', function (Kong, $route, $location) {
-                        var api_id = $route.current.params.api_id;
-                        var url = '/apis/' + api_id + '/plugins?';
-                        if ($route.current.params.offset) {
-                           url += '&offset=' + encodeURIComponent($route.current.params.offset);
-                        }
-                        if ($route.current.params.size) {
-                            url += '&size=' + $route.current.params.size;
-                        }
-                        return Kong.get(url);
-                    }],
                     owner: ['Kong', '$route', function(Kong, $route) {
                         var api_id = $route.current.params.api_id;
                         return Kong.get('/apis/' + api_id);
@@ -88,16 +67,6 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 controller: 'PluginsController',
                 resolve: {
                     isAppReady: isAppReady,
-                    pluginsCollection: ['Kong', '$route', '$location', function (Kong, $route, $location) {
-                        var url = '/plugins?consumer_id=' + $route.current.params.consumer_id;
-                        if ($route.current.params.offset) {
-                           url += '&offset=' + encodeURIComponent($route.current.params.offset);
-                        }
-                        if ($route.current.params.size) {
-                            url += '&size=' + $route.current.params.size;
-                        }
-                        return Kong.get(url);
-                    }],
                     owner: ['Kong', '$route', function(Kong, $route) {
                         var consumer_id = $route.current.params.consumer_id;
                         return Kong.get('/consumers/' + consumer_id);
@@ -107,18 +76,8 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
             .when('/plugins', {
                 templateUrl: 'html/plugins/index.html',
                 controller: 'PluginsController',
-                resolve: { 
+                resolve: {
                     isAppReady: isAppReady,
-                    pluginsCollection: ['Kong', '$route', '$location', function (Kong, $route, $location) {
-                        var url = '/plugins?';
-                        if ($route.current.params.offset) {
-                           url += 'offset=' + encodeURIComponent($route.current.params.offset);
-                        }
-                        if ($route.current.params.size) {
-                            url += '&size=' + $route.current.params.size;
-                        }
-                        return Kong.get(url);
-                    }],
                     owner: function() { return {};}
                 }
             })
@@ -165,17 +124,7 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
                 templateUrl: 'html/consumers/index.html',
                 controller: 'ConsumersController',
                 resolve: {
-                    isAppReady: isAppReady,
-                    consumersCollection: ['Kong', '$route', function (Kong, $route) {
-                        var url = '/consumers?';
-                        if ($route.current.params.offset) {
-                           url += 'offset=' + encodeURIComponent($route.current.params.offset);
-                        }
-                        if ($route.current.params.size) {
-                            url += '&size=' + $route.current.params.size;
-                        }
-                        return Kong.get(url);
-                    }]
+                    isAppReady: isAppReady
                 }
             })
             .when('/consumers/add', {
