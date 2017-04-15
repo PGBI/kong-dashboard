@@ -1,4 +1,4 @@
-angular.module('app').controller("PluginsController", ["pluginsCollection", "$scope", "Kong", "$route", "$location", "$routeParams", "owner", "Alert", function (pluginsCollection, $scope, Kong, $route, $location, $routeParams, $owner, Alert) {
+angular.module('app').controller("PluginsController", ["$scope", "Kong", "$route", "$location", "$routeParams", "owner", "Alert", function ($scope, Kong, $route, $location, $routeParams, $owner, Alert) {
     if ($routeParams.api_id) {
         $scope.owner_type = 'API';
     } else if ($routeParams.consumer_id) {
@@ -7,26 +7,51 @@ angular.module('app').controller("PluginsController", ["pluginsCollection", "$sc
         $scope.owner_type = null;
     }
     $scope.owner = $owner;
-
-    $scope.plugins = pluginsCollection.data;
-    $scope.total = pluginsCollection.total;
-    $scope.next = pluginsCollection.next;
-    $scope.size = $route.current.params.size;
-    $scope.offset = pluginsCollection.next ? /offset=([^&]+)/.exec(pluginsCollection.next)[1] : null;
+    $scope.plugins = [];
+    $scope.total = null;
+    $scope.offset = null;
     $scope.location = $location;
 
-    angular.forEach($scope.plugins, function(plugin) {
-        if (plugin.api_id) {
-            Kong.get('/apis/' + plugin.api_id).then(function(api) {
-                plugin.api_name = api.name;
-            });
+    var loaded_pages = [];
+    $scope.loadMore = function() {
+        var page;
+        if ($scope.owner_type == 'Consumer') {
+            page = '/plugins?consumer_id=' + $scope.owner.id + '&';
+        } else if ($scope.owner_type == 'API') {
+            page = '/plugins?api_id=' + $scope.owner.id + '&';
+        } else {
+            page = '/plugins?';
         }
-        if (plugin.consumer_id) {
-            Kong.get('/consumers/' + plugin.consumer_id).then(function(consumer) {
-                plugin.consumer_username = consumer.username;
-            });
+        if ($scope.offset) {
+            page += 'offset=' + $scope.offset + '&';
         }
-    });
+        if (loaded_pages.indexOf(page) !== -1) {
+            return;
+        }
+        loaded_pages.push(page);
+
+        Kong.get(page).then(function(collection) {
+            if ($scope.total === null) {
+                $scope.total = 0;
+            }
+            $scope.plugins.push.apply($scope.plugins, collection.data);
+            $scope.total += collection.total;
+            $scope.offset = collection.offset ? collection.offset : null;
+            angular.forEach($scope.plugins, function(plugin) {
+                if (!plugin.api_name && plugin.api_id) {
+                    Kong.get('/apis/' + plugin.api_id).then(function(api) {
+                        plugin.api_name = api.name;
+                    });
+                }
+                if (!plugin.consumer_name && plugin.consumer_id) {
+                    Kong.get('/consumers/' + plugin.consumer_id).then(function(consumer) {
+                        plugin.consumer_username = consumer.username;
+                    });
+                }
+            });
+        });
+    };
+    $scope.loadMore();
 
     $scope.showDeleteModal = function (name, id) {
         $scope.current = {name: name, id: id};
@@ -38,7 +63,12 @@ angular.module('app').controller("PluginsController", ["pluginsCollection", "$sc
     $scope.performDelete = function () {
         $('#deletePlugin').closeModal();
         Kong.delete('/plugins/' + $scope.current.id).then(function () {
-            $route.reload();
+            $scope.total -= 1;
+            $scope.plugins.forEach(function(element, index) {
+                if (element.id === $scope.current.id) {
+                    $scope.plugins.splice(index, 1);
+                }
+            });
         });
     };
 
