@@ -32,7 +32,7 @@
                     <select materialize-select
                             ng-model="plugin.name"
                             ng-change="loadSchema()"
-                            ng-options="p for p in enabled_plugins"
+                            ng-options="p for p in enabled_plugins | orderBy: 'toString()'"
                             ng-disabled="{{mode==='edit'}}"
                             >
                         <option value="" disabled ng-selected="{{mode==='create'}}">Choose Plugin</option>
