@@ -46,7 +46,7 @@ You will need:
 
 ```bash
 # Install Kong Dashboard
-npm install -g kong-dashboard@v1
+npm install -g kong-dashboard@v2
 
 # Start Kong Dashboard
 kong-dashboard start
@@ -68,7 +68,7 @@ set kong-dashboard-name=admin && set kong-dashboard-pass=password && kong-dashbo
 # Pull repository
 git clone https://github.com/PGBI/kong-dashboard.git
 cd kong-dashboard
-git checkout 1.0
+git checkout 2.0
 
 # Build Kong Dashboard
 npm install
@@ -86,13 +86,13 @@ npm start -- [-p port] [-a user=password]
 
 ```bash
 # Start Kong Dashboard
-docker run -d -p 8080:8080 pgbi/kong-dashboard:v1
+docker run -d -p 8080:8080 pgbi/kong-dashboard:v2
 
 # Start Kong Dashboard on a custom port
-docker run -d -p [port]:8080 pgbi/kong-dashboard:v1
+docker run -d -p [port]:8080 pgbi/kong-dashboard:v2
 
 # Start Kong Dashboard with basic auth
-docker run -d -p 8080:8080 pgbi/kong-dashboard:v1 npm start -- -a user=password
+docker run -d -p 8080:8080 pgbi/kong-dashboard:v2 npm start -- -a user=password
 ```
 
 
@@ -102,7 +102,7 @@ docker run -d -p 8080:8080 pgbi/kong-dashboard:v1 npm start -- -a user=password
 # Pull repository
 git clone https://github.com/PGBI/kong-dashboard.git
 cd kong-dashboard
-git checkout 1.0
+git checkout 2.0
 
 # Start VM
 vagrant up
