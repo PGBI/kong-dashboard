@@ -38,12 +38,12 @@
         <tr ng-repeat="api in apis">
             <td>{{api.name}}</td>
             <td ng-if="api.hosts.length == 1">
-                {{ api.hosts[0] }}
+                <a href="{{ api.https_only ? 'https' : 'http' }}://{{ api.hosts[0] }}">{{ api.hosts[0] }}</a>
             </td>
             <td ng-if="api.hosts.length != 1">
                 <ul class="browser-default">
                     <li ng-repeat="host in api.hosts">
-                        {{ host }}
+                        <a href="{{ api.https_only ? 'https' : 'http' }}://{{ host }}">{{ host }}</a>
                     </li>
                 </ul>
             </td>
