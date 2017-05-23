@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-var dashboard = require('../lib/kong-dashboard');
 var parseArgs = require('minimist');
 var argv = parseArgs(process.argv.slice(2));
+var child_process = require('child_process');
 
 // validate options
 var validOptions = ['_', 'a', 'p'];
@@ -35,5 +35,24 @@ if (argv._[0] === 'build') {
 if (argv._[0] === 'start') {
     var port = argv.p ? argv.p : 8080;
     var auth = argv.a;
-    dashboard.serve(port, auth);
+
+    // launch server
+    console.log('Launching webserver');
+    if (port) {
+        process.env['kong-dashboard-port'] = port;
+    }
+    if (auth) {
+        auth = auth.split('=');
+        process.env['kong-dashboard-name'] = auth[0];
+        process.env['kong-dashboard-pass'] = auth[1];
+    }
+    var server = child_process.fork(__dirname + '/server', [], {
+        env: process.env
+    });
+    server.on('message', function (message) {
+        process.stdout.write(message);
+    });
+    server.on('close', function (message) {
+        process.stdout.write('Proxy server is down.');
+    });
 }

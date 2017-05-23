@@ -2,5 +2,5 @@
 .vagrant
 *.iml
 node_modules/
-public/
 screenshots/
+src/scss/_custom_theme.scss

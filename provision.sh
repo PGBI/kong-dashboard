@@ -1,8 +1,10 @@
 #!/bin/bash
 cd /vagrant
-sudo apt-get update
-sudo apt-get install -y nodejs npm git
-sudo ln -s /usr/bin/nodejs /usr/bin/node
-sudo rm -r node_modules
-sudo -u vagrant -H sh -c "npm install"
+
+curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+apt-get update
+apt-get install -y nodejs git
+
+rm -r node_modules
+npm install && npm run build && npm prune --production
 echo "Successfully Installed Kong Dashboard."
