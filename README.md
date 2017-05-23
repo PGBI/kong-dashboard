@@ -72,6 +72,7 @@ git checkout 2.0
 
 # Build Kong Dashboard
 npm install
+npm run build
 
 # Start Kong Dashboard
 npm start
@@ -92,7 +93,7 @@ docker run -d -p 8080:8080 pgbi/kong-dashboard:v2
 docker run -d -p [port]:8080 pgbi/kong-dashboard:v2
 
 # Start Kong Dashboard with basic auth
-docker run -d -p 8080:8080 pgbi/kong-dashboard:v2 npm start -- -a user=password
+docker run -d -p 8080:8080 pgbi/kong-dashboard:v2 -a user=password
 ```
 
 

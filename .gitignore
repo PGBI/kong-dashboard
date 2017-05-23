@@ -1,7 +1,6 @@
 .idea/
+.vagrant
 *.iml
-bower_components/
 node_modules/
 public/
 src/scss/_custom_theme.scss
-.vagrant
