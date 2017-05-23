@@ -11,4 +11,5 @@ os:
 
 install:
   - npm install
+  - npm run build
   - npm -v
