@@ -25,6 +25,7 @@
     "prepublishOnly": "node_modules/.bin/gulp build",
     "build": "node_modules/.bin/gulp build",
     "start": "node ./bin/kong-dashboard start",
+    "start:dev": "node_modules/.bin/gulp serve",
     "test": "mocha"
   },
   "devDependencies": {
@@ -36,6 +37,7 @@
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
+    "gulp-plumber": "^1.1.0",
     "gulp-sass": "^3.1.0",
     "gulp-uglify": "^3.0.0",
     "jquery": "^3.1.1",

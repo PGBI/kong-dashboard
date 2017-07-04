@@ -6,6 +6,7 @@ var fs = require('fs');
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
+var plumber = require('gulp-plumber');
 
 // Define file path variables
 var paths = {
@@ -30,6 +31,7 @@ gulp.task('build_js', function () {
       "./node_modules/ng-infinite-scroll/build/ng-infinite-scroll.min.js",
       paths.js_src + '/**/*.js'
     ])
+    .pipe(plumber())
     .pipe(uglify())
     .pipe(concat('app.min.js'))
     .pipe(gulp.dest(paths.dist + '/js'));
@@ -50,6 +52,7 @@ gulp.task('build_css', function() {
     src_file = 'custom_app.scss';
   }
   gulp.src([paths.sass_src + '/' + src_file])
+    .pipe(plumber())
     .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(concat('app.min.css'))
     .pipe(gulp.dest(paths.dist + '/css'));
