@@ -57,7 +57,7 @@ webapp.use(serve(path.join(__dirname, '../public')));
 
 var proxyapp = koa();
 var proxy = httpProxy.createProxyServer({
-  proxyTimeout: 3000
+  proxyTimeout: 30000
 });
 
 // Authentication middleware, if app started with basic auth.
