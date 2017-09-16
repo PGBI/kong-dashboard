@@ -18,7 +18,7 @@ var pass = process.env['KONG_DASHBOARD_PASS'];
 /////////////////////////
 // Serving angular app //
 /////////////////////////
-var webapp = koa();
+var webapp = new koa();
 
 // Middleware adding response headers
 webapp.use(function *(next){
@@ -55,7 +55,7 @@ webapp.use(serve(path.join(__dirname, '../public')));
 // Proxy server        //
 /////////////////////////
 
-var proxyapp = koa();
+var proxyapp = new koa();
 var proxy = httpProxy.createProxyServer({
   proxyTimeout: 30000
 });
@@ -132,7 +132,7 @@ proxy.on('error', function(err, req, res) {
 //////////////////////////////////////
 
 // app
-var app = koa();
+var app = new koa();
 
 // add trailing slashes
 app.use(addSlashes());
