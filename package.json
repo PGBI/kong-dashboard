@@ -8,6 +8,9 @@
     "type": "git",
     "url": "https://github.com/PGBI/kong-dashboard.git"
   },
+  "engines": {
+    "node": ">= 6.0.0"
+  },
   "dependencies": {
     "basic-auth": "^2.0.0",
     "chalk": "^2.1.0",

@@ -4,9 +4,8 @@ os:
   - linux
 
 node_js:
+  - "7"
   - "6"
-  - "5"
-  - "4"
 
 env:
   - KONG_VERSION=0.9

@@ -6,6 +6,8 @@ var spawn = require('child_process').spawn;
 
 var fs = require ('fs');
 
+console.log(process.env.KONG_VERSION);
+
 describe('Starting Kong-dashboard', function () {
   it("should error if required kong_url parameter is missing", function (done) {
     exec('node ./bin/kong-dashboard.js start', (err, stdout, stderr) => {
