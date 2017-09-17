@@ -114,7 +114,12 @@ function start(argv) {
     console.log("Connected to Kong on " + argv.kong_url + ".");
     console.log("Kong version is " + version);
     argv.kong_version = version;
-    startKongDashboard(argv);
+    var angularConfig = {
+      kong_url: argv.kong_url,
+      kong_version: argv.kong_version,
+      gelato_integration: argv.gelato_integration
+    };
+    startKongDashboard(argv, angularConfig);
   })
 }
 
@@ -123,7 +128,7 @@ function abortAndShowHelp() {
   process.exit(1);
 }
 
-function startKongDashboard(args) {
+function startKongDashboard(backendConfig, angularConfig) {
   var server = new KongDashboardServer();
-  server.start(args.port, args.kong_url, args.auth_basic);
+  server.start(backendConfig, angularConfig);
 }
