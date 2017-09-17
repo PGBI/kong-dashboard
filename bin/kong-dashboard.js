@@ -18,8 +18,8 @@ program
 
   .command('start', 'Start serving Kong Dashboard', function (cmd) {
     return cmd
-      .option('u', {
-        alias: 'kong_url',
+      .option('kong_url', {
+        alias: 'u',
         required: true,
         describe: 'Url of the admin API of Kong',
         type: 'string'

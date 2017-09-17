@@ -1,12 +1,16 @@
 language: node_js
 
-node_js:
-  - "6"
-  #- "5"
-  #- "4"
-
 os:
   - linux
+
+node_js:
+  - "6"
+  - "5"
+  - "4"
+
+env:
+  - KONG_VERSION=0.9
+  - KONG_VERSION=0.10
 
 services:
   - docker
@@ -14,12 +18,11 @@ services:
 before_install:
   - docker run -d --name kong-database -e "POSTGRES_USER=kong" -e "POSTGRES_DB=kong" postgres:9.4
   - sleep 5
-  - docker run -d --name kong --link kong-database:kong-database -e "KONG_DATABASE=postgres" -e "KONG_PG_HOST=kong-database" -p 8001:8001 kong:0.9
+  - docker run -d --name kong --link kong-database:kong-database -e "KONG_DATABASE=postgres" -e "KONG_PG_HOST=kong-database" -p 8001:8001 kong:$KONG_VERSION
   - sleep 5
   - curl 127.0.0.1:8001
 
 install:
   - npm install
   - npm run build
-  - node bin/kong-dashboard start --kong_url http://localhost:8001
 
