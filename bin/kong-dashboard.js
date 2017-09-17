@@ -5,6 +5,7 @@ var request = require('request');
 var compareVersions = require('compare-versions');
 var child_process = require('child_process');
 var KongDashboardServer = require('../lib/server');
+var terminal = require('../lib/terminal');
 
 program
   .usage('$0 <cmd> [args]')
@@ -40,7 +41,14 @@ program
         describe: 'If set, each Kong consumer will be linked with their associated account on Gelato'
       })
       .strict(true);
-  }, start)
+  }, (argv) => {
+    handle(argv, start);
+  })
+  .option('v', {
+    alias: 'verbose',
+    boolean: true,
+    describe: 'Increase kong-dashboard command line verbosity'
+  })
   .showHelpOnFail(true, 'Specify --help for available options')
   .strict(true)
   .help('help')
@@ -52,12 +60,17 @@ if (program.argv._.length == 0) {
   abortAndShowHelp();
 }
 
+function handle(argv, cmd) {
+  terminal.setVerbose(argv.verbose);
+  cmd(argv);
+}
+
 function start(argv) {
   for (var property in argv) {
     var reject = false;
     if (Number.isNaN(argv[property])) {
       reject = true;
-      console.error("Invalid option " + property);
+      terminal.error("Invalid option " + property);
     }
     if (reject) {
       abortAndShowHelp();
@@ -72,23 +85,23 @@ function start(argv) {
   argv.auth_basic.forEach((element) => {
     var creds = element.split('=');
     if (creds.length != 2) {
-      console.log('Invalid value "' + element + '" for --auth_basic option. Ignoring.');
+      terminal.warning('Invalid value "' + element + '" for --auth_basic option. Ignoring.');
     } else {
       auth_basic[creds[0]] = creds[1];
     }
   });
   argv.auth_basic = auth_basic;
 
-  console.warn("Connecting to Kong on " + argv.kong_url + " ...");
+  terminal.info("Connecting to Kong on " + argv.kong_url + " ...");
 
   request({
     method: 'GET',
     uri: argv.kong_url
   }, function(error, response, body) {
     if (error) {
-      console.log('Could not reach Kong on ' + argv.kong_url);
-      console.log('Error details:');
-      console.log(error);
+      terminal.error('Could not reach Kong on ' + argv.kong_url);
+      terminal.error('Error details:');
+      terminal.error(error);
       process.exit(1);
     }
 
@@ -99,20 +112,19 @@ function start(argv) {
       }
       var version = body.version;
     } catch(e) {
-      console.log(e);
-      console.log("What's on " + argv.kong_url + " isn't Kong");
+      terminal.error("What's on " + argv.kong_url + " isn't Kong");
       process.exit(1);
     }
     if (compareVersions('0.9.0', version) > 0) {
-      console.log("This version of Kong dashboard doesn't support Kong v0.9 and lower.");
+      terminal.error("This version of Kong dashboard doesn't support Kong v0.9 and lower.");
       process.exit(1);
     }
     if (compareVersions(version, '0.11.0') >= 0) {
-      console.log("This version of Kong dashboard doesn't support Kong v0.11 and higher.");
+      terminal.error("This version of Kong dashboard doesn't support Kong v0.11 and higher.");
       process.exit(1);
     }
-    console.log("Connected to Kong on " + argv.kong_url + ".");
-    console.log("Kong version is " + version);
+    terminal.success("Connected to Kong on " + argv.kong_url + ".");
+    terminal.info("Kong version is " + version);
     argv.kong_version = version;
     var angularConfig = {
       kong_url: argv.kong_url,

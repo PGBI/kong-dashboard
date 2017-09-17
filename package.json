@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "basic-auth": "^2.0.0",
+    "chalk": "^2.1.0",
     "compare-versions": "^3.0.1",
     "koa": "^2.3.0",
     "koa-mount": "^2.0.0",
