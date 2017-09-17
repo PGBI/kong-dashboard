@@ -19,7 +19,6 @@ before_install:
   - sleep 5
   - docker run -d --name kong --link kong-database:kong-database -e "KONG_DATABASE=postgres" -e "KONG_PG_HOST=kong-database" -p 8001:8001 kong:$KONG_VERSION
   - sleep 5
-  - curl 127.0.0.1:8001
 
 install:
   - npm install
