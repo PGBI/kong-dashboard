@@ -10,13 +10,13 @@
   },
   "dependencies": {
     "basic-auth": "^2.0.0",
-    "http-proxy": "^1.16.2",
+    "compare-versions": "^3.0.1",
     "koa": "^2.3.0",
-    "koa-add-trailing-slashes": "^1.1.0",
-    "koa-basic-auth": "^2.0.0",
     "koa-mount": "^2.0.0",
     "koa-static": "^3.0.0",
-    "minimist": "^1.2.0"
+    "minimist": "^1.2.0",
+    "request": "^2.81.0",
+    "yargs": "^8.0.2"
   },
   "bin": {
     "kong-dashboard": "./bin/kong-dashboard.js"
