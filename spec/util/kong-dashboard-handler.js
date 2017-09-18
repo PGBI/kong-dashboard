@@ -1,4 +1,5 @@
 var spawn = require('child_process').spawn;
+var exec = require('child_process').exec;
 
 var KongDashboardHandler = function() {
 
@@ -9,12 +10,13 @@ var KongDashboardHandler = function() {
   this.childProcess = null;
 
   this.start = (options, cbOnStart, cbOnExit) => {
-    var cmd = 'node bin/kong-dashboard start ';
-    for (var key in options) {
-      cmd += key + ' ' + options[key] + ' ';
-    }
-    this.childProcess = spawn(cmd, {shell: true});
     var port = options['-p'] || options['--port'] || 8080;
+    var args = ['start'];
+    for (var key in options) {
+      args.push(key);
+      Array.prototype.push.apply(args, options[key].split(" "));
+    }
+    this.childProcess = spawn('./bin/kong-dashboard.js', args);
     this.childProcess.stdout.on('data', (data) => {
       this.stdout += data.toString();
       if (data.toString().trim() == 'Kong Dashboard has started on port ' + port) {
@@ -31,10 +33,12 @@ var KongDashboardHandler = function() {
     });
   };
 
-  this.stop = () => {
-    this.childProcess.stdout.pause();
-    this.childProcess.stderr.pause();
-    this.childProcess.kill();
+  this.stop = (cb) => {
+    if (cb) {
+      exec('kill ' + this.childProcess.pid, cb);
+    } else {
+      exec('kill ' + this.childProcess.pid);
+    }
   }
 };
 

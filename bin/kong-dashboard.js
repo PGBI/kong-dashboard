@@ -3,7 +3,6 @@
 var program = require('yargs');
 var request = require('request');
 var compareVersions = require('compare-versions');
-var child_process = require('child_process');
 var KongDashboardServer = require('../lib/server');
 var terminal = require('../lib/terminal');
 
