@@ -1,4 +1,4 @@
-var request = require('request');
+var request = require('../lib/request');
 var KongDashboard = require('./util/kong-dashboard-handler');
 
 console.log(process.env.KONG_VERSION);
@@ -58,37 +58,24 @@ describe('Starting Kong-dashboard', function () {
       expect(kd.stdout).toContain('Invalid value "user" for --auth_basic option. Ignoring.');
       expect(kd.stdout).toContain("Kong Dashboard has started on port 8080");
 
-      var authOptions = {auth: {user: 'user2', pass: 'password2', sendImmediately: true}};
+      var opts = {auth: {user: 'user2', pass: 'password2', sendImmediately: true}};
 
-      new Promise((resolve, reject) => {
-        request('http://localhost:8080/proxy', authOptions, (error, response, body) => {
+      request.get('http://localhost:8080/proxy', opts)
+        .then((response) => {
           expect(response.statusCode).toBe(200);
-          resolve();
-        });
-      })
-        .then(() => {
-          return new Promise((resolve, reject) => {
-            request('http://localhost:8080', authOptions, (error, response, body) => {
-              expect(response.statusCode).toBe(200);
-              resolve();
-            });
-          });
+          return request.get('http://localhost:8080', opts);
         })
-        .then(() => {
-          return new Promise((resolve, reject) => {
-            request('http://localhost:8080/proxy', (error, response, body) => {
-              expect(response.statusCode).toBe(401);
-              resolve();
-            });
-          });
+        .then((response) => {
+          expect(response.statusCode).toBe(200);
+          return request.get('http://localhost:8080/proxy');
         })
-        .then(() => {
-          return new Promise((resolve, reject) => {
-            request('http://localhost:8080', (error, response, body) => {
-              expect(response.statusCode).toBe(401);
-              kd.stop(done);
-            });
-          });
+        .then((response) => {
+          expect(response.statusCode).toBe(401);
+          return request.get('http://localhost:8080');
+        })
+        .then((response) => {
+          expect(response.statusCode).toBe(401);
+          kd.stop(done);
         });
     }
   });

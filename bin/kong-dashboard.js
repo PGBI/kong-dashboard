@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var program = require('yargs');
-var request = require('request');
+var request = require('../lib/request');
 var compareVersions = require('compare-versions');
 var KongDashboardServer = require('../lib/server');
 var terminal = require('../lib/terminal');
@@ -93,45 +93,42 @@ function start(argv) {
 
   terminal.info("Connecting to Kong on " + argv.kong_url + " ...");
 
-  request({
-    method: 'GET',
-    uri: argv.kong_url
-  }, function(error, response, body) {
-    if (error) {
+  request.get(argv.kong_url).then((response) => {
+      try {
+        var body = JSON.parse(response.body);
+        if (body.tagline != 'Welcome to kong') {
+          throw 'not kong';
+        }
+        return body.version;
+      } catch(e) {
+        terminal.error("What's on " + argv.kong_url + " isn't Kong");
+        process.exit(1);
+      }
+    }, (error) => {
       terminal.error('Could not reach Kong on ' + argv.kong_url);
       terminal.error('Error details:');
       terminal.error(error);
       process.exit(1);
     }
-
-    try {
-      body = JSON.parse(body);
-      if (body.tagline != 'Welcome to kong') {
-        throw 'not kong';
+  ).then((version) => {
+      if (compareVersions('0.9.0', version) > 0) {
+        terminal.error("This version of Kong dashboard doesn't support Kong v0.9 and lower.");
+        process.exit(1);
       }
-      var version = body.version;
-    } catch(e) {
-      terminal.error("What's on " + argv.kong_url + " isn't Kong");
-      process.exit(1);
-    }
-    if (compareVersions('0.9.0', version) > 0) {
-      terminal.error("This version of Kong dashboard doesn't support Kong v0.9 and lower.");
-      process.exit(1);
-    }
-    if (compareVersions(version, '0.11.0') >= 0) {
-      terminal.error("This version of Kong dashboard doesn't support Kong v0.11 and higher.");
-      process.exit(1);
-    }
-    terminal.success("Connected to Kong on " + argv.kong_url + ".");
-    terminal.info("Kong version is " + version);
-    argv.kong_version = version;
-    var angularConfig = {
-      kong_url: argv.kong_url,
-      kong_version: argv.kong_version,
-      gelato_integration: argv.gelato_integration
-    };
-    startKongDashboard(argv, angularConfig);
-  })
+      if (compareVersions(version, '0.11.0') >= 0) {
+        terminal.error("This version of Kong dashboard doesn't support Kong v0.11 and higher.");
+        process.exit(1);
+      }
+      terminal.success("Connected to Kong on " + argv.kong_url + ".");
+      terminal.info("Kong version is " + version);
+      argv.kong_version = version;
+      var angularConfig = {
+        kong_url: argv.kong_url,
+        kong_version: argv.kong_version,
+        gelato_integration: argv.gelato_integration
+      };
+      startKongDashboard(argv, angularConfig);
+    });
 }
 
 function abortAndShowHelp() {
