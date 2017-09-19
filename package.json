@@ -30,7 +30,7 @@
     "build": "node_modules/.bin/gulp build",
     "start": "node ./bin/kong-dashboard start",
     "start:dev": "node_modules/.bin/gulp serve",
-    "test": "jasmine"
+    "test": "./tests/bootstrap.js"
   },
   "devDependencies": {
     "angular": "^1.6.6",
