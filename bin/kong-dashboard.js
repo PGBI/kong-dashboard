@@ -2,7 +2,7 @@
 
 var program = require('yargs');
 var request = require('../lib/request');
-var compareVersions = require('compare-versions');
+var semver = require('semver');
 var KongDashboardServer = require('../lib/server');
 var terminal = require('../lib/terminal');
 
@@ -111,11 +111,11 @@ function start(argv) {
       process.exit(1);
     }
   ).then((version) => {
-      if (compareVersions('0.9.0', version) > 0) {
+      if (semver.lt(version, '0.9.0')) {
         terminal.error("This version of Kong dashboard doesn't support Kong v0.9 and lower.");
         process.exit(1);
       }
-      if (compareVersions(version, '0.11.0') >= 0) {
+      if (semver.gte(version, '0.11.0')) {
         terminal.error("This version of Kong dashboard doesn't support Kong v0.11 and higher.");
         process.exit(1);
       }
