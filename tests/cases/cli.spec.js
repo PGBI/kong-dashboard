@@ -1,5 +1,5 @@
-var request = require('../lib/request');
-var KongDashboard = require('./util/kong-dashboard-handler');
+var request = require('../../lib/request');
+var KongDashboard = require('../util/kong-dashboard-handler');
 
 console.log(process.env.KONG_VERSION);
 
