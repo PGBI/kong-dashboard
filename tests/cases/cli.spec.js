@@ -32,6 +32,15 @@ describe('Starting Kong-dashboard', function () {
     });
   });
 
+  it("should error if Kong requires basic authentication and credentials aren't set", (done) => {
+    var kd = new KongDashboard();
+    kd.start({'--kong_url': 'http://localhost:8000/kong_with_basic_auth'}, () => {}, (code) => {
+      expect(code).toBe(1);
+      expect(kd.stderr).toContain("Can\'t connect to Kong: authentication required");
+      done();
+    });
+  });
+
   it("should successfully start", (done) => {
     var kd = new KongDashboard();
     kd.start({'--kong_url': 'http://127.0.0.1:8001'}, () => {
@@ -79,4 +88,9 @@ describe('Starting Kong-dashboard', function () {
         });
     }
   });
-});
+
+  it("should successfully start when Kong requires basic auth", (done) => {
+    pending();
+  });
+
+  });
