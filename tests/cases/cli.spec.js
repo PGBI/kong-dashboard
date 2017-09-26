@@ -9,14 +9,14 @@ describe('Starting Kong-dashboard', function () {
     var kd = new KongDashboard();
     kd.start({}, () => {}, (code) => {
       expect(code).toBe(1);
-      expect(kd.stderr).toContain('Missing required argument: kong_url');
+      expect(kd.stderr).toContain('Missing required argument: kong-url');
       done()
     });
   });
 
   it("should error if kong isn't reachable", (done) => {
     var kd = new KongDashboard();
-    kd.start({'--kong_url': 'http://127.0.0.1:8002'}, () => {}, (code) => {
+    kd.start({'--kong-url': 'http://127.0.0.1:8002'}, () => {}, (code) => {
       expect(code).toBe(1);
       expect(kd.stderr).toContain('Could not reach Kong on http://127.0.0.1:8002');
       done();
@@ -25,7 +25,7 @@ describe('Starting Kong-dashboard', function () {
 
   it("should error if kong_url doesn't not point to a Kong admin API", (done) => {
     var kd = new KongDashboard();
-    kd.start({'--kong_url': 'http://www.google.com'}, () => {}, (code) => {
+    kd.start({'--kong-url': 'http://www.google.com'}, () => {}, (code) => {
       expect(code).toBe(1);
       expect(kd.stderr).toContain("What\'s on http://www.google.com isn\'t Kong");
       done();
@@ -34,7 +34,7 @@ describe('Starting Kong-dashboard', function () {
 
   it("should error if Kong requires basic authentication and credentials aren't set", (done) => {
     var kd = new KongDashboard();
-    kd.start({'--kong_url': 'http://localhost:8000/kong_with_basic_auth'}, () => {}, (code) => {
+    kd.start({'--kong-url': 'http://localhost:8000/kong_with_basic_auth'}, () => {}, (code) => {
       expect(code).toBe(1);
       expect(kd.stderr).toContain("Can\'t connect to Kong: authentication required");
       done();
@@ -43,7 +43,7 @@ describe('Starting Kong-dashboard', function () {
 
   it("should successfully start", (done) => {
     var kd = new KongDashboard();
-    kd.start({'--kong_url': 'http://127.0.0.1:8001'}, () => {
+    kd.start({'--kong-url': 'http://127.0.0.1:8001'}, () => {
       expect(kd.stdout).toContain("Kong Dashboard has started on port 8080");
       kd.stop();
       done();
@@ -52,7 +52,7 @@ describe('Starting Kong-dashboard', function () {
 
   it("should successfully start on a custom port", (done) => {
     var kd = new KongDashboard();
-    kd.start({'--kong_url': 'http://127.0.0.1:8001', '-p': '8082'}, () => {
+    kd.start({'--kong-url': 'http://127.0.0.1:8001', '-p': '8082'}, () => {
       expect(kd.stdout).toContain("Kong Dashboard has started on port 8082");
       kd.stop();
       done();
@@ -61,10 +61,10 @@ describe('Starting Kong-dashboard', function () {
 
   it("should successfully start with basic auth", (done) => {
     var kd = new KongDashboard();
-    kd.start({'--kong_url': 'http://127.0.0.1:8001', '--auth_basic': 'user user2=password2'}, kongStarted);
+    kd.start({'--kong-url': 'http://127.0.0.1:8001', '--basic-auth': 'user user2=password2'}, kongStarted);
 
     function kongStarted() {
-      expect(kd.stdout).toContain('Invalid value "user" for --auth_basic option. Ignoring.');
+      expect(kd.stdout).toContain('Invalid value "user" for --basic-auth option. Ignoring.');
       expect(kd.stdout).toContain("Kong Dashboard has started on port 8080");
 
       var opts = {auth: {user: 'user2', pass: 'password2', sendImmediately: true}};
@@ -91,6 +91,12 @@ describe('Starting Kong-dashboard', function () {
 
   it("should successfully start when Kong requires basic auth", (done) => {
     pending();
+    //var kd = new KongDashboard();
+    //kd.start({'--kong-url': 'http://localhost:8000/kong_with_basic_auth'}, () => {}, (code) => {
+    //  expect(code).toBe(1);
+    //  expect(kd.stderr).toContain("Can\'t connect to Kong: authentication required");
+    //  done();
+    //});
   });
 
   });
