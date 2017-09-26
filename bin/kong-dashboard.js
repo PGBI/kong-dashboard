@@ -20,23 +20,31 @@ program
       .option('kong-url', {
         alias: 'u',
         required: true,
-        describe: 'Url of the admin API of Kong',
+        describe: 'Url of Kong admin API\n',
         type: 'string'
       })
       .option('p', {
         alias: 'port',
         default: 8080,
-        describe: 'Port on which Kong Dashboard will be served',
+        describe: 'Port on which Kong Dashboard will be served\n',
         type: 'number'
       })
       .option('basic-auth', {
-        describe: 'Of the form "user1=password1 user2=password2 ...". If set, Kong Dashboard will be protected with basic auth.',
+        describe: 'Of the form "user1=password1 user2=password2 ...". If set, Kong Dashboard will be protected with basic auth.\n',
         type: 'array'
       })
       .option('g', {
-        alias: 'gelato-integration',
+        alias: 'gelato',
         boolean: true,
-        describe: 'If set, each Kong consumer will be linked with their associated account on Gelato'
+        describe: 'If set, each Kong consumer will be linked with their associated account on Gelato\n'
+      })
+      .option('kong-username', {
+        type: 'string',
+        describe: 'Username to use to connect to Kong admin API if it is protected with basic auth\n'
+      })
+      .option('kong-password', {
+        type: 'string',
+        describe: 'Password to use to connect to Kong admin API if it is protected with basic auth\n'
       })
       .strict(true);
   }, (argv) => {
@@ -90,11 +98,22 @@ function start(argv) {
   });
   argv.basicAuth = basicAuth;
 
-  terminal.info("Connecting to Kong on " + argv.kong_url + " ...");
+  argv.kongRequestOpts = {'headers': {}};
+  if (argv.kongUsername && argv.kongPassword) {
+    var base64 = new Buffer(argv.kongUsername + ':' + argv.kongPassword).toString('base64');
+    argv.kongRequestOpts.headers['Authorization'] = 'Basic ' + base64
+  }
 
-  request.get(argv.kongUrl).then((response) => {
+  terminal.info("Connecting to Kong on " + argv.kongUrl + " ...");
+
+  request.get(argv.kongUrl, argv.kongRequestOpts).then((response) => {
     if (response.statusCode == 401) {
       terminal.error("Can't connect to Kong: authentication required");
+      process.exit(1);
+    }
+
+    if (response.statusCode == 403) {
+      terminal.error("Can't connect to Kong: invalid authentication credentials");
       process.exit(1);
     }
 
@@ -128,7 +147,7 @@ function start(argv) {
     var angularConfig = {
       kong_url: argv.kongUrl,
       kong_version: argv.kongVersion,
-      gelato_integration: argv.gelatoIntegration
+      gelato_integration: argv.gelato
     };
     startKongDashboard(argv, angularConfig);
   });

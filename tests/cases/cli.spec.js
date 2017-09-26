@@ -23,7 +23,7 @@ describe('Starting Kong-dashboard', function () {
     });
   });
 
-  it("should error if kong_url doesn't not point to a Kong admin API", (done) => {
+  it("should error if kong-url doesn't not point to a Kong admin API", (done) => {
     var kd = new KongDashboard();
     kd.start({'--kong-url': 'http://www.google.com'}, () => {}, (code) => {
       expect(code).toBe(1);
@@ -90,13 +90,35 @@ describe('Starting Kong-dashboard', function () {
   });
 
   it("should successfully start when Kong requires basic auth", (done) => {
-    pending();
-    //var kd = new KongDashboard();
-    //kd.start({'--kong-url': 'http://localhost:8000/kong_with_basic_auth'}, () => {}, (code) => {
-    //  expect(code).toBe(1);
-    //  expect(kd.stderr).toContain("Can\'t connect to Kong: authentication required");
-    //  done();
-    //});
+    var kd = new KongDashboard();
+    kd.start({
+      '-u': 'http://localhost:8000/kong_with_basic_auth',
+      '--kong-username': 'test-user',
+      '--kong-password': 'password'
+    }, () => {
+      expect(kd.stdout).toContain("Kong Dashboard has started on port 8080");
+      request.get('http://localhost:8080/proxy').then((response) => {
+        expect(response.statusCode).toBe(200);
+        kd.stop(done);
+      });
+    });
   });
 
+  it("should error if basic auth credentials aren't correct", (done) => {
+    var kd = new KongDashboard();
+    kd.start({
+      '-u': 'http://localhost:8000/kong_with_basic_auth',
+      '--kong-username': 'test-user',
+      '--kong-password': 'wrong'
+    }, () => {}, (code) => {
+      expect(code).toBe(1);
+      expect(kd.stderr).toContain("Can't connect to Kong: invalid authentication credentials");
+      done();
+    });
   });
+
+  it("should warn if Kong is protected with basic auth using http", (done) => {
+    pending();
+  });
+
+});
