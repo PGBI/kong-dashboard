@@ -61,7 +61,10 @@ describe('Starting Kong-dashboard', function () {
 
   it("should successfully start with basic auth", (done) => {
     var kd = new KongDashboard();
-    kd.start({'--kong-url': 'http://127.0.0.1:8001', '--basic-auth': 'user user2=password2'}, kongStarted);
+    kd.start({
+      '--kong-url': 'http://127.0.0.1:8001',
+      '--basic-auth': 'user user2=password2'
+    }, kongStarted);
 
     function kongStarted() {
       expect(kd.stdout).toContain('Invalid value "user" for --basic-auth option. Ignoring.');
@@ -94,7 +97,8 @@ describe('Starting Kong-dashboard', function () {
     kd.start({
       '-u': 'http://localhost:8000/kong_with_basic_auth',
       '--kong-username': 'test-user',
-      '--kong-password': 'password'
+      '--kong-password': 'password',
+      '--insecure': ''
     }, () => {
       expect(kd.stdout).toContain("Kong Dashboard has started on port 8080");
       request.get('http://localhost:8080/proxy').then((response) => {
@@ -109,7 +113,8 @@ describe('Starting Kong-dashboard', function () {
     kd.start({
       '-u': 'http://localhost:8000/kong_with_basic_auth',
       '--kong-username': 'test-user',
-      '--kong-password': 'wrong'
+      '--kong-password': 'wrong',
+      '--insecure': ''
     }, () => {}, (code) => {
       expect(code).toBe(1);
       expect(kd.stderr).toContain("Can't connect to Kong: invalid authentication credentials");
@@ -117,8 +122,17 @@ describe('Starting Kong-dashboard', function () {
     });
   });
 
-  it("should warn if Kong is protected with basic auth using http", (done) => {
-    pending();
+  it("should error if Kong is protected with basic auth using http", (done) => {
+    var kd = new KongDashboard();
+    kd.start({
+      '-u': 'http://localhost:8000/kong_with_basic_auth',
+      '--kong-username': 'test-user',
+      '--kong-password': 'whatever'
+    }, () => {}, (code) => {
+      expect(code).toBe(1);
+      expect(kd.stderr).toContain("You should not connect to Kong admin API using credentials over an unsecured protocol (http)");
+      done();
+    });
   });
 
 });

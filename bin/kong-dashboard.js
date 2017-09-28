@@ -35,7 +35,7 @@ program
       })
       .option('g', {
         alias: 'gelato',
-        boolean: true,
+        type: 'boolean',
         describe: 'If set, each Kong consumer will be linked with their associated account on Gelato\n'
       })
       .option('kong-username', {
@@ -45,6 +45,10 @@ program
       .option('kong-password', {
         type: 'string',
         describe: 'Password to use to connect to Kong admin API if it is protected with basic auth\n'
+      })
+      .option('insecure', {
+        type: 'boolean',
+        describe: "Authenticated connections to Kong over an insecured protocol won't be accepted unless this option is used\n"
       })
       .strict(true);
   }, (argv) => {
@@ -100,8 +104,12 @@ function start(argv) {
 
   argv.kongRequestOpts = {'headers': {}};
   if (argv.kongUsername && argv.kongPassword) {
+    if (!argv.kongUrl.startsWith('https://') && !argv.insecure) {
+      terminal.error("You should not connect to Kong admin API using credentials over an unsecured protocol (http).\nUse the --insecure option to ignore this error.");
+      process.exit(1);
+    }
     var base64 = new Buffer(argv.kongUsername + ':' + argv.kongPassword).toString('base64');
-    argv.kongRequestOpts.headers['Authorization'] = 'Basic ' + base64
+    argv.kongRequestOpts.headers['Authorization'] = 'Basic ' + base64;
   }
 
   terminal.info("Connecting to Kong on " + argv.kongUrl + " ...");
