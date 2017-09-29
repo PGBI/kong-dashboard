@@ -29,7 +29,6 @@
     "prepublishOnly": "node_modules/.bin/gulp build",
     "build": "node_modules/.bin/gulp build",
     "start": "node ./bin/kong-dashboard start",
-    "start:dev": "node_modules/.bin/gulp serve",
     "test": "./tests/run.js"
   },
   "devDependencies": {

@@ -1,12 +1,13 @@
 'use strict';
 
-var child_process = require('child_process');
+var spawn = require('child_process').spawn;
 var concat = require('gulp-concat');
 var fs = require('fs');
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
 var plumber = require('gulp-plumber');
+var terminal = require('./lib/terminal');
 
 // Define file path variables
 var paths = {
@@ -68,7 +69,16 @@ gulp.task('watch', function() {
 
 gulp.task('serve', ['build', 'watch'], function() {
   var args = process.argv;
-  args.push('start');
   args = args.slice(3);
-  child_process.fork(__dirname + '/bin/kong-dashboard', args);
+  args.unshift('start');
+  var kd = spawn(__dirname + '/bin/kong-dashboard.js', args);
+  kd.stdout.on('data', function(data) {
+    terminal.success('kong-dashboard stdout: ' + data.toString().trim());
+  });
+  kd.stderr.on('data', function(data) {
+    terminal.warning('kong-dashboard stderr: ' + data.toString().trim());
+  });
+  kd.on('close', function(code) {
+    terminal.error('kong-dashboard exited');
+  });
 });
