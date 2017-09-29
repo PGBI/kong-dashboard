@@ -9,7 +9,7 @@
 <body>
 <app-route-loading-indicator></app-route-loading-indicator>
 
-<nav class="fade ng-hide-animate" ng-show="app.config.url">
+<nav>
   <div class="nav-wrapper">
     <ul class="right">
       <li>
@@ -51,21 +51,17 @@
   </div>
 </nav>
 
-<main ng-view ng-show="initialized"></main>
-<app-loader ng-hide="initialized"></app-loader>
+<main ng-view></main>
 
-<footer ng-show="app.config.url" class="fade ng-hide-animate">
+<footer>
   <div class="container">
     <p class="grey-text text-lighten-4 right">
-      Current kong node:
-      <em>
-        {{app.config.url}} (v{{app.config.kong_version}})
-        (<a class="white-text" href="#/config" style="text-decoration:underline">Edit</a>)
-      </em>
+      Current Kong node: {{ env.kong_url }} (v{{ env.kong_version }})
     </p>
   </div>
 </footer>
 
+<script src="config"></script>
 <script src="js/app.min.js"></script>
 </body>
 </html>

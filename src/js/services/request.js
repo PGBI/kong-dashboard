@@ -2,7 +2,6 @@
  * Send request via local server.
  */
 angular.module('app').factory('Request', ['$http', function ($http) {
-  var kongNodeURLHeader = 'Kong-Node-URL';
 
   var request = function(options) {
     setOptions(options);
@@ -26,8 +25,6 @@ angular.module('app').factory('Request', ['$http', function ($http) {
   // utils
   function setOptions(options) {
     options.headers = options.headers || {};
-    options.timeout = options.timeout || 5000;
-    options.headers[kongNodeURLHeader] = options.kong_url;
     options.url = './proxy' + options.endpoint;
     options.timeout = 30000;
   }
