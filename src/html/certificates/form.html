@@ -25,19 +25,19 @@
                     <app-field-error error="error.id"></app-field-error>
                 </div>
                 <div class="input-field col s12">
-                    <textarea autofocus id="cert" ng-model="certificate.cert" class="validate materialize-textarea" 
+                    <textarea autofocus id="cert" ng-model="certificate.cert" class="validate materialize-textarea"
                         ng-required="true" ng-class="{invalid: error.cert}" rows="4"></textarea>
                     <label for="cert" ng-class="{active:certificate.cert}">Cert</label>
                     <app-field-error error="error.cert"></app-field-error>
                 </div>
                 <div class="input-field col s12">
-                    <textarea id="key" ng-model="certificate.key" class="validate materialize-textarea" 
+                    <textarea id="key" ng-model="certificate.key" class="validate materialize-textarea"
                         ng-required="true" ng-class="{invalid: error.key}" rows="4"></textarea>
                     <label for="key" ng-class="{active:certificate.key}">Key</label>
                     <app-field-error error="error.key"></app-field-error>
                 </div>
                 <div class="input-field col s12">
-                    <input id="snis" ng-model="certificate.snis" type="text" class="validate" 
+                    <input id="snis" ng-model="certificate.snis" type="text" class="validate"
                     ng-class="{invalid: error.snis}" ng-show="! isEdit()">
                     <ul ng-repeat="sni in certificate.snis" ng-show="isEdit()" ng-readonly="true" >
                             <li>{{sni}}</li>
@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="input-field col s6" >
-                    <a href="#/snis/add/{{certificate.id}}" class="waves-effect waves-light btn" ng-show="isEdit()">
+                    <a href="#!/snis/add/{{certificate.id}}" class="waves-effect waves-light btn" ng-show="isEdit()">
                         <i class="material-icons left">add_box</i>
                         Add SNI
                     </a>
@@ -57,7 +57,7 @@
                         {{action}}
                     </button>
                 </div>
-                
+
             </div>
             <input type="hidden" ng-model="certificate.id" value="{{certificate.id}}" />
         </form>

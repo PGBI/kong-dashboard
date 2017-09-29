@@ -1,14 +1,14 @@
 <div class="container" infinite-scroll="loadMore()" infinite-scroll-distance="5" infinite-scroll-use-document-bottom="true">
-    <a href="#/plugins/add" class="btn-floating btn-large waves-effect waves-light right" ng-show="plugins.length >= 1">
+    <a href="#!/plugins/add" class="btn-floating btn-large waves-effect waves-light right" ng-show="plugins.length >= 1">
         <i class="material-icons">add</i>
     </a>
 
     <h3 class="header" ng-hide="owner_type">Plugins</h3>
     <h3 class="header" ng-show="owner_type=='API'">
-        Plugins of API "<a href="#/apis/{{owner.id}}">{{owner.name}}</a>"
+        Plugins of API "<a href="#!/apis/{{owner.id}}">{{owner.name}}</a>"
     </h3>
     <h3 class="header" ng-show="owner_type==='Consumer'">
-        Plugins of consumer "<a href="#/consumers/{{owner.id}}">{{owner.username}}</a>"
+        Plugins of consumer "<a href="#!/consumers/{{owner.id}}">{{owner.username}}</a>"
     </h3>
 
     <p class="flow-text center" ng-show="total === null" style="margin-top:50px;">
@@ -26,7 +26,7 @@
             This Consumer doesn't have any plugin configured yet.
         </p>
         <p class="center" ng-show="total == 0">
-            <a href="#/plugins/add" class="waves-effect waves-light btn">
+            <a href="#!/plugins/add" class="waves-effect waves-light btn">
                 <i class="material-icons left">add_box</i>
                 Add Plugin
             </a>
@@ -49,11 +49,11 @@
         <tr ng-repeat="plugin in plugins">
             <td>{{plugin.name}}</td>
             <td>
-                <a ng-if="plugin.api_id" href="#/apis/{{plugin.api_id}}">{{plugin.api_name}}</a>
+                <a ng-if="plugin.api_id" href="#!/apis/{{plugin.api_id}}">{{plugin.api_name}}</a>
                 <span ng-if="!plugin.api_id">All</span>
             </td>
             <td>
-                <a ng-if="plugin.consumer_id" href="#/consumers/{{plugin.consumer_id}}">{{plugin.consumer_username}}</a>
+                <a ng-if="plugin.consumer_id" href="#!/consumers/{{plugin.consumer_id}}">{{plugin.consumer_username}}</a>
                 <span ng-if="!plugin.consumer_id">All</span>
             </td>
             <td>
@@ -68,7 +68,7 @@
             </td>
             <td>{{plugin.created_at | date}}</td>
             <td class="right">
-                <a class="btn-floating waves-effect waves-light" href="#/plugins/{{plugin.id}}">
+                <a class="btn-floating waves-effect waves-light" href="#!/plugins/{{plugin.id}}">
                     <i class="material-icons">mode_edit</i>
                 </a>
                 <a class="btn-floating waves-effect waves-light red modal-trigger" ng-click="showDeleteModal(plugin.name, plugin.id)">

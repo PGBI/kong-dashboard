@@ -1,5 +1,5 @@
 <div class="container" infinite-scroll="loadMore()" infinite-scroll-distance="5" infinite-scroll-use-document-bottom="true">
-    <a href="#/apis/add" class="btn-floating btn-large waves-effect waves-light right" ng-show="apis.length >= 1">
+    <a href="#!/apis/add" class="btn-floating btn-large waves-effect waves-light right" ng-show="apis.length >= 1">
         <i class="material-icons">add</i>
     </a>
 
@@ -14,7 +14,7 @@
             You haven't created any API in Kong yet.
         </p>
         <p class="center">
-            <a href="#/apis/add" class="waves-effect waves-light btn">
+            <a href="#!/apis/add" class="waves-effect waves-light btn">
                 <i class="material-icons left">add_box</i>
                 Add API
             </a>
@@ -72,10 +72,10 @@
             </td>
             <td>{{api.created_at | date}}</td>
             <td class="right">
-                <a class="btn-floating waves-effect waves-light" href="#/apis/{{api.id}}">
+                <a class="btn-floating waves-effect waves-light" href="#!/apis/{{api.id}}">
                     <i class="material-icons">mode_edit</i>
                 </a>
-                <a class="btn-floating waves-effect waves-light blue" href="#/apis/{{api.id}}/plugins">
+                <a class="btn-floating waves-effect waves-light blue" href="#!/apis/{{api.id}}/plugins">
                     <i class="material-icons">extension</i>
                 </a>
                 <a class="btn-floating waves-effect waves-light red modal-trigger" ng-click="showDeleteModal(api.name, api.id)">

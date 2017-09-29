@@ -18,7 +18,7 @@
           <p class="collection-item grey-text" ng-if="searching && Utils.keys(searchResults).length == 0">
             No results found.
           </p>
-          <a class="collection-item" ng-repeat="(id, name) in searchResults" href="#/consumers/{{ id }}">
+          <a class="collection-item" ng-repeat="(id, name) in searchResults" href="#!/consumers/{{ id }}">
             {{ name }}
           </a>
           <!--
@@ -29,7 +29,7 @@
       </div>
     </li>
     <li>
-      <a href="#/consumers/add" class="btn-floating btn-large waves-effect waves-light">
+      <a href="#!/consumers/add" class="btn-floating btn-large waves-effect waves-light">
         <i class="material-icons">add</i>
       </a>
     </li>
@@ -48,7 +48,7 @@
             You haven't defined any Consumers in Kong yet.
         </p>
         <p class="center">
-            <a href="#/consumers/add" class="waves-effect waves-light btn">
+            <a href="#!/consumers/add" class="waves-effect waves-light btn">
                 <i class="material-icons left">add_box</i>
                 Add Consumer
             </a>
@@ -73,10 +73,10 @@
                 <p ng-show="!consumer.custom_id">nope</p></td>
             <td>{{consumer.created_at | date}}</td>
             <td class="right">
-                <a class="btn-floating waves-effect waves-light" href="#/consumers/{{consumer.id}}">
+                <a class="btn-floating waves-effect waves-light" href="#!/consumers/{{consumer.id}}">
                     <i class="material-icons">mode_edit</i>
                 </a>
-                <a class="btn-floating waves-effect waves-light blue" href="#/consumers/{{consumer.id}}/plugins">
+                <a class="btn-floating waves-effect waves-light blue" href="#!/consumers/{{consumer.id}}/plugins">
                     <i class="material-icons">extension</i>
                 </a>
                 <a class="btn-floating waves-effect waves-light red modal-trigger" ng-click="showDeleteModal(consumer.username, consumer.id)">

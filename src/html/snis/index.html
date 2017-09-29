@@ -2,7 +2,7 @@
 
   <ul ng-show="snis.length >= 1" class="horizontal right">
     <li>
-      <a href="#/snis/add" class="btn-floating btn-large waves-effect waves-light">
+      <a href="#!/snis/add" class="btn-floating btn-large waves-effect waves-light">
         <i class="material-icons">add</i>
       </a>
     </li>
@@ -21,7 +21,7 @@
             You haven't defined any SNI in Kong yet.
         </p>
         <p class="center">
-            <a href="#/snis/add" class="waves-effect waves-light btn">
+            <a href="#!/snis/add" class="waves-effect waves-light btn">
                 <i class="material-icons left">add_box</i>
                 Add SNI
             </a>
@@ -44,7 +44,7 @@
             <td>{{sni.ssl_certificate_id}}</td>
             <td>{{sni.created_at | date}}</td>
             <td class="right">
-                <a class="btn-floating waves-effect waves-light" href="#/snis/{{sni.name}}">
+                <a class="btn-floating waves-effect waves-light" href="#!/snis/{{sni.name}}">
                     <i class="material-icons">mode_edit</i>
                 </a>
                 <a class="btn-floating waves-effect waves-light red modal-trigger" ng-click="showDeleteModal(sni.name)">
