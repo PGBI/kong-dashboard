@@ -1,0 +1,61 @@
+version: '2.2'
+
+services:
+
+  kong-database:
+    image: postgres:9.4
+    container_name: kong-database
+    environment:
+      - POSTGRES_USER=kong
+      - POSTGRES_DB=kong
+    healthcheck:
+      test: "pg_isready -U kong && psql -d kong -U kong -c \"SELECT 1=1\""
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kong-migration:
+    image: kong:${KONG_VERSION}
+    container_name: kong-migration
+    depends_on:
+      kong-database:
+        condition: service_healthy
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=kong-database
+    command: sh -c "kong migrations up && touch migrations_run && sleep 30"
+    healthcheck:
+      test: "if [[ -f migrations_run ]] ; then exit 0; else exit 1; fi"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kong:
+    image: kong:${KONG_VERSION}
+    container_name: kong
+    depends_on:
+      kong-migration:
+        condition: service_healthy
+    healthcheck:
+      test: "curl localhost:8001"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=kong-database
+    ports:
+      - 8001:8001
+      - 8000:8000
+
+  kong-dashboard:
+    build: .
+    container_name: kong-dashboard
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/app
+    depends_on:
+      kong:
+        condition: service_healthy
+    entrypoint: ./docker/entrypoint_dev.sh
