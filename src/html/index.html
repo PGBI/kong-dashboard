@@ -9,57 +9,53 @@
 <body>
 <app-route-loading-indicator></app-route-loading-indicator>
 
-<nav>
-  <div class="nav-wrapper">
-    <ul class="right">
-      <li>
-        <a href="#!/">
-          <i class="material-icons">home</i>
-        </a>
-      </li>
-      <li>
-        <a href="#!/apis">
-          <i class="material-icons tooltipped" data-position="bottom" data-tooltip="Manage APIs" data-delay="0">apps</i>
-        </a>
-      </li>
-      <li>
-        <a href="#!/consumers">
-          <i class="material-icons tooltipped" data-position="bottom" data-tooltip="Manage Consumers" data-delay="0">account_box</i>
-        </a>
-      </li>
-      <li>
-        <a href="#!/plugins">
-          <i class="material-icons tooltipped" data-position="bottom" data-tooltip="Manage Plugins" data-delay="0">extension</i>
-        </a>
-      </li>
-      <li>
-        <a href="#!/snis">
-          <i class="material-icons tooltipped" data-position="bottom" data-tooltip="Manage SNIS" data-delay="0">dns</i>
-        </a>
-      </li>
-      <li>
-        <a href="#!/certificates">
-          <i class="material-icons tooltipped" data-position="bottom" data-tooltip="Manage Certificates" data-delay="0">https</i>
-        </a>
-      </li>
-      <li>
-          <a href="#/upstreams">
-            <i class="material-icons tooltipped" data-position="bottom" data-tooltip="Manage Upstreams" data-delay="0">input</i>
-          </a>
-        </li>
-    </ul>
-  </div>
-</nav>
+<ul class="side-nav fixed">
+  <li>
+    <a href="#!/" class="waves-effect">
+      <i class="material-icons">home</i> Home
+    </a>
+  </li>
+  <li>
+    <a href="#!/apis" class="waves-effect">
+      <i class="material-icons">apps</i> APIs
+    </a>
+  </li>
+  <li>
+    <a href="#!/consumers" class="waves-effect">
+      <i class="material-icons">account_box</i> Consumers
+    </a>
+  </li>
+  <li>
+    <a href="#!/plugins" class="waves-effect">
+      <i class="material-icons">extension</i> Plugins
+    </a>
+  </li>
+  <li>
+    <a href="#!/snis" class="waves-effect">
+      <i class="material-icons">dns</i> SNIs
+    </a>
+  </li>
+  <li>
+    <a href="#!/certificates" class="waves-effect">
+      <i class="material-icons">https</i> Certificates
+    </a>
+  </li>
+  <li>
+    <a href="#!/upstreams" class="waves-effect">
+      <i class="material-icons">input</i> Upstreams
+    </a>
+  </li>
+</ul>
 
-<main ng-view></main>
-
-<footer>
-  <div class="container">
-    <p class="grey-text text-lighten-4 right">
+<section class="content">
+  <main ng-view></main>
+  <footer>
+    <p class="grey-text text-lighten-4">
       Current Kong node: {{ env.kong_url }} (v{{ env.kong_version }})
     </p>
-  </div>
-</footer>
+  </footer>
+</section>
+
 
 <script src="config"></script>
 <script src="js/app.min.js"></script>

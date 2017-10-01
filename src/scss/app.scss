@@ -1,34 +1,60 @@
 @import './node_modules/materialize-css/sass/materialize.scss';
 
-body {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
+$sideNavWidth: 250px;
+
+/*************\
+ *  Layout   *
+\*************/
+ul.side-nav {
+    transform: translateX(0) !important;
+    width: $sideNavWidth;
 }
 
-main {
-    flex: 1 0 auto;
+section.content {
+    margin-left: $sideNavWidth;
+    display: flex;
+    min-height: 100vh;
+    min-width: 800px;
+    flex-direction: column;
+    background-color: #fdfdfd;
+
+    main {
+        flex-grow: 1;
+    }
+
+    footer {
+        background-color: $primary-color;
+        p {
+            padding-right: 15px;
+            text-align: right;
+        }
+    }
 }
+
+.container {
+    width: 85%;
+}
+
+/*************\
+ *   Typo    *
+\*************/
 
 h1, h2, h3, h4, h5, h6 {
     font-weight:300;
-}
-
-.header {
-    color: $primary-color;
-    font-weight: 300;
-    margin-top:50px;
-    margin-bottom:50px;
-}
-
-nav i.material-icons {
-    vertical-align: middle;
-    display: inline-block;
+    &.header {
+        color: $primary-color;
+        margin-top:50px;
+        margin-bottom:50px;
+    }
 }
 
 a {
     cursor: pointer;
 }
+
+/*************\
+ *   Misc    *
+\*************/
 
 ul.horizontal {
     padding: 0;
@@ -122,8 +148,3 @@ li.search {
         list-style-type: circle;
     }
 }
-
-footer {
-    background-color: $primary-color;
-}
-
