@@ -29,8 +29,8 @@
             <p>Kong Dashboard is an open source project hosted on github.</p>
             <p>Special thanks to 5 top contributors:</p>
             <div class="chip" ng-repeat="contributor in contributors">
+                <img ng-src="{{ contributor.avatar_url }}" alt="{{ contributor.login }} avatar">
                 <a href="{{ contributor.html_url }}">
-                    <img ng-src="{{ contributor.avatar_url }}" alt="{{ contributor.login }} avatar">
                     {{ contributor.login }}
                 </a>
             </div>
