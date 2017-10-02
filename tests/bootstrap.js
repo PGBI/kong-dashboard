@@ -68,9 +68,4 @@ request.get('http://localhost:8001').then((response) => {
     throw response;
   }
   terminal.success('Basic auth credentials added');
-
-  terminal.info('-------------------');
-  terminal.info('-- Running tests --');
-  terminal.info('-------------------');
-  execSync('node_modules/.bin/jasmine JASMINE_CONFIG_PATH=./jasmine.json', {stdio: 'inherit'});
 });

@@ -1,8 +1,6 @@
 var request = require('../../lib/request');
 var KongDashboard = require('../util/kong-dashboard-handler');
 
-console.log(process.env.KONG_VERSION);
-
 describe('Starting Kong-dashboard', function () {
 
   it("should error if required kong_url parameter is missing", (done) => {
