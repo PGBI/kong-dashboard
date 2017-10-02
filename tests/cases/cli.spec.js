@@ -132,5 +132,4 @@ describe('Starting Kong-dashboard', function () {
       done();
     });
   });
-
 });

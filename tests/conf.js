@@ -1,4 +1,17 @@
 exports.config = {
-  seleniumAddress: 'http://localhost:4444/wd/hub',
-  specs: ['./**/*.spec.js']
+  directConnect: true,
+  framework: 'jasmine',
+  jasmineNodeOpts: {
+    showColors: true
+  },
+  specs: ['./**/*.spec.js'],
+  capabilities: {
+    browserName: 'chrome',
+    chromeOptions: {
+      args: [
+        "--headless",
+        "--disable-gpu"
+      ]
+    }
+  }
 };
