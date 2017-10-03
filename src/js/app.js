@@ -146,6 +146,27 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
           }]
         }
       })
+      .when('/snis', {
+        templateUrl: 'html/snis/index.html',
+        controller: 'SnisController',
+        resolve: {
+          isAppReady: isAppReady
+        }
+      })
+      .when('/snis/add', {
+        templateUrl: 'html/snis/form.html',
+        controller: 'SniController',
+        resolve: {
+          isAppReady: isAppReady
+        }
+      })
+      .when('/snis/:name', {
+        templateUrl: 'html/snis/form.html',
+        controller: 'SniController',
+        resolve: {
+          isAppReady: isAppReady,
+        }
+      })
       .otherwise({redirectTo: '/'});
   }])
   .run(['$rootScope', 'Kong', '$location', function($rootScope, Kong, $location) {
