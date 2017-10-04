@@ -48,23 +48,4 @@ angular.module('app').controller("SnisController", ["$scope", "Kong", function (
       });
     });
   };
-
-  $scope.searchSnis = function() {
-    $scope.searchResults = {};
-    var input = $scope.searchInput;
-    if (!input) {
-      $scope.searching = false;
-      return;
-    }
-
-    $scope.searching = true;
-
-    var populateResults = function(response) {
-      angular.forEach(response.data, function(value) {
-        $scope.searchResults[value.name] = value.name;
-      });
-    };
-
-    Kong.get('/snis?name=' + input).then(populateResults);
-  };
 }]);
