@@ -18,7 +18,7 @@
         <form name="addCertificate" class="col s7" novalidate ng-submit="save()">
             <div class="row">
 
-                <div class="input-field col s12">
+                <div class="input-field col s12" ng-show="isEdit()">
                     <input id="id" ng-model="certificate.id" type="text" class="validate"
                        ng-class="{invalid: error.id}" ng-readonly="isEdit()" >
                     <label for="id" ng-class="{active:certificate.id}">ID</label>
