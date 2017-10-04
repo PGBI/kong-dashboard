@@ -13,5 +13,6 @@ exports.config = {
         "--disable-gpu"
       ]
     }
-  }
+  },
+  baseUrl: 'http://localhost:8080'
 };
