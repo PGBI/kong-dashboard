@@ -1,0 +1,42 @@
+<div class="container">
+    <h3 class="header">{{title}}</h3>
+
+    <div class="row">
+        <div class="col s5">
+            <div class="card-panel teal">
+                <p class="white-text">
+                    An SNI object represents a many-to-one mapping of hostnames to a certificate. That is, a certificate object can have many hostnames associated with it; when Kong receives an SSL request, it uses the SNI field in the Client Hello to lookup the certificate object based on the SNI associated with the certificate.
+                </p>
+
+                <p class="white-text">
+                    Checkout <a href="https://getkong.org/docs/latest/admin-api/#add-sni" target="_blank">Kong documentation</a> for the meaning of the form parameters.
+                </p>
+            </div>
+        </div>
+        <form name="addSni" class="col s7" novalidate ng-submit="save()">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="name" autofocus ng-required="true" ng-model="sni.name" type="text" 
+                           ng-class="{invalid: error.name}"  ng-readonly="isEdit()" class="validate" >
+                    <label for="name" ng-class="{active:sni.name}">Name</label>
+                    <app-field-error error="error.name"></app-field-error>
+                </div>
+                <div class="input-field col s12">
+                    <label class="active">SSL Certificate ID</label>
+                    <select materialize-select required id="ssl_certificate_id"
+                           ng-model="sni.ssl_certificate_id"
+                           ng-options="cert.id as cert.id for cert in certificates"
+                           >
+                   </select>
+                    <app-field-error error="error.ssl_certificate_id"></app-field-error>
+                </div>
+                <div class="input-field col s12">
+                    <button type="submit" class="waves-effect waves-light btn right">
+                        {{action}}
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" ng-model="sni.name" value="{{sni.name}}"/>
+        </form>
+    </div>
+</div>

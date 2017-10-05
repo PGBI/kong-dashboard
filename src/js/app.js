@@ -146,6 +146,55 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
           }]
         }
       })
+      .when('/snis', {
+        templateUrl: 'html/snis/index.html',
+        controller: 'SnisController',
+        resolve: {
+          isAppReady: isAppReady
+        }
+      })
+      .when('/snis/add', {
+        templateUrl: 'html/snis/form.html',
+        controller: 'SniController',
+        resolve: {
+          isAppReady: isAppReady
+        }
+      })
+      .when('/snis/:name', {
+        templateUrl: 'html/snis/form.html',
+        controller: 'SniController',
+        resolve: {
+          isAppReady: isAppReady,
+        }
+      })
+      .when('/snis/add/:certificate_id', {
+        templateUrl: 'html/snis/form.html',
+        controller: 'SniController',
+        resolve: {
+          isAppReady: isAppReady
+        }
+      })
+      .when('/certificates', {
+        templateUrl: 'html/certificates/index.html',
+        controller: 'CertificatesController',
+        resolve: {
+          isAppReady: isAppReady
+        }
+      })
+      .when('/certificates/add', {
+        templateUrl: 'html/certificates/form.html',
+        controller: 'CertificateController',
+        resolve: {
+          isAppReady: isAppReady
+        }
+      })
+      .when('/certificates/:id', {
+        templateUrl: 'html/certificates/form.html',
+        controller: 'CertificateController',
+        resolve: {
+          isAppReady: isAppReady,
+        }
+      })
       .otherwise({redirectTo: '/'});
   }])
   .run(['$rootScope', 'Kong', '$location', function($rootScope, Kong, $location) {
