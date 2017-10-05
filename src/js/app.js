@@ -195,6 +195,27 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
           isAppReady: isAppReady,
         }
       })
+      .when('/upstreams', {
+        templateUrl: 'html/upstreams/index.html',
+        controller: 'UpstreamsController',
+        resolve: {
+          isAppReady: isAppReady
+        }
+      })
+      .when('/upstreams/add', {
+        templateUrl: 'html/upstreams/form.html',
+        controller: 'UpstreamController',
+        resolve: {
+          isAppReady: isAppReady
+        }
+      })
+      .when('/upstreams/:id', {
+        templateUrl: 'html/upstreams/form.html',
+        controller: 'UpstreamController',
+        resolve: {
+          isAppReady: isAppReady,
+        }
+      })
       .otherwise({redirectTo: '/'});
   }])
   .run(['$rootScope', 'Kong', '$location', function($rootScope, Kong, $location) {
