@@ -1,4 +1,4 @@
 #!/bin/sh
 
 npm install
-node_modules/.bin/gulp serve -u http://kong:8001 --verbose
+node_modules/.bin/gulp serve -u http://kong:8001 --verbose -p 8081

@@ -52,7 +52,7 @@ services:
     build: .
     container_name: kong-dashboard
     ports:
-      - 8080:8080
+      - 8081:8081
     volumes:
       - .:/app
       - /app/node_modules/
