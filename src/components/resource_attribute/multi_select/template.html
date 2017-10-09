@@ -1,0 +1,15 @@
+<div class="col s12 input-field">
+  <select multiple materialize-select
+          id="{{ 'attr_' + $ctrl.name }}"
+          ng-options="method as method for method in $ctrl.schema.items.enum"
+          ng-model="dummyModel">
+    <option value="" disabled selected>Choose options</option>
+  </select>
+  <label>{{ $ctrl.name }}</label>
+
+  <p ng-if="$ctrl.schema.description"
+     class="grey-text"
+     style="margin-top: 0; margin-bottom: 30px; font-size: 85%">
+    <em>{{ $ctrl.schema.description }}</em>
+  </p>
+</div>

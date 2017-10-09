@@ -1,4 +1,6 @@
-angular.module('app').controller("ApiController", ["$scope", "Kong", "$location", "$routeParams", "Alert", "api", function ($scope, Kong, $location, $routeParams, Alert, api) {
+angular.module('app').controller("ApiController", ["$scope", "Kong", "$location", "$routeParams", "Alert", "api", "env", function ($scope, Kong, $location, $routeParams, Alert, api, env) {
+    $scope.apiObjectSchema = env.schemas.api;
+
     if ($routeParams.id) {
         $scope.api = api;
         $scope.title = "Edit API";

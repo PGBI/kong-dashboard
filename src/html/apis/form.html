@@ -3,88 +3,27 @@
 
     <div class="row">
         <div class="col s5">
-            <div class="card-panel teal">
+            <div class="card-panel teal lighten-2">
+                <h5 class="white-text">
+                    <i class="material-icons small">highlight</i>
+                    What's an API?
+                </h5>
                 <p class="white-text">
-                    The API object describes an API that's being exposed by Kong. In order to do that Kong needs to know
-                    how to retrieve the API when a consumer is calling it. This can be achieved either
-                    by specifying a custom DNS address or a specific URL path.
-                </p>
-
-                <p class="white-text">
-                    Then, Kong needs to know what is the final target URL of the API where the requests will be proxied.
+                    {{ apiObjectSchema.description }}
                 </p>
                 <p class="white-text">
-                    Checkout <a href="https://getkong.org/docs/latest/admin-api/#add-api" target="_blank">Kong documentation</a> for the meaning of these parameters.
+                    <a href="{{ apiObjectSchema.documentation }}" target="_blank">Official Kong documentation.</a>
                 </p>
             </div>
         </div>
         <form name="addAPI" class="col s7" novalidate ng-submit="save()">
             <div class="row">
-                <div class="input-field col s12">
-                    <input id="name" ng-model="api.name" type="text" class="validate" ng-class="{invalid: error.name}">
-                    <label for="name" ng-class="{active:api.name}">Name</label>
-                    <app-field-error error="error.name"></app-field-error>
-                </div>
-                <div class="input-field col s12">
-                    <input id="hosts" ng-model="api.hosts" type="text" class="validate" ng-class="{invalid: error.hosts}">
-                    <label for="hosts" ng-class="{active:api.hosts}">Hosts</label>
-                    <app-field-error error="error.hosts"></app-field-error>
-                </div>
-                <div class="input-field col s12">
-                    <input id="uris"  ng-model="api.uris" type="text" class="validate" ng-class="{invalid: error.uris}">
-                    <label for="uris" ng-class="{active:api.uris}">Uris</label>
-                    <app-field-error error="error.uris"></app-field-error>
-                </div>
-                <div class="input-field col s12">
-                    <input id="methods"  ng-model="api.methods" type="text" class="validate" ng-class="{invalid: error.methods}">
-                    <label for="methods" ng-class="{active:api.methods}">Methods</label>
-                    <app-field-error error="error.methods"></app-field-error>
-                </div>
-                <div class="input-field col s12">
-                    <input id="upstream_url"  ng-model="api.upstream_url" type="text" class="validate" ng-class="{invalid: error.upstream_url}">
-                    <label for="upstream_url" ng-class="{active:api.upstream_url}">Upstream url</label>
-                    <app-field-error error="error.upstream_url"></app-field-error>
-                </div>
-                <div class="input-field col s12">
-                    <input id="retries"  ng-model="api.retries" type="text" class="validate" ng-class="{invalid: error.retries}">
-                    <label for="retries" ng-class="{active:api.retries}">Retries</label>
-                    <app-field-error error="error.retries"></app-field-error>
-                </div>
-                <div class="input-field col s12">
-                    <input id="upstream_connect_timeout"  ng-model="api.upstream_connect_timeout" type="text" class="validate" ng-class="{invalid: error.upstream_connect_timeout}">
-                    <label for="upstream_connect_timeout" ng-class="{active:api.upstream_connect_timeout}">Upstream connect timeout</label>
-                    <app-field-error error="error.upstream_connect_timeout"></app-field-error>
-                </div>
-                <div class="input-field col s12">
-                    <input id="upstream_send_timeout"  ng-model="api.upstream_send_timeout" type="text" class="validate" ng-class="{invalid: error.upstream_send_timeout}">
-                    <label for="upstream_send_timeout" ng-class="{active:api.upstream_send_timeout}">Upstream send timeout</label>
-                    <app-field-error error="error.upstream_send_timeout"></app-field-error>
-                </div>
-                <div class="input-field col s12">
-                    <input id="upstream_read_timeout"  ng-model="api.upstream_read_timeout" type="text" class="validate" ng-class="{invalid: error.upstream_read_timeout}">
-                    <label for="upstream_read_timeout" ng-class="{active:api.upstream_read_timeout}">Upstream read timeout</label>
-                    <app-field-error error="error.upstream_read_timeout"></app-field-error>
-                </div>
-                <p class="col s6">
-                    <input type="checkbox" ng-model="api.strip_uri" class="filled-in validate" id="strip_uri" ng-true-value="true" ng-false-value="false" />
-                    <label for="strip_uri">Strip uri</label>
-                    <app-field-error error="error.strip_uri"></app-field-error>
-                </p>
-                <p class="col s6">
-                    <input type="checkbox"  ng-model="api.preserve_host" class="filled-in validate" id="preserve_host" ng-true-value="true" ng-false-value="false" />
-                    <label for="preserve_host">Preserve host</label>
-                    <app-field-error error="error.preserve_host"></app-field-error>
-                </p>
-                <p class="col s6">
-                    <input type="checkbox"  ng-model="api.https_only" class="filled-in validate" id="https_only" ng-true-value="true" ng-false-value="false" />
-                    <label for="https_only">Https only</label>
-                    <app-field-error error="error.https_only"></app-field-error>
-                </p>
-                <p class="col s6">
-                    <input type="checkbox"  ng-model="api.http_if_terminated" class="filled-in validate" id="http_if_terminated" ng-true-value="true" ng-false-value="false" />
-                    <label for="http_if_terminated">Http if terminated</label>
-                    <app-field-error error="error.http_if_terminated"></app-field-error>
-                </p>
+                <resource-attribute
+                  ng-repeat="(key, schema) in apiObjectSchema.fields"
+                  schema="schema"
+                  name="key"
+                  ></resource-attribute>
+
                 <div class="input-field col s12">
                     <button type="submit" class="waves-effect waves-light btn right">
                         {{action}}

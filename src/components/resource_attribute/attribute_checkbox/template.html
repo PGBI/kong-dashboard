@@ -1,0 +1,18 @@
+<div class="col s12" style="margin-top: 15px;">
+  <input type="checkbox"
+         class="filled-in validate"
+         id="{{ 'attr_' + $ctrl.name }}"
+         ng-checked="{{ $ctrl.schema.default }}"
+         ng-true-value="true"
+         ng-false-value="false" />
+  <label
+    for="{{ 'attr_' + $ctrl.name }}">
+    {{ $ctrl.name }}
+  </label>
+
+  <p ng-if="$ctrl.schema.description"
+     class="grey-text"
+     style="margin-top: 0; margin-bottom: 30px; font-size: 85%">
+    <em>{{ $ctrl.schema.description }}</em>
+  </p>
+</div>

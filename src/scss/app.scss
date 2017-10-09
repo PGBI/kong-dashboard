@@ -148,3 +148,8 @@ li.search {
         list-style-type: circle;
     }
 }
+
+// Fix checkbox not being aligned with label in a multiple select
+.select-wrapper [type="checkbox"]+label {
+    display: inline;
+}

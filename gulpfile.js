@@ -30,7 +30,7 @@ gulp.task('build_js', function () {
       "./node_modules/angular-sanitize/angular-sanitize.min.js",
       "./node_modules/materialize-css/dist/js/materialize.min.js",
       "./node_modules/ng-infinite-scroll/build/ng-infinite-scroll.min.js",
-      paths.js_src + '/**/*.js'
+      paths.root + '/**/*.js'
     ])
     .pipe(plumber())
     .pipe(uglify())
@@ -43,6 +43,8 @@ gulp.task('build_html', function() {
     .pipe(gulp.dest(paths.dist));
   gulp.src([paths.html_src + '/**/*'])
     .pipe(gulp.dest(paths.dist + '/html'));
+  gulp.src([paths.root + '/components/**/*.html'])
+    .pipe(gulp.dest(paths.dist + '/components'));
   gulp.src(['node_modules/materialize-css/dist/fonts/roboto/**/*'])
     .pipe(gulp.dest(paths.dist + '/fonts/roboto'));
 });
@@ -62,9 +64,9 @@ gulp.task('build_css', function() {
 gulp.task('build', ['build_js', 'build_css', 'build_html']);
 
 gulp.task('watch', function() {
-  gulp.watch(paths.js_src + '/**/*.js', ['build_js']);
-  gulp.watch(paths.html_src + '/**/*.html', ['build_html']);
-  gulp.watch(paths.sass_src + '/**/*.scss', ['build_css']);
+  gulp.watch(paths.root + '/**/*.js', ['build_js']);
+  gulp.watch(paths.root + '/**/*.html', ['build_html']);
+  gulp.watch(paths.root + '/**/*.scss', ['build_css']);
 });
 
 gulp.task('serve', ['build', 'watch'], function() {

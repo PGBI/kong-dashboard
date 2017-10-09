@@ -1,0 +1,36 @@
+<attribute-input
+  ng-if="$ctrl.schema.type == 'string'"
+  type="'text'"
+  schema="$ctrl.schema"
+  name="$ctrl.name"></attribute-input>
+
+<attribute-input
+  ng-if="$ctrl.schema.type == 'url'"
+  type="'url'"
+  schema="$ctrl.schema"
+  name="$ctrl.name"></attribute-input>
+
+<attribute-input
+  ng-if="$ctrl.schema.type == 'number'"
+  type="'number'"
+  schema="$ctrl.schema"
+  name="$ctrl.name"></attribute-input>
+
+<checkbox
+  ng-if="$ctrl.schema.type == 'boolean'"
+  schema="$ctrl.schema"
+  name="$ctrl.name"
+  ></checkbox>
+
+<multi-select
+  ng-if="$ctrl.schema.type == 'array' && $ctrl.schema.items.type == 'string' && $ctrl.schema.items.enum"
+  schema="$ctrl.schema"
+  name="$ctrl.name"
+  ></multi-select>
+
+<attribute-input
+  ng-if="$ctrl.schema.type == 'array' && $ctrl.schema.items.type == 'string' && !$ctrl.schema.items.enum"
+  type="'text'"
+  schema="$ctrl.schema"
+  name="$ctrl.name"></attribute-input>
+
