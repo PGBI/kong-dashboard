@@ -15,7 +15,7 @@
     "basic-auth": "^2.0.0",
     "chalk": "^2.1.0",
     "koa": "^2.3.0",
-    "koa-bodyparser": "^4.2.0",
+    "koa-bodyparser": "^3.2.0",
     "koa-mount": "^2.0.0",
     "koa-static": "^3.0.0",
     "minimist": "^1.2.0",
