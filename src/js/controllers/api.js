@@ -5,23 +5,9 @@ angular.module('app').controller("ApiController", ["$scope", "Kong", "$location"
         $scope.api = api;
         $scope.title = "Edit API";
         $scope.action = "Save";
-        if (api.hosts && angular.equals({}, api.hosts)) { api.hosts = '';}
-        if (api.uris && angular.equals({}, api.uris)) { api.uris = '';}
-        if (api.methods && angular.equals({}, api.methods)) { api.methods = '';}
     } else {
         $scope.title = "Add an API";
         $scope.action = "Create";
-        // default values on API creation
-        $scope.api = {
-            strip_uri: true,
-            preserve_host: false,
-            retries: 5,
-            upstream_connect_timeout: 60000,
-            upstream_send_timeout: 60000,
-            upstream_read_timeout: 60000,
-            https_only: false,
-            http_if_terminated: true
-        };
     }
 
     $scope.save = function () {
@@ -36,7 +22,12 @@ angular.module('app').controller("ApiController", ["$scope", "Kong", "$location"
             // clearing errors.
             $scope.error = {};
         }, function (response) {
-            $scope.error = response.data;
+            if (response.status == 400) {
+                $scope.error = response.data;
+            } else {
+                Alert.error('Unexpected error from Kong');
+                console.log(response);
+            }
         });
     }
 }]);
