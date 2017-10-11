@@ -6,7 +6,9 @@
     bindings: {
       schema: '<',
       name: '<',
-      type: '<'
+      type: '<',
+      error: '<',
+      value: '='
     },
     templateUrl: 'components/resource_attribute/attribute_input/template.html',
     controller: 'AttributeInputController'

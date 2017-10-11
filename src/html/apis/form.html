@@ -22,6 +22,8 @@
                   ng-repeat="(key, schema) in apiObjectSchema.fields"
                   schema="schema"
                   name="key"
+                  error="errors[key]"
+                  value="api[key]"
                   ></resource-attribute>
 
                 <div class="input-field col s12">
@@ -31,7 +33,7 @@
                 </div>
             </div>
             <input type="hidden" ng-model="api.id" value="{{api.id}}" />
-            <pre>{{ error | json }}</pre>
+            <pre>{{ api | json }}</pre>
         </form>
     </div>
 </div>

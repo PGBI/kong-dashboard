@@ -5,7 +5,9 @@
     scope: {},
     bindings: {
       schema: '<',
-      name: '<'
+      name: '<',
+      error: '<',
+      value: '='
     },
     templateUrl: 'components/resource_attribute/template.html',
     controller: 'ResourceAttributeController'

@@ -1,4 +1,4 @@
-angular.module('app').controller("ApiController", ["$scope", "Kong", "$location", "$routeParams", "Alert", "api", "env", function ($scope, Kong, $location, $routeParams, Alert, api, env) {
+angular.module('app').controller("ApiController", ["$scope", "Kong", "$routeParams", "Alert", "api", "env", function ($scope, Kong, $routeParams, Alert, api, env) {
     $scope.apiObjectSchema = env.schemas.api;
 
     if ($routeParams.id) {
@@ -6,6 +6,7 @@ angular.module('app').controller("ApiController", ["$scope", "Kong", "$location"
         $scope.title = "Edit API";
         $scope.action = "Save";
     } else {
+        $scope.api = {};
         $scope.title = "Add an API";
         $scope.action = "Create";
     }
@@ -23,7 +24,7 @@ angular.module('app').controller("ApiController", ["$scope", "Kong", "$location"
             $scope.error = {};
         }, function (response) {
             if (response.status == 400) {
-                $scope.error = response.data;
+                $scope.errors = response.data;
             } else {
                 Alert.error('Unexpected error from Kong');
                 console.log(response);

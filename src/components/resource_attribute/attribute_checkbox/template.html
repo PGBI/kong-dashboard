@@ -2,7 +2,7 @@
   <input type="checkbox"
          class="filled-in validate"
          id="{{ 'attr_' + $ctrl.name }}"
-         ng-checked="{{ $ctrl.schema.default }}"
+         ng-model="$ctrl.value"
          ng-true-value="true"
          ng-false-value="false" />
   <label

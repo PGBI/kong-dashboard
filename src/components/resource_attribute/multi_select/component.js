@@ -6,6 +6,7 @@
     bindings: {
       schema: '<',
       name: '<',
+      value: '='
     },
     templateUrl: 'components/resource_attribute/multi_select/template.html',
     controller: 'MultiSelectController'

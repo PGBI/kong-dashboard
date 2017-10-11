@@ -2,7 +2,7 @@
   <select multiple materialize-select
           id="{{ 'attr_' + $ctrl.name }}"
           ng-options="method as method for method in $ctrl.schema.items.enum"
-          ng-model="dummyModel">
+          ng-model="$ctrl.value">
     <option value="" disabled selected>Choose options</option>
   </select>
   <label>{{ $ctrl.name }}</label>
