@@ -32,20 +32,20 @@ request.get('http://localhost:8001').then((response) => {
 }).then((response) => {
   if (response.statusCode != 201) {
     terminal.error("Failed to create Kong API");
-    throw response;
+    process.exit(1);
   }
   terminal.success('Kong API created');
   return response.body.id;
 }, (error) => {
   terminal.error("A Kong gateway running on http://localhost:8001 is necessary to run tests.");
-  process.exitCode = 1;
+  process.exit(1);
 }).then((kongAPIId) => {
   terminal.info('Adding basic auth to Kong API');
   return request.post('http://localhost:8001/apis/' + kongAPIId + '/plugins' , {name: 'basic-auth'});
 }).then((response) => {
   if (response.statusCode != 201) {
     terminal.error("Failed to adding basic auth to Kong API");
-    throw response;
+    process.exit(1);
   }
   terminal.success('Basic auth plugin added');
   terminal.info('Creating consumer');
@@ -53,7 +53,7 @@ request.get('http://localhost:8001').then((response) => {
 }).then((response) => {
   if (response.statusCode != 201) {
     terminal.error("Failed to create Consumer");
-    throw response;
+    process.exit(1);
   }
   terminal.success('Consumer created');
   terminal.info('Adding basic auth credentials to consumer');
@@ -65,7 +65,7 @@ request.get('http://localhost:8001').then((response) => {
 }).then((response) => {
   if (response.statusCode != 201) {
     terminal.error("Failed to adding basic auth credentials to Consumer");
-    throw response;
+    process.exit(1);
   }
   terminal.success('Basic auth credentials added');
 });
