@@ -39,12 +39,12 @@ if (argv._[0] === 'start') {
     // launch server
     console.log('Launching webserver');
     if (port) {
-        process.env['kong-dashboard-port'] = port;
+        process.env['KONG_DASHBOARD_PORT'] = port;
     }
     if (auth) {
         auth = auth.split('=');
-        process.env['kong-dashboard-name'] = auth[0];
-        process.env['kong-dashboard-pass'] = auth[1];
+        process.env['KONG_DASHBOARD_NAME'] = auth[0];
+        process.env['KONG_DASHBOARD_PASS'] = auth[1];
     }
     var server = child_process.fork(__dirname + '/server', [], {
         env: process.env

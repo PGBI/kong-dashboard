@@ -59,7 +59,7 @@ kong-dashboard start -a user=password
 
 # You can set basic auth user with environment variables
 # Do not set -a parameter or this will be overwritten
-set kong-dashboard-name=admin && set kong-dashboard-pass=password && kong-dashboard start
+set KONG_DASHBOARD_NAME=admin && set KONG_DASHBOARD_PASS=password && kong-dashboard start
 ```
 
 ### From sources
