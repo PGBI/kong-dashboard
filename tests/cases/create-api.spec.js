@@ -12,8 +12,14 @@ var kd = new KongDashboard();
 
 describe('API creation testing testing', () => {
 
+  var apiSchema;
+
   beforeEach((done) => {
     Kong.deleteAllAPIs().then(done);
+  });
+
+  afterEach(() => {
+    browser.refresh();
   });
 
   beforeAll((done) => {
@@ -21,7 +27,11 @@ describe('API creation testing testing', () => {
       HomePage.visit();
       Sidebar.clickOn('APIs');
       ListAPIsPage.clickAddButton();
-      done();
+      request.get('http://127.0.0.1:8080/config').then((response) => {
+        eval(response.body);
+        apiSchema = __env.schemas.api;
+        done();
+      });
     });
   });
 
@@ -31,17 +41,13 @@ describe('API creation testing testing', () => {
 
   it('should recognize and display an input for every field', () => {
     expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/#!/apis/add');
-    request.get('http://127.0.0.1:8080/config').then((response) => {
-      eval(response.body);
-      var fields = Object.keys(__env.schemas.api.fields);
-      fields.forEach((fieldName) => {
-        expect(element(by.css('#attr_' + fieldName)).isPresent()).toBeTruthy('Form section for ' + fieldName + ' is missing');
-      })
-    });
+    Object.keys(apiSchema.fields).forEach((fieldName) => {
+      expect(element(by.css('#attr_' + fieldName)).isPresent()).toBeTruthy('Form section for ' + fieldName + ' is missing');
+    })
   });
 
   using(validApiInputsProvider, (data) => {
-    it('should correctly behave on API creation', (done) => {
+    it('should correctly create an API', (done) => {
       Object.keys(data.inputs).forEach((inputName) => {
         AttributeField.set(inputName, data.inputs[inputName]);
       });
@@ -54,6 +60,29 @@ describe('API creation testing testing', () => {
         delete api.created_at;
         delete api.id;
         expect(api).toEqual(data.expectedCreatedAPI);
+        done();
+      });
+    })
+  });
+
+  using(invalidApiInputsProvider, (data) => {
+    it('should correctly show validation error on API creation', (done) => {
+      Object.keys(data.inputs).forEach((inputName) => {
+        AttributeField.set(inputName, data.inputs[inputName]);
+      });
+      CreateAPIPage.submit().then(() => {
+        expect(element(by.cssContainingText('div.toast', 'Api created')).isPresent()).toBeFalsy();
+        Object.keys(apiSchema.fields).forEach((fieldName) => {
+          var expectIsInvalid = expect(AttributeField.isInvalid(fieldName));
+          var expectHasErrorMessage = expect(AttributeField.getElementErrorMsg(fieldName).isPresent());
+          if (data.expectedErrors.indexOf(fieldName) !== -1) {
+            expectIsInvalid.toBeTruthy(fieldName + ' should be errored');
+            expectHasErrorMessage.toBeTruthy(fieldName + ' should have an error message.');
+          } else {
+            expectIsInvalid.toBeFalsy(fieldName + ' should not be errored');
+            expectHasErrorMessage.toBeFalsy(fieldName + ' should not have an error message.');
+          }
+        });
         done();
       });
     })
@@ -91,6 +120,18 @@ describe('API creation testing testing', () => {
             strip_request_path: true,
             preserve_host: true
           }
+        }
+      ];
+    }
+    throw new Error('Kong version not supported in unit tests.')
+  }
+
+  function invalidApiInputsProvider() {
+    if (process.env.KONG_VERSION === '0.9') {
+      return [
+        {
+          inputs: {},
+          expectedErrors: ['request_host', 'request_path', 'upstream_url']
         }
       ];
     }

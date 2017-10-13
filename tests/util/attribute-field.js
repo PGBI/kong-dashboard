@@ -6,6 +6,10 @@ var AttributeField = {
     return element(by.css('#attr_' + name));
   },
 
+  getElementErrorMsg: (name) => {
+    return element(by.css('#attr_' + name + ' ~ div.errors'));
+  },
+
   set: function (name, value) {
     var elt = this.getElement(name);
     if (typeof value === 'string' || typeof value === 'number') {
@@ -20,6 +24,13 @@ var AttributeField = {
     } else {
       throw new Error("Invalid input value");
     }
+  },
+
+  isInvalid: function (name) {
+    var elt = this.getElement(name);
+    return elt.getAttribute('class').then((classes) => {
+      return classes.split(' ').indexOf('invalid') !== -1;
+    });
   }
 
 };
