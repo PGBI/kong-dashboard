@@ -12,8 +12,8 @@ var auth = require('basic-auth');
 var httpProxy = require('http-proxy');
 var url_parser = require('url');
 
-var name = process.env['kong-dashboard-name'];
-var pass = process.env['kong-dashboard-pass'];
+var name = process.env['KONG_DASHBOARD_NAME'];
+var pass = process.env['KONG_DASHBOARD_PASS'];
 
 /////////////////////////
 // Serving angular app //
@@ -143,6 +143,6 @@ app.use(mount('/', webapp));
 // serve proxy server
 app.use(mount('/proxy', proxyapp));
 
-app.listen(process.env['kong-dashboard-port']);
+app.listen(process.env['KONG_DASHBOARD_PORT']);
 
-console.log('Server is running on port ' + process.env['kong-dashboard-port']);
+console.log('Server is running on port ' + process.env['KONG_DASHBOARD_PORT']);
