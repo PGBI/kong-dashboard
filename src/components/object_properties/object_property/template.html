@@ -1,0 +1,95 @@
+<div class="col s11">
+  <input-property
+    ng-if="$ctrl.propertySchema.type == 'string' && !$ctrl.propertySchema.enum"
+    type="'text'"
+    style="display:block"
+    error="$ctrl.error"
+    label="$ctrl.label"
+    key="$ctrl.key"
+    schema="$ctrl.propertySchema"
+    object="$ctrl.object"
+    ></input-property>
+
+  <input-property
+    ng-if="$ctrl.propertySchema.type == 'url'"
+    type="'url'"
+    style="display:block"
+    error="$ctrl.error"
+    label="$ctrl.label"
+    key="$ctrl.key"
+    schema="$ctrl.propertySchema"
+    object="$ctrl.object"
+    ></input-property>
+
+  <input-property
+    ng-if="$ctrl.propertySchema.type == 'number'"
+    type="'number'"
+    style="display:block"
+    error="$ctrl.error"
+    label="$ctrl.label"
+    key="$ctrl.key"
+    schema="$ctrl.propertySchema"
+    object="$ctrl.object"
+    ></input-property>
+
+  <input-property
+    ng-if="$ctrl.propertySchema.type == 'array' && $ctrl.propertySchema.items.type == 'string' && !$ctrl.propertySchema.items.enum"
+    type="'text'"
+    style="display:block"
+    error="$ctrl.error"
+    label="$ctrl.label"
+    key="$ctrl.key"
+    schema="$ctrl.propertySchema"
+    object="$ctrl.object"
+    ></input-property>
+
+  <select-property
+    ng-if="$ctrl.propertySchema.type == 'string' && $ctrl.propertySchema.enum"
+    type="'text'"
+    style="display:block"
+    error="$ctrl.error"
+    label="$ctrl.label"
+    key="$ctrl.key"
+    schema="$ctrl.propertySchema"
+    object="$ctrl.object"
+  ></select-property>
+
+  <multi-select-property
+    ng-if="$ctrl.propertySchema.type == 'array' && $ctrl.propertySchema.items.type == 'string' && $ctrl.propertySchema.items.enum"
+    style="display:block"
+    error="$ctrl.error"
+    label="$ctrl.label"
+    key="$ctrl.key"
+    schema="$ctrl.propertySchema"
+    object="$ctrl.object"
+    ></multi-select-property>
+
+  <checkbox-property
+    ng-if="$ctrl.propertySchema.type == 'boolean'"
+    style="display:block"
+    error="$ctrl.error"
+    label="$ctrl.label"
+    key="$ctrl.key"
+    schema="$ctrl.propertySchema"
+    object="$ctrl.object"
+    ></checkbox-property>
+
+  <div class="card-panel" ng-if="$ctrl.propertySchema.type == 'object'" style="margin-bottom: 40px;">
+    <div class="card-title" style="padding: 0; margin-bottom: 40px; border-bottom: 1px #ccc solid; color: #ccc">
+      {{ $ctrl.key }}
+    </div>
+    <object-properties
+      schema="$ctrl.propertySchema"
+      object="$ctrl.object[$ctrl.key]"
+      errors="$ctrl.error"
+      ></object-properties>
+  </div>
+</div>
+
+<div class="col s1">
+  <a class="btn-floating waves-effect waves-light red"
+     ng-if="$ctrl.removable"
+     ng-click="$ctrl.deleteProperty()">
+    <i class="material-icons">delete</i>
+  </a>
+</div>

@@ -1,11 +1,18 @@
-<div class="col s12 input-field">
+<div class="input-field">
   <select multiple materialize-select
-          id="{{ 'attr_' + $ctrl.name }}"
+          id="{{ 'attr_' + $ctrl.key }}"
           ng-options="method as method for method in $ctrl.schema.items.enum"
-          ng-model="$ctrl.value">
+          ng-model="$ctrl.object[$ctrl.key]">
     <option value="" disabled selected>Choose options</option>
   </select>
-  <label>{{ $ctrl.name }}</label>
+  <label>{{ $ctrl.label }}</label>
+
+  <div
+    style="margin-top: -15px;"
+    class="red-text errors"
+    ng-if="$ctrl.error"
+    ng-bind-html="$ctrl.error | arrayToHtmlList">
+  </div >
 
   <p ng-if="$ctrl.schema.description"
      class="grey-text"

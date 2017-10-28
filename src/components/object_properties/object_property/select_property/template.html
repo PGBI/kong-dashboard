@@ -1,0 +1,22 @@
+<div class="input-field">
+  <select materialize-select
+          id="{{ 'attr_' + $ctrl.key }}"
+          ng-options="value as key for (key, value) in $ctrl.options"
+          ng-model="$ctrl.object[$ctrl.key]">
+    <option value="" disabled selected>Choose option</option>
+  </select>
+  <label>{{ $ctrl.label }}</label>
+
+  <div
+    style="margin-top: -15px;"
+    class="red-text errors"
+    ng-if="$ctrl.error"
+    ng-bind-html="$ctrl.error | arrayToHtmlList">
+  </div >
+
+  <p ng-if="$ctrl.schema.description"
+     class="grey-text"
+     style="margin-top: 0; margin-bottom: 30px; font-size: 85%">
+    <em>{{ $ctrl.schema.description }}</em>
+  </p>
+</div>

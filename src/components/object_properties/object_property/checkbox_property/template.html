@@ -1,14 +1,20 @@
-<div class="col s12" style="margin-top: 15px;">
+<div style="margin-top: 15px;">
   <input type="checkbox"
          class="filled-in validate"
-         id="{{ 'attr_' + $ctrl.name }}"
-         ng-model="$ctrl.value"
+         id="{{ 'attr_' + $ctrl.key }}"
+         ng-model="$ctrl.object[$ctrl.key]"
          ng-true-value="true"
          ng-false-value="false" />
   <label
-    for="{{ 'attr_' + $ctrl.name }}">
-    {{ $ctrl.name }}
+    for="{{ 'attr_' + $ctrl.key }}">
+    {{ $ctrl.label }}
   </label>
+
+  <div
+    class="red-text errors"
+    ng-if="$ctrl.error"
+    ng-bind-html="$ctrl.error | arrayToHtmlList">
+  </div >
 
   <p ng-if="$ctrl.schema.description"
      class="grey-text"

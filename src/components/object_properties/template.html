@@ -1,0 +1,38 @@
+<div class="row">
+  <object-property
+    ng-repeat="(key, schema) in $ctrl.schema.properties"
+    property-schema="schema"
+    key="key"
+    errors="$ctrl.errors"
+    object="$ctrl.object"></object-property>
+
+  <div ng-if="$ctrl.schema.additionalProperties">
+    <object-property
+      ng-repeat="(key, value) in $ctrl.object"
+      ng-if="!$ctrl.schema.properties.hasOwnProperty(key)"
+      property-schema="$ctrl.schema.additionalProperties"
+      key="key"
+      errors="$ctrl.errors"
+      object="$ctrl.object"
+      removable="true">
+    </object-property>
+
+    <div class="col s12 input-field"
+      style="margin-top: 50px;">
+      <input
+        id="new_property"
+        type="text"
+        placeholder="Input property name and press enter"
+        ng-model="$ctrl.newPropertyName"
+        ng-keypress="$ctrl.newPropertyKeyPress($event)"
+        class="validate">
+
+      <label
+        for="new_property"
+        class="active"
+        style="margin-bottom: 15px">
+        Add property
+      </label>
+    </div>
+  </div>
+</div>
