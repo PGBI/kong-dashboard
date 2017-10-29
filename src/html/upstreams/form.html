@@ -33,7 +33,20 @@
                     <label for="slots" ng-class="{active:upstream.slots}">Slot</label>
                     <app-field-error error="error.slots"></app-field-error>
                 </div>
-                <div class="input-field col s12">
+
+                <div class="input-field col s4">
+                    <a href="#/upstreams/{{upstream.id}}/targets/add" class="waves-effect waves-light btn" ng-show="isEdit()">
+                        <i class="material-icons left">add_box</i>
+                        Add Target
+                    </a>
+                </div>
+                <div class="input-field col s4">
+                    <a href="#/upstreams/{{upstream.id}}/targets" class="waves-effect waves-light btn" ng-show="isEdit()">
+                        <i class="material-icons left">list</i>
+                        List Target
+                    </a>
+                </div>
+                <div class="input-field col s4">
                     <button type="submit" class="waves-effect waves-light btn right">
                         {{action}}
                     </button>

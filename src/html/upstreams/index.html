@@ -51,7 +51,7 @@
         </p>
     </div>
 
-    <table class="bordered" ng-show="total > 0">
+    <table class="bordered " ng-show="total > 0">
         <thead>
         <tr>
             <th>ID</th>
@@ -69,6 +69,9 @@
             <td>{{upstream.slots}}</td>
             <td>{{upstream.created_at | date}}</td>
             <td class="right">
+                <a class="btn-floating waves-effect waves-light" href="#/upstreams/{{upstream.id}}/targets" alt="List Targets">
+                    <i class="material-icons tooltipped" data-position="bottom" data-tooltip="List Targets" data-delay="0" >input</i>
+                </a>
                 <a class="btn-floating waves-effect waves-light" href="#/upstreams/{{upstream.id}}">
                     <i class="material-icons">mode_edit</i>
                 </a>
