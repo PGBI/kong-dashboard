@@ -216,6 +216,24 @@ var app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate', 'ngSanitiz
           isAppReady: isAppReady,
         }
       })
+      .when('/upstreams/:upstream_id/targets', {
+        templateUrl: 'html/targets/index.html',
+        controller: 'TargetsController',
+        resolve: {
+          isAppReady: isAppReady,
+          upstream: ['Kong', '$route', function (Kong, $route) {
+            var id = $route.current.params.upstream_id;
+            return Kong.get('/upstreams/' + id);
+          }]
+        }
+      })
+      .when('/upstreams/:upstream_id/targets/add', {
+        templateUrl: 'html/targets/form.html',
+        controller: 'TargetController',
+        resolve: {
+          isAppReady: isAppReady
+        }
+      })
       .otherwise({redirectTo: '/'});
   }])
   .run(['$rootScope', 'Kong', '$location', function($rootScope, Kong, $location) {
