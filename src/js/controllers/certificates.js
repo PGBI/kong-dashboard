@@ -48,23 +48,4 @@ angular.module('app').controller("CertificatesController", ["$scope", "Kong", fu
       });
     });
   };
-
-  $scope.searchCertificates = function() {
-    $scope.searchResults = {};
-    var input = $scope.searchInput;
-    if (!input) {
-      $scope.searching = false;
-      return;
-    }
-
-    $scope.searching = true;
-
-    var populateResults = function(response) {
-      angular.forEach(response.data, function(value) {
-        $scope.searchResults[value.id] = value.id;
-      });
-    };
-
-    Kong.get('/certificates?id=' + input).then(populateResults);
-  };
 }]);
