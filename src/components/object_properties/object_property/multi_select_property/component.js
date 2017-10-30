@@ -12,7 +12,7 @@
       label: '<',
       object: '='
     },
-    templateUrl: 'components/object_properties/object_property/multi_select/template.html',
+    templateUrl: 'components/object_properties/object_property/multi_select_property/template.html',
     controller: 'MultiSelectPropertyController'
   });
 

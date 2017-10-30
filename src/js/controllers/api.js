@@ -1,5 +1,7 @@
-angular.module('app').controller("ApiController", ["$scope", "Kong", "$routeParams", "Alert", "api", "env", function ($scope, Kong, $routeParams, Alert, api, env) {
-    $scope.apiObjectSchema = env.schemas.api;
+angular.module('app').controller("ApiController", ["$scope", "Kong", "$routeParams", "Alert", "api", "env", function ($scope, Kong, $routeParams, Alert, api, env)
+{
+    $scope.schema = env.schemas.api;
+    $scope.errors = {};
 
     if ($routeParams.id) {
         $scope.api = api;
@@ -21,9 +23,9 @@ angular.module('app').controller("ApiController", ["$scope", "Kong", "$routePara
                 $scope.api = {};
             }
             // clearing errors.
-            $scope.error = {};
+            $scope.errors = {};
         }, function (response) {
-            if (response.status == 400) {
+            if (response.status == 400 || response.status == 409) {
                 $scope.errors = response.data;
             } else {
                 Alert.error('Unexpected error from Kong');

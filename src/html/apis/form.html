@@ -9,23 +9,20 @@
                     What's an API?
                 </h5>
                 <p class="white-text">
-                    {{ apiObjectSchema.description }}
+                    {{ schema.description }}
                 </p>
                 <p class="white-text">
-                    <a href="{{ apiObjectSchema.documentation }}" target="_blank">Official Kong documentation.</a>
+                    <a href="{{ schema.documentation }}" target="_blank">Official Kong documentation.</a>
                 </p>
             </div>
         </div>
         <form name="addAPI" class="col s7" novalidate ng-submit="save()">
+            <object-properties
+              schema="schema"
+              object="api"
+              errors="errors"
+              ></object-properties>
             <div class="row">
-                <resource-attribute
-                  ng-repeat="(key, schema) in apiObjectSchema.fields"
-                  schema="schema"
-                  name="key"
-                  error="errors[key]"
-                  value="api[key]"
-                  ></resource-attribute>
-
                 <div class="input-field col s12">
                     <button type="submit" class="waves-effect waves-light btn right">
                         {{action}}

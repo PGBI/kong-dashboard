@@ -6,11 +6,11 @@ var KongDashboard = require('../util/kong-dashboard-handler');
 var Kong = require('../util/kong-handler');
 var request = require('../../lib/request');
 var using = require('jasmine-data-provider');
-var AttributeField = require('../util/attribute-field');
+var PropertyInput = require('../util/property-input');
 
 var kd = new KongDashboard();
 
-describe('API creation testing testing', () => {
+describe('API creation testing', () => {
 
   var apiSchema;
 
@@ -41,15 +41,15 @@ describe('API creation testing testing', () => {
 
   it('should recognize and display an input for every field', () => {
     expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/#!/apis/add');
-    Object.keys(apiSchema.fields).forEach((fieldName) => {
-      expect(element(by.css('#attr_' + fieldName)).isPresent()).toBeTruthy('Form section for ' + fieldName + ' is missing');
+    Object.keys(apiSchema.properties).forEach((fieldName) => {
+      expect(PropertyInput.getElement(fieldName).isPresent()).toBeTruthy('Form section for ' + fieldName + ' is missing');
     })
   });
 
   using(validApiInputsProvider, (data) => {
     it('should correctly create an API', (done) => {
       Object.keys(data.inputs).forEach((inputName) => {
-        AttributeField.set(inputName, data.inputs[inputName]);
+        PropertyInput.set(inputName, data.inputs[inputName]);
       });
       CreateAPIPage.submit().then(() => {
         expect(element(by.cssContainingText('div.toast', 'Api created')).isPresent()).toBeTruthy();
@@ -68,21 +68,26 @@ describe('API creation testing testing', () => {
   using(invalidApiInputsProvider, (data) => {
     it('should correctly show validation error on API creation', (done) => {
       Object.keys(data.inputs).forEach((inputName) => {
-        AttributeField.set(inputName, data.inputs[inputName]);
+        PropertyInput.set(inputName, data.inputs[inputName]);
       });
       CreateAPIPage.submit().then(() => {
         expect(element(by.cssContainingText('div.toast', 'Api created')).isPresent()).toBeFalsy();
-        Object.keys(apiSchema.fields).forEach((fieldName) => {
-          var expectIsInvalid = expect(AttributeField.isInvalid(fieldName));
-          var expectHasErrorMessage = expect(AttributeField.getElementErrorMsg(fieldName).isPresent());
-          if (data.expectedErrors.indexOf(fieldName) !== -1) {
-            expectIsInvalid.toBeTruthy(fieldName + ' should be errored');
-            expectHasErrorMessage.toBeTruthy(fieldName + ' should have an error message.');
-          } else {
-            expectIsInvalid.toBeFalsy(fieldName + ' should not be errored');
-            expectHasErrorMessage.toBeFalsy(fieldName + ' should not have an error message.');
-          }
-        });
+        if (data.expectedErrors.globalError) {
+          expect(element(by.cssContainingText('div.toast', data.expectedErrors.globalError)).isPresent()).toBeTruthy();
+        }
+        if (data.expectedErrors.properties) {
+          Object.keys(apiSchema.properties).forEach((fieldName) => {
+            var expectIsInvalid = expect(PropertyInput.isInvalid(fieldName));
+            var expectHasErrorMessage = expect(PropertyInput.getElementErrorMsg(fieldName).isPresent());
+            if (data.expectedErrors.properties.indexOf(fieldName) !== -1) {
+              expectIsInvalid.toBeTruthy(fieldName + ' should be errored');
+              expectHasErrorMessage.toBeTruthy(fieldName + ' should have an error message.');
+            } else {
+              expectIsInvalid.toBeFalsy(fieldName + ' should not be errored');
+              expectHasErrorMessage.toBeFalsy(fieldName + ' should not have an error message.');
+            }
+          });
+        }
         done();
       });
     })
@@ -123,6 +128,38 @@ describe('API creation testing testing', () => {
         }
       ];
     }
+
+    if (process.env.KONG_VERSION === '0.10' || process.env.KONG_VERSION === '0.11') {
+      return [
+        {
+          inputs: {
+            name: 'my_awesome_API',
+            hosts: ['host1.com', 'host2.com'],
+            uris: ['/1.0', '/2.0'],
+            methods: ['GET', 'POST'],
+            upstream_url: 'http://upstream.loc',
+            strip_uri: false,
+            http_if_terminated: true
+          },
+          expectedCreatedAPI: {
+            name: 'my_awesome_API',
+            hosts: ['host1.com', 'host2.com'],
+            uris: ['/1.0', '/2.0'],
+            methods: ['GET', 'POST'],
+            upstream_url: 'http://upstream.loc',
+            strip_uri: false,
+            preserve_host: false,
+            retries: 5,
+            upstream_connect_timeout: 60000,
+            upstream_send_timeout: 60000,
+            upstream_read_timeout: 60000,
+            https_only: false,
+            http_if_terminated: true
+          }
+        }
+      ];
+    }
+
     throw new Error('Kong version not supported in unit tests.')
   }
 
@@ -131,7 +168,19 @@ describe('API creation testing testing', () => {
       return [
         {
           inputs: {},
-          expectedErrors: ['request_host', 'request_path', 'upstream_url']
+          expectedErrors: {'properties': ['request_host', 'request_path', 'upstream_url']}
+        }
+      ];
+    }
+    if (process.env.KONG_VERSION === '0.10' || process.env.KONG_VERSION === '0.11') {
+      return [
+        {
+          inputs: {},
+          expectedErrors: {'properties': ['name', 'upstream_url']}
+        },
+        {
+          inputs: {name: 'hello', upstream_url: 'http://goo'},
+          expectedErrors: {'globalError': "at least one of 'hosts', 'uris' or 'methods' must be specified"}
         }
       ];
     }

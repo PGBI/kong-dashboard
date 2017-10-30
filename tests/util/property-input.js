@@ -1,13 +1,13 @@
-var AttributeField = {
+var PropertyInput = {
 
   title: element(by.css('h3.header')),
 
   getElement: (name) => {
-    return element(by.css('#attr_' + name));
+    return element(by.css("#property-" + name));
   },
 
   getElementErrorMsg: (name) => {
-    return element(by.css('#attr_' + name + ' ~ div.errors'));
+    return element(by.css("#property-" + name + ' ~ div.errors'));
   },
 
   set: function (name, value) {
@@ -17,12 +17,26 @@ var AttributeField = {
     } else if (typeof value === 'boolean') {
       elt.isSelected().then((isSelected) => {
         if (isSelected !== value) {
-          var label = element(by.css('label[for=attr_' + name + ']'));
+          var label = element(by.css('label[for=property-' + name + ']'));
           browser.actions().mouseMove(label).click().perform();
         }
       })
+    } else if (Array.isArray(value)) {
+      elt.getTagName().then((tagName) => {
+        if (tagName === 'input') {
+          elt.sendKeys(value.join());
+        } else if (tagName === 'select') {
+          elt.element(by.xpath("..")).element(by.css('input.select-dropdown')).click();
+          value.forEach((val) => {
+            elt.element(by.xpath("..")).element(by.cssContainingText('li', val)).click();
+          });
+          browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
+        } else {
+          throw "Don't know how to fill in " + tagName;
+        }
+      });
     } else {
-      throw new Error("Invalid input value");
+      throw new Error("Invalid input value " + name + " of type " + typeof value);
     }
   },
 
@@ -35,4 +49,4 @@ var AttributeField = {
 
 };
 
-module.exports = AttributeField;
+module.exports = PropertyInput;
