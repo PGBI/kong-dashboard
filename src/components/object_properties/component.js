@@ -6,7 +6,8 @@
     bindings: {
       schema: '<',
       object: '=',
-      errors: '<'
+      errors: '<',
+      path: '<'
     },
     templateUrl: 'components/object_properties/template.html',
     controller: 'ObjectPropertiesController'

@@ -1,6 +1,6 @@
 <div class="input-field">
   <select materialize-select
-          id="{{ 'attr_' + $ctrl.key }}"
+          id="{{ 'property-' + $ctrl.path }}"
           ng-options="value as key for (key, value) in $ctrl.options"
           ng-model="$ctrl.object[$ctrl.key]">
     <option value="" disabled selected>Choose option</option>

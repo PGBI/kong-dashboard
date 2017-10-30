@@ -1,6 +1,6 @@
 <div class="input-field">
   <select multiple materialize-select
-          id="{{ 'attr_' + $ctrl.key }}"
+          id="{{ 'property-' + $ctrl.path }}"
           ng-options="method as method for method in $ctrl.schema.items.enum"
           ng-model="$ctrl.object[$ctrl.key]">
     <option value="" disabled selected>Choose options</option>

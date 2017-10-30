@@ -2,6 +2,7 @@
   <object-property
     ng-repeat="(key, schema) in $ctrl.schema.properties"
     property-schema="schema"
+    path="$ctrl.path ? $ctrl.path + '-' + key : key"
     key="key"
     errors="$ctrl.errors"
     object="$ctrl.object"></object-property>
@@ -11,6 +12,7 @@
       ng-repeat="(key, value) in $ctrl.object"
       ng-if="!$ctrl.schema.properties.hasOwnProperty(key)"
       property-schema="$ctrl.schema.additionalProperties"
+      path="$ctrl.path ? $ctrl.path + '-' + key : key"
       key="key"
       errors="$ctrl.errors"
       object="$ctrl.object"

@@ -9,6 +9,7 @@
       object: '=',
       errors: '<',
       removable: '<',
+      path: '<'
     },
     templateUrl: 'components/object_properties/object_property/template.html',
     controller: 'ObjectPropertyController'

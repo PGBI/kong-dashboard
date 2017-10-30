@@ -1,3 +1,8 @@
+var chromeArgs = [];
+if (process.env.TRAVIS) {
+  chromeArgs = ["--headless", "--disable-gpu"];
+}
+
 exports.config = {
   directConnect: true,
   framework: 'jasmine',
@@ -8,10 +13,7 @@ exports.config = {
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {
-      args: [
-        "--headless",
-        "--disable-gpu"
-      ]
+      args: chromeArgs
     }
   },
   baseUrl: 'http://localhost:8080'

@@ -25,20 +25,6 @@
       vm.object[vm.newPropertyName] = vm.schema.additionalProperties.type == 'object' ? {} : '';
       vm.newPropertyName = '';
     };
-
-    /*
-    vm.$onInit = function() {
-
-      if (typeof vm.object[vm.key] === 'undefined' && typeof vm.schema.default !== 'undefined') {
-        vm.object[vm.key] = vm.schema.default;
-      }
-
-      vm.label = vm.schema.label || vm.key;
-    };
-
-    vm.deleteProperty = function(key) {
-      delete vm.object[key];
-    }*/
   }
 
 })();

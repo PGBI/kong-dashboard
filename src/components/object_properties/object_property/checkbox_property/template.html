@@ -1,12 +1,12 @@
 <div style="margin-top: 15px;">
   <input type="checkbox"
          class="filled-in validate"
-         id="{{ 'attr_' + $ctrl.key }}"
+         id="{{ 'property-' + $ctrl.path }}"
          ng-model="$ctrl.object[$ctrl.key]"
          ng-true-value="true"
          ng-false-value="false" />
   <label
-    for="{{ 'attr_' + $ctrl.key }}">
+    for="{{ 'property-' + $ctrl.path }}"
     {{ $ctrl.label }}
   </label>
 

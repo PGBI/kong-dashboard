@@ -1,6 +1,6 @@
 <div class="input-field">
   <input
-    id="{{ 'attr_' + $ctrl.key }}"
+    id="{{ 'property-' + $ctrl.path }}"
     type="{{ $ctrl.type }}"
     ng-attr-placeholder="{{ $ctrl.schema.default }}"
     class="validate"
@@ -8,7 +8,7 @@
     ng-class="{invalid: $ctrl.error}">
 
   <label
-    for="{{ 'attr_' + $ctrl.key }}"
+    for="{{ 'property-' + $ctrl.path }}"
     ng-class="{ 'active': $ctrl.object[$ctrl.key] || $ctrl.schema.default }"
     style="margin-bottom: 15px">
     {{ $ctrl.label }}

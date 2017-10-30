@@ -6,6 +6,7 @@
     bindings: {
       schema: '<',
       key: '<',
+      path: '<',
       type: '<',
       error: '<',
       label: '<',
