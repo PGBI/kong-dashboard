@@ -3,6 +3,7 @@
          class="filled-in validate"
          id="{{ 'property-' + $ctrl.path }}"
          ng-model="$ctrl.object[$ctrl.key]"
+         ng-disabled="{{ $ctrl.schema.readonly }}"
          ng-true-value="true"
          ng-false-value="false" />
   <label

@@ -2,6 +2,7 @@
   <select materialize-select
           id="{{ 'property-' + $ctrl.path }}"
           ng-options="value as key for (key, value) in $ctrl.options"
+          ng-disabled="{{ $ctrl.schema.readonly }}"
           ng-model="$ctrl.object[$ctrl.key]">
     <option value="" disabled selected>Choose option</option>
   </select>

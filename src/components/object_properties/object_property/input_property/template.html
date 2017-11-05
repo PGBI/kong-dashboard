@@ -3,6 +3,7 @@
     id="{{ 'property-' + $ctrl.path }}"
     type="{{ $ctrl.type }}"
     ng-attr-placeholder="{{ $ctrl.schema.default }}"
+    ng-disabled="{{ $ctrl.schema.readonly }}"
     class="validate"
     ng-model="$ctrl.object[$ctrl.key]"
     ng-class="{invalid: $ctrl.error}">

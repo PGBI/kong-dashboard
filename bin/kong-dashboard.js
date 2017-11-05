@@ -7,6 +7,7 @@ var KongDashboardServer = require('../lib/server');
 var terminal = require('../lib/terminal');
 
 program
+  .locale('en')
   .usage('$0 <cmd> [args]')
 
   .example('$0 start \\\n--kong-url http://kong:8001', 'Start Kong Dashboard on default port 8080')

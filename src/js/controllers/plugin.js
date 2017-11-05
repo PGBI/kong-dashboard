@@ -1,68 +1,64 @@
 angular.module('app').controller("PluginController", ["$scope", "Kong", "$location", "$routeParams", "plugins", "apis", "consumers", "plugin", "Alert", function ($scope, Kong, $location, $routeParams, plugins, apis, consumers, plugin, Alert)
 {
-    $scope.api_id_required = false;
-    // Kong before version 0.9.x didn't allow to define cross-apis plugins.
-    var kong_version = Kong.config.kong_version.split('.');
-    if (kong_version[0] == 0 && kong_version[1] < 9) {
-        $scope.api_id_required = true;
-    }
-
-    if (plugins.enabled_plugins instanceof Array) {
-        $scope.enabled_plugins = plugins.enabled_plugins;
-    } else {
-        // Happens with kong 0.9.0. See issue #52
-        $scope.enabled_plugins = Object.keys(plugins.enabled_plugins);
-    }
-
-    $scope.plugin = plugin ? angular.copy(plugin) : {};
-
-    $scope.error = {};
-    $scope.apis = apis;
-    $scope.consumers = consumers;
-    $scope.mode = plugin ? 'edit' : 'create';
-
-    $scope.loadSchema = function () {
-        $scope.plugin_schema_loaded = false;
-        $scope.plugin_schema_loading = true;
-        Kong.get('/plugins/schema/' + $scope.plugin.name).then(function (response) {
-            $scope.plugin_schema_loaded = true;
-            $scope.plugin_schema_loading = false;
-            $scope.plugin_schema = response;
-            if ($scope.plugin_schema.no_consumer) {
-                delete $scope.plugin.consumer_id;
-            }
-            if ($scope.mode === 'create') {
-                $scope.plugin.config = {};
-            }
-            populatePluginWithDefaultValues();
-            afterFind($scope.plugin.config, $scope.plugin_schema.fields);
-        });
-    };
-
-    $scope.isPublic = function (fieldName) {
-        return fieldName.slice(0, 1) != '_';
-    };
-
+    var mode;
     if (plugin) {
         $scope.title = "Edit Plugin";
         $scope.action = "Save";
-        $scope.loadSchema();
+        mode = 'edit';
     } else {
         $scope.title = "Add plugin";
         $scope.action = "Add";
+        mode = 'create';
     }
 
-    $scope.save = function () {
-        if (!$scope.plugin.api_id) {
-            if ($scope.api_id_required) {
-                Alert.error("You must select an API.");
-                return;
-            } else {
-                // Kong 0.9.x will fail if the body payload contains {api_id: null}
-                delete $scope.plugin.api_id;
+    var enabledPlugins = Array.isArray(plugins.enabled_plugins) ?
+      plugins.enabled_plugins :
+      Object.keys(plugins.enabled_plugins); // Happens with kong 0.9.0. See issue #52
+
+    var apisOptions = {'All': null};
+    apis.data.forEach(function(api) {
+        apisOptions[api.name] = api.id
+    });
+    var consumerOptions = {'All': null};
+    consumers.data.forEach(function(consumer) {
+        consumerOptions[consumer.username] = consumer.id
+    });
+
+    $scope.schema = {
+        properties: {
+            'api_id': {
+                required: false,
+                type: 'string',
+                'enum': apisOptions,
+                label: 'Which API(s) should this plugin apply to?'
+            },
+            'name': {
+                required: true,
+                type: 'string',
+                'enum': enabledPlugins.sort(),
+                label: 'Plugin',
+                readonly: mode === 'edit'
             }
         }
-        beforeSave($scope.plugin.config, $scope.plugin_schema.fields);
+    };
+    $scope.plugin = plugin || {};
+    if (!$scope.plugin.api_id) {
+        $scope.plugin.api_id = null;
+    }
+
+    $scope.errors = {};
+
+    $scope.$watch('plugin.name', loadSchema);
+
+    $scope.consumers = consumers;
+    $scope.mode = plugin ? 'edit' : 'create';
+
+    $scope.save = function () {
+        var plugin = angular.copy($scope.plugin);
+        if (!$scope.plugin.api_id) {
+            // Kong 0.9.x will fail if the body payload contains {api_id: null}
+            delete $scope.plugin.api_id;
+        }
         if (!$scope.plugin.name) {
             Alert.error("You must choose a plugin.");
             return;
@@ -72,114 +68,99 @@ angular.module('app').controller("PluginController", ["$scope", "Kong", "$locati
 
         Kong.put(endpoint, data).then(function (response) {
             Alert.success('Plugin saved!');
-            $scope.error = {};
+            $scope.errors = {};
             if ($scope.mode === 'create') {
                 $scope.plugin = {};
-                $scope.plugin_schema_loaded = false;
             } else {
                 $scope.plugin = response;
-                populatePluginWithDefaultValues();
+                if (!$scope.plugin.hasOwnProperty('api_id')) {
+                    $scope.plugin.api_id = null;
+                }
             }
-            afterFind($scope.plugin.config, $scope.plugin_schema.fields);
         }, function (response) {
-            $scope.error = response.data;
-            // if error not linked to a specific field, throw an error notification.
-            if (response.data.config && angular.isString(response.data.config)) {
-                Alert.error(response.data.config);
+            if (!response) {
+                // unexpected error message already displayed by Kong service.
+                return;
+            }
+            if (response.status == 400 || response.status == 409) {
+                $scope.errors = response.data;
+            } else {
+                Alert.error('Unexpected error from Kong');
+                console.log(response);
             }
         });
     };
 
-    $scope.newObj = {};
-
-    $scope.addFormObject = function(field, schema) {
-        if (!$scope.newObj[field] || $scope.newObj[field] == '') {
+    function loadSchema(pluginName) {
+        if (typeof pluginName === 'undefined') {
             return;
         }
-        if (!$scope.plugin.config[field]) {
-            $scope.plugin.config[field] = {};
-        }
-        $scope.plugin.config[field][$scope.newObj[field]] = {};
-        angular.forEach(schema, function(field_attrs, field_name) {
-            var default_value = field_attrs.default ? field_attrs.default : '';
-            $scope.plugin.config[field][$scope.newObj[field]][field_name] = default_value;
-        });
-        $scope.newObj[field] = '';
-    };
+        $scope.plugin_schema_loaded = false;
+        $scope.plugin_schema_loading = true;
+        Kong.get('/plugins/schema/' + $scope.plugin.name).then(function (response) {
 
-    $scope.removeFormObject = function(field, sub_field) {
-        if ($scope.plugin.config[field][sub_field]) {
-            delete $scope.plugin.config[field][sub_field];
-        }
-    };
+            delete($scope.schema.properties.consumer_id);
+            delete($scope.schema.properties.config);
 
-    function populatePluginWithDefaultValues() {
-        angular.forEach($scope.plugin_schema.fields, function(fieldAttrs, fieldName) {
-            if ($scope.isPublic(fieldName)) {
-                if (fieldAttrs.hasOwnProperty('default') && fieldAttrs.default !== 'function') {
-                    if (!$scope.plugin.hasOwnProperty('config')) {
-                        $scope.plugin.config = {};
-                    }
-                    if (!$scope.plugin.config.hasOwnProperty(fieldName)) {
-                        $scope.plugin.config[fieldName] = fieldAttrs.default;
-                    }
+            if (!response.no_consumer) {
+                $scope.schema.properties.consumer_id = {
+                    required: false,
+                    type: 'string',
+                    'enum': consumerOptions,
+                    label: 'Apply to'
                 }
+            } else {
+                delete $scope.schema.properties.consumer_id;
+                delete $scope.plugin.consumer_id;
+            }
+
+            $scope.schemaBefore = response;
+            $scope.schemaAfter = convertPluginSchema(response);
+
+            $scope.schema.properties.config = convertPluginSchema(response);
+            $scope.plugin_schema_loaded = true;
+            $scope.plugin_schema_loading = false;
+            if ($scope.mode === 'create') {
+                $scope.plugin.config = {};
             }
         });
-    }
+    };
 
     /**
-     * Transform the plugin object before saving it into kong.
-     * @param obj
+     * Convert a "kong" schema to a schema compatible with http://json-schema.org
      * @param schema
      */
-    function beforeSave(obj, schema) {
-        if (typeof obj === 'undefined') {
-            return;
-        }
-        angular.forEach(schema, function(attrs, key) {
-            if (attrs.type === 'table') {
-                if (attrs.schema.flexible) {
-                    angular.forEach(obj[key], function(value, sub_key) {
-                        beforeSave(obj[key][sub_key], schema[key].schema.fields)
-                    });
+    function convertPluginSchema(schema) {
+        var result = {properties: {}, type: 'object'};
+        Object.keys(schema.fields).forEach(function(propertyName) {
+            result.properties[propertyName] = {
+                type: schema.fields[propertyName].type
+            };
+            if (schema.fields[propertyName].enum) {
+                result.properties[propertyName].enum = schema.fields[propertyName].enum;
+            }
+            if (schema.fields[propertyName].hasOwnProperty('default')) {
+                result.properties[propertyName].default = schema.fields[propertyName].default;
+            }
+            if (schema.fields[propertyName].hasOwnProperty('required')) {
+                result.properties[propertyName].required = schema.fields[propertyName].required;
+            }
+            if (result.properties[propertyName].type === 'table') {
+                result.properties[propertyName].type = 'object';
+                if (schema.fields[propertyName].schema.flexible) {
+                    result.properties[propertyName].additionalProperties = convertPluginSchema(schema.fields[propertyName].schema).properties;
                 } else {
-                    beforeSave(obj[key], schema[key].schema.fields);
-                }
-            } else if (attrs.type === 'array') {
-                if (!obj.hasOwnProperty(key) || obj[key] === '' || angular.equals(obj[key], {})) {
-                    delete obj[key]; // Fix issue #11
-                }
-            } else if (attrs.type === 'string' || attrs.type === 'url') {
-                if (angular.isString(obj[key]) && obj[key] === '') {
-                    // do nothing
-                }
-            } else if (attrs.type === 'number') {
-                if (angular.isString(obj[key]) && obj[key] === '') {
-                    delete obj[key];
+                    result.properties[propertyName].properties = convertPluginSchema(schema.fields[propertyName].schema).properties;
                 }
             }
-        });
-    }
 
-    /**
-     * Transform the plugin object after being retrieved from Kong to be compatible with html forms (example:
-     * transform arrays into comma separated lists).
-     * @param obj
-     * @param schema
-     */
-    function afterFind(obj, schema) {
-        angular.forEach(obj, function(value, key) {
-            if (angular.equals(value, {}) && schema[key].type === 'array') {
-                obj[key] = [];
+            if (result.properties[propertyName].type === 'array') {
+                // by default, assuming the elements of a property of type array is a string, since it's
+                // the case most of the time, and Kong doesn't provide the types of the elements of array properties :(
+                result.properties[propertyName].items = {type: 'string'}
             }
-            if (schema[key].type === 'array') {
-                if (!schema[key].enum) {
-                    obj[key] = obj[key].join();
-                }
-            } else if (schema[key].type == 'table' && !schema[key].schema.flexible) {
-                afterFind(obj[key], schema[key].schema.fields);
-            }
+
         });
+        return result;
     }
 }]);
