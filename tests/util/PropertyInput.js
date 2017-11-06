@@ -9,7 +9,7 @@ var PropertyInput = {
   },
 
   getElementErrorMsg: (name) => {
-    return element(by.css("#property-" + name + ' ~ div.errors'));
+    return element(by.css("#error-" + name));
   },
 
   set: function (name, value) {
@@ -17,7 +17,9 @@ var PropertyInput = {
     if (typeof value === 'number') {
       elt.clear();
       return elt.sendKeys(value);
-    } else if(typeof value === 'string') {
+    }
+
+    if (typeof value === 'string') {
       return elt.getTagName().then((tagName) => {
         if (tagName === 'input') {
           elt.clear();
@@ -34,15 +36,18 @@ var PropertyInput = {
           throw "Don't know how to fill in " + tagName;
         }
       });
+    }
 
-    } else if (typeof value === 'boolean') {
+    if (typeof value === 'boolean') {
       return elt.isSelected().then((isSelected) => {
         if (isSelected !== value) {
           var label = element(by.css('label[for=property-' + name + ']'));
           return browser.actions().mouseMove(label).click().perform();
         }
       })
-    } else if (Array.isArray(value)) {
+    }
+
+    if (Array.isArray(value)) {
       return elt.getTagName().then((tagName) => {
         if (tagName === 'input') {
           return elt.sendKeys(value.join());
@@ -60,16 +65,13 @@ var PropertyInput = {
           throw "Don't know how to fill in " + tagName;
         }
       });
-    } else {
-      throw new Error("Invalid input value " + name + " of type " + typeof value);
     }
+
+    throw new Error("Invalid input value " + name + " of type " + typeof value);
   },
 
   isInvalid: function (name) {
-    var elt = this.getElement(name);
-    return elt.getAttribute('class').then((classes) => {
-      return classes.split(' ').indexOf('invalid') !== -1;
-    });
+    return this.getElementErrorMsg(name).isDisplayed();
   }
 
 };

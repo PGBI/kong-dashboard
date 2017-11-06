@@ -6,7 +6,7 @@ var KongDashboard = require('../util/kong-dashboard-handler');
 var Kong = require('../util/kong-handler');
 var request = require('../../lib/request');
 var using = require('jasmine-data-provider');
-var PropertyInput = require('../util/property-input');
+var PropertyInput = require('../util/PropertyInput');
 
 var kd = new KongDashboard();
 
@@ -77,13 +77,10 @@ describe('API creation testing', () => {
         }
         if (data.expectedErrors.properties) {
           Object.keys(apiSchema.properties).forEach((fieldName) => {
-            var expectIsInvalid = expect(PropertyInput.isInvalid(fieldName));
             var expectHasErrorMessage = expect(PropertyInput.getElementErrorMsg(fieldName).isPresent());
             if (data.expectedErrors.properties.indexOf(fieldName) !== -1) {
-              expectIsInvalid.toBeTruthy(fieldName + ' should be errored');
               expectHasErrorMessage.toBeTruthy(fieldName + ' should have an error message.');
             } else {
-              expectIsInvalid.toBeFalsy(fieldName + ' should not be errored');
               expectHasErrorMessage.toBeFalsy(fieldName + ' should not have an error message.');
             }
           });

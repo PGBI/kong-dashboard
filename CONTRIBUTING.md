@@ -36,5 +36,5 @@ KONG_VERSION=0.9 docker-compose up kong-dashboard
 docker exec -it kong sh -c "yes | kong migrations reset && kong migrations up"
 
 # Run tests
-npm run test
+npm test
 ```

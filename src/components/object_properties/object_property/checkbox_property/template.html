@@ -6,14 +6,14 @@
          ng-disabled="{{ $ctrl.schema.readonly }}"
          ng-true-value="true"
          ng-false-value="false" />
-  <label
-    for="{{ 'property-' + $ctrl.path }}"
+  <label for="{{ 'property-' + $ctrl.path }}">
     {{ $ctrl.label }}
   </label>
 
   <div
     class="red-text errors"
     ng-if="$ctrl.error"
+    id="{{ 'error-' + $ctrl.path }}"
     ng-bind-html="$ctrl.error | arrayToHtmlList">
   </div >
 

@@ -4,9 +4,8 @@ var PluginPage = require('../../util/PluginPage');
 var ListPluginsPage = require('../../util/list-plugins-page');
 var KongDashboard = require('../../util/kong-dashboard-handler');
 var Kong = require('../../util/kong-handler');
-var PropertyInput = require('../../util/property-input');
+var PropertyInput = require('../../util/PropertyInput');
 var ObjectProperties = require('../../util/ObjectProperties');
-//var request = require('../../../lib/request');
 
 var kd = new KongDashboard();
 
