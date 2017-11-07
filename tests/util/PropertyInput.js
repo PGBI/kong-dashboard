@@ -12,6 +12,20 @@ var PropertyInput = {
     return element(by.css("#error-" + name));
   },
 
+  /**
+   * Returns a Promise that will resolve with the value of the form element representing the field <name>
+   * @param name
+   */
+  get: function(name) {
+    var elt = this.getElement(name);
+    return elt.getTagName().then((tagName) => {
+      if (tagName === 'select') {
+       return elt.element(by.xpath("..")).element(by.css('input')).getAttribute('value');
+      }
+      throw 'Not able to fetch values of form elements of type ' + tagName;
+    });
+  },
+
   set: function (name, value) {
     var elt = this.getElement(name);
     if (typeof value === 'number') {

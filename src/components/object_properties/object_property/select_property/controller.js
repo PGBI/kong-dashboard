@@ -16,6 +16,10 @@
       } else {
         vm.options = vm.schema.enum;
       }
+
+      if (!vm.object.hasOwnProperty(vm.key) && vm.schema.hasOwnProperty('default')) {
+        vm.object[vm.key] = vm.schema.default;
+      }
     };
   }
 
