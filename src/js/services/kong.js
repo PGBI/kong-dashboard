@@ -57,5 +57,38 @@ angular.module('app')
       };
     });
 
+    /**
+     * In case of a 400 response, Kong returns validation errors in the following form:
+     * {
+     *   field1: "error message for field1",
+     *   config.nested_field: "error message for nested field"
+     * }
+     * This method takes this object and transform it into that format:
+     * {
+     *   field1: "error message for field1",
+     *   config: {
+     *     nested_field: "error message for nested field"
+     *   }
+     * }
+     */
+    factory.unflattenErrorResponse = function(kongResponseBody) {
+      if (Object(kongResponseBody) !== kongResponseBody || Array.isArray(kongResponseBody)) {
+        return kongResponseBody;
+      }
+      var result = {}, cur, prop, idx, last, temp;
+      for(var p in kongResponseBody) {
+        cur = result, prop = "", last = 0;
+        do {
+          idx = p.indexOf(".", last);
+          temp = p.substring(last, idx !== -1 ? idx : undefined);
+          cur = cur[prop] || (cur[prop] = (!isNaN(parseInt(temp)) ? [] : {}));
+          prop = temp;
+          last = idx + 1;
+        } while(idx >= 0);
+        cur[prop] = kongResponseBody[p];
+      }
+      return result[""];
+    };
+
     return factory;
   }]);

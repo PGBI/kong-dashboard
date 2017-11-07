@@ -83,7 +83,7 @@ angular.module('app').controller("PluginController", ["$scope", "Kong", "$locati
                 return;
             }
             if (response.status == 400 || response.status == 409) {
-                $scope.errors = response.data;
+                $scope.errors = Kong.unflattenErrorResponse(response.data);
             } else {
                 Alert.error('Unexpected error from Kong');
                 console.log(response);

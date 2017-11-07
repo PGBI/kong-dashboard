@@ -30,6 +30,8 @@ var PropertyInput = {
           return dropdown.click().then(() => {
             return browser.wait(until.presenceOf(li));
           }).then(() => {
+            return browser.executeScript("arguments[0].scrollIntoView()", li);
+          }).then(() => {
             return li.click();
           });
         } else {

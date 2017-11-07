@@ -3,7 +3,7 @@ var Sidebar = require('../../util/sidebar');
 var PluginPage = require('../../util/PluginPage');
 var ListPluginsPage = require('../../util/list-plugins-page');
 var KongDashboard = require('../../util/kong-dashboard-handler');
-var Kong = require('../../util/kong-handler');
+var Kong = require('../../util/KongClient');
 var PropertyInput = require('../../util/PropertyInput');
 var ObjectProperties = require('../../util/ObjectProperties');
 
