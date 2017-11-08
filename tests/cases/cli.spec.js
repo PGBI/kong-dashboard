@@ -1,10 +1,31 @@
 var request = require('../../lib/request');
 var KongDashboard = require('../util/kong-dashboard-handler');
+var Kong = require('../util/KongClient');
+
+var kd = new KongDashboard();
 
 describe('Starting Kong-dashboard', function () {
 
+  beforeAll((done) => {
+    Promise.all([
+      Kong.deleteAllAPIs(),
+      Kong.deleteAllPlugins()
+    ]).then(() => {
+      return Promise.all([
+        createKongAPI(),
+        createConsumer()
+      ]);
+    }).then(done);
+  });
+
+  afterEach((done) => {
+    kd.stop(() => {
+      kd.clean();
+      done();
+    });
+  });
+
   it("should error if required kong_url parameter is missing", (done) => {
-    var kd = new KongDashboard();
     kd.start({}, () => {}, (code) => {
       expect(code).toBe(1);
       expect(kd.stderr).toContain('Missing required argument: kong-url');
@@ -13,7 +34,6 @@ describe('Starting Kong-dashboard', function () {
   });
 
   it("should error if kong isn't reachable", (done) => {
-    var kd = new KongDashboard();
     kd.start({'--kong-url': 'http://127.0.0.1:8002'}, () => {}, (code) => {
       expect(code).toBe(1);
       expect(kd.stderr).toContain('Could not reach Kong on http://127.0.0.1:8002');
@@ -22,7 +42,6 @@ describe('Starting Kong-dashboard', function () {
   });
 
   it("should error if kong-url doesn't not point to a Kong admin API", (done) => {
-    var kd = new KongDashboard();
     kd.start({'--kong-url': 'http://www.google.com'}, () => {}, (code) => {
       expect(code).toBe(1);
       expect(kd.stderr).toContain("What\'s on http://www.google.com isn\'t Kong");
@@ -31,7 +50,6 @@ describe('Starting Kong-dashboard', function () {
   });
 
   it("should error if Kong requires basic authentication and credentials aren't set", (done) => {
-    var kd = new KongDashboard();
     kd.start({'--kong-url': 'http://localhost:8000/kong_with_basic_auth'}, () => {}, (code) => {
       expect(code).toBe(1);
       expect(kd.stderr).toContain("Can\'t connect to Kong: authentication required");
@@ -40,25 +58,20 @@ describe('Starting Kong-dashboard', function () {
   });
 
   it("should successfully start", (done) => {
-    var kd = new KongDashboard();
     kd.start({'--kong-url': 'http://127.0.0.1:8001'}, () => {
       expect(kd.stdout).toContain("Kong Dashboard has started on port 8080");
-      kd.stop();
       done();
     });
   });
 
   it("should successfully start on a custom port", (done) => {
-    var kd = new KongDashboard();
     kd.start({'--kong-url': 'http://127.0.0.1:8001', '-p': '8082'}, () => {
       expect(kd.stdout).toContain("Kong Dashboard has started on port 8082");
-      kd.stop();
       done();
     });
   });
 
   it("should successfully start with basic auth", (done) => {
-    var kd = new KongDashboard();
     kd.start({
       '--kong-url': 'http://127.0.0.1:8001',
       '--basic-auth': 'user user2=password2'
@@ -85,13 +98,12 @@ describe('Starting Kong-dashboard', function () {
         })
         .then((response) => {
           expect(response.statusCode).toBe(401);
-          kd.stop(done);
+          done();
         });
     }
   });
 
   it("should successfully start when Kong requires basic auth", (done) => {
-    var kd = new KongDashboard();
     kd.start({
       '-u': 'http://localhost:8000/kong_with_basic_auth',
       '--kong-username': 'test-user',
@@ -101,13 +113,12 @@ describe('Starting Kong-dashboard', function () {
       expect(kd.stdout).toContain("Kong Dashboard has started on port 8080");
       request.get('http://localhost:8080/proxy').then((response) => {
         expect(response.statusCode).toBe(200);
-        kd.stop(done);
+        done();
       });
     });
   });
 
   it("should error if basic auth credentials aren't correct", (done) => {
-    var kd = new KongDashboard();
     kd.start({
       '-u': 'http://localhost:8000/kong_with_basic_auth',
       '--kong-username': 'test-user',
@@ -121,7 +132,6 @@ describe('Starting Kong-dashboard', function () {
   });
 
   it("should error if Kong is protected with basic auth using http", (done) => {
-    var kd = new KongDashboard();
     kd.start({
       '-u': 'http://localhost:8000/kong_with_basic_auth',
       '--kong-username': 'test-user',
@@ -133,3 +143,43 @@ describe('Starting Kong-dashboard', function () {
     });
   });
 });
+
+function createKongAPI() {
+  var apiPromise;
+  if (process.env.KONG_VERSION === '0.9') {
+    apiPromise = Kong.createAPI({
+      name: 'Kong',
+      upstream_url: 'http://localhost:8001',
+      request_path: '/kong_with_basic_auth',
+      strip_request_path: true
+    });
+  }
+
+  else if (process.env.KONG_VERSION === '0.10' || process.env.KONG_VERSION === '0.11') {
+    apiPromise = Kong.createAPI({
+      name: 'Kong',
+      upstream_url: 'http://localhost:8001',
+      uris: ['/kong_with_basic_auth'],
+      strip_uri: true
+    });
+  }
+
+  else {
+    throw new Error('Kong version not supported in unit tests.')
+  }
+
+  return apiPromise.then((api) => {
+    return Kong.createPlugin({
+      api_id: api.id,
+      name: 'basic-auth'
+    });
+  })
+}
+
+function createConsumer() {
+  return Kong.createConsumer({
+    custom_id: Date.now().toString()
+  }).then((consumer) => {
+    return Kong.createBasicAuthCreds(consumer, 'test-user', 'password');
+  });
+}

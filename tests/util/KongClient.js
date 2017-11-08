@@ -51,7 +51,7 @@ var Kong = {
   },
 
   /**
-   * Returns a promise that will resolve with the first plugin being created.
+   * Returns a promise that will resolve with a plugin being created.
    */
   createPlugin: (data) => {
     return request.post('http://127.0.0.1:8001/plugins', data).then((response) => {
@@ -59,12 +59,32 @@ var Kong = {
     });
   },
 
+  /**
+   * Returns a promise that will resolve with a consumer being created.
+   */
+  createConsumer: (data) => {
+    return request.post('http://127.0.0.1:8001/consumers', data).then((response) => {
+      return response.body;
+    });
+  },
 
   /**
    * Returns a promise that will resolve with the creation of an API.
    */
   createAPI: (data) => {
     return request.post('http://127.0.0.1:8001/apis', data).then((response) => {
+      return response.body;
+    });
+  },
+
+  /**
+   * Returns a promise that will resolve with the creation of basic auth credentials for the consumer.
+   */
+  createBasicAuthCreds: (consumer, username, password) => {
+    return request.post('http://127.0.0.1:8001/consumers/' + consumer.id + '/basic-auth', {
+      username: username,
+      password: password
+    }).then((response) => {
       return response.body;
     });
   }
