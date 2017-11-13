@@ -1,6 +1,6 @@
 var HomePage = require('../util/home-page');
 var Sidebar = require('../util/sidebar');
-var ListAPIsPage = require('../util/list-apis-page');
+var ListAPIsPage = require('../util/ListApisPage');
 var CreateAPIPage = require('../util/create-api-page');
 var KongDashboard = require('../util/kong-dashboard-handler');
 var Kong = require('../util/KongClient');

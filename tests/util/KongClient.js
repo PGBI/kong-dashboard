@@ -51,6 +51,15 @@ var Kong = {
   },
 
   /**
+   * Returns a promise that will resolve with the plugin whose ID is <id>
+   */
+  getPluginById: (id) => {
+    return request.get('http://127.0.0.1:8001/plugins/' + id).then((response) => {
+      return JSON.parse(response.body);
+    });
+  },
+
+  /**
    * Returns a promise that will resolve with a plugin being created.
    */
   createPlugin: (data) => {

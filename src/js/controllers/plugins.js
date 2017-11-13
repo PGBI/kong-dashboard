@@ -55,13 +55,13 @@ angular.module('app').controller("PluginsController", ["$scope", "Kong", "$route
 
     $scope.showDeleteModal = function (name, id) {
         $scope.current = {name: name, id: id};
-        $('#deletePlugin').openModal();
+        $('#deletePlugin').modal('open');
     };
     $scope.abortDelete = function () {
-        $('#deletePlugin').closeModal();
+        $('#deletePlugin').modal('close');
     };
     $scope.performDelete = function () {
-        $('#deletePlugin').closeModal();
+        $('#deletePlugin').modal('close');
         Kong.delete('/plugins/' + $scope.current.id).then(function () {
             $scope.total -= 1;
             $scope.plugins.forEach(function(element, index) {
