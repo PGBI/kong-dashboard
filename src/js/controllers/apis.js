@@ -27,15 +27,15 @@ angular.module('app').controller("ApisController", ["$scope", "Kong", function (
 
     $scope.showDeleteModal = function (name, id) {
         $scope.current = {name: name, id: id};
-        $('#deleteAPI').openModal();
+        $('#deleteAPI').modal('open');
     };
 
     $scope.abortDelete = function () {
-        $('#deleteAPI').closeModal();
+        $('#deleteAPI').modal('close');
     };
 
     $scope.performDelete = function () {
-        $('#deleteAPI').closeModal();
+        $('#deleteAPI').modal('close');
         Kong.delete('/apis/' + $scope.current.id).then(function () {
             $scope.total -= 1;
             $scope.apis.forEach(function(element, index) {

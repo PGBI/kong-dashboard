@@ -30,15 +30,15 @@ angular.module('app').controller("CertificatesController", ["$scope", "Kong", fu
 
   $scope.showDeleteModal = function (id) {
     $scope.current = {id: id};
-    $('#deleteCertificate').openModal();
+    $('#deleteCertificate').modal('open');
   };
 
   $scope.abortDelete = function () {
-    $('#deleteCertificate').closeModal();
+    $('#deleteCertificate').modal('close');
   };
 
   $scope.performDelete = function () {
-    $('#deleteCertificate').closeModal();
+    $('#deleteCertificate').modal('close');
     Kong.delete('/certificates/' + $scope.current.id).then(function (response) {
       $scope.total -= 1;
       $scope.certificates.forEach(function(element, index) {

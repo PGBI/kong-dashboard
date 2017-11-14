@@ -30,15 +30,15 @@ angular.module('app').controller("SnisController", ["$scope", "Kong", function (
 
   $scope.showDeleteModal = function (name) {
     $scope.current = {name: name};
-    $('#deleteSni').openModal();
+    $('#deleteSni').modal('open');
   };
 
   $scope.abortDelete = function () {
-    $('#deleteSni').closeModal();
+    $('#deleteSni').modal('close');
   };
 
   $scope.performDelete = function () {
-    $('#deleteSni').closeModal();
+    $('#deleteSni').modal('close');
     Kong.delete('/snis/' + $scope.current.name).then(function (response) {
       $scope.total -= 1;
       $scope.snis.forEach(function(element, index) {

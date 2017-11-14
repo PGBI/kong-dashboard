@@ -65,18 +65,18 @@ angular.module('app').controller("ConsumerController", ["$scope", "Kong", "$loca
     $scope.showDeleteModal = function(type, id) {
         extension_type = type;
         extension_id = id;
-        $('#deleteCredentials').openModal();
+        $('#deleteCredentials').modal('open');
     };
     $scope.performDelete = function() {
         var endpoint = extension_type.replace(/\_/g, '-');
-        $('#deleteCredentials').closeModal();
+        $('#deleteCredentials').modal('close');
         Kong.delete('/consumers/' + $scope.consumer.id + '/' + endpoint + '/' + extension_id).then(function(response) {
             Alert.success('Record deleted');
             loadExtensions(endpoint);
         });
     };
     $scope.abortDelete = function() {
-        $('#deleteCredentials').closeModal();
+        $('#deleteCredentials').modal('close');
     };
 
     function loadExtensions(endpoint) {

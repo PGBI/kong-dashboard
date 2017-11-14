@@ -1,8 +1,8 @@
-angular.module('app').controller("ConsumersController", ["$scope", "Kong", function ($scope, Kong) {
+angular.module('app').controller("ConsumersController", ["$scope", "Kong", "env", function ($scope, Kong, env) {
   $scope.consumers = [];
   $scope.total = null;
   $scope.offset = null;
-  $scope.gelato = Kong.config.gelato;
+  $scope.gelato = env.gelato_integration;
   $scope.searchResults = {};
   $scope.searching = false;
 
@@ -31,15 +31,15 @@ angular.module('app').controller("ConsumersController", ["$scope", "Kong", funct
 
   $scope.showDeleteModal = function (username, id) {
     $scope.current = {username: username, id: id};
-    $('#deleteConsumer').openModal();
+    $('#deleteConsumer').modal('open');
   };
 
   $scope.abortDelete = function () {
-    $('#deleteConsumer').closeModal();
+    $('#deleteConsumer').modal('close');
   };
 
   $scope.performDelete = function () {
-    $('#deleteConsumer').closeModal();
+    $('#deleteConsumer').modal('close');
     Kong.delete('/consumers/' + $scope.current.id).then(function (response) {
       $scope.total -= 1;
       $scope.consumers.forEach(function(element, index) {

@@ -1,9 +1,10 @@
 <div class="container" infinite-scroll="loadMore()" infinite-scroll-distance="5" infinite-scroll-use-document-bottom="true">
 
-  <ul ng-show="consumers.length >= 1" class="horizontal right">
+  <ul class="horizontal right">
     <li class="search" style="width:300px;">
       <div class="search-wrapper card">
         <input class="search" placeholder="Search consumer" value=""
+               ng-show="consumers.length >= 1"
                ng-focus="searchBarFocused = true"
                ng-blur="searchBarFocused = false"
                ng-model="searchInput"
