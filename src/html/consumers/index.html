@@ -2,9 +2,9 @@
 
   <ul class="horizontal right">
     <li class="search" style="width:300px;">
-      <div class="search-wrapper card">
+      <div class="search-wrapper card"
+           ng-show="consumers.length >= 1">
         <input class="search" placeholder="Search consumer" value=""
-               ng-show="consumers.length >= 1"
                ng-focus="searchBarFocused = true"
                ng-blur="searchBarFocused = false"
                ng-model="searchInput"

@@ -30,12 +30,12 @@
       <i class="material-icons">extension</i> Plugins
     </a>
   </li>
-  <li>
+  <li ng-if="env.schemas.sni">
     <a href="#!/snis" class="waves-effect">
       <i class="material-icons">dns</i> SNIs
     </a>
   </li>
-  <li>
+  <li ng-if="env.schemas.certificate">
     <a href="#!/certificates" class="waves-effect">
       <i class="material-icons">https</i> Certificates
     </a>

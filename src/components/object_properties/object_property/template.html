@@ -85,6 +85,13 @@
     <div class="card-title" style="padding: 0; margin-bottom: 40px; border-bottom: 1px #ccc solid; color: #ccc">
       {{ $ctrl.key }}
     </div>
+    <div
+      style="margin-top: -15px;"
+      id="{{ 'error-' + $ctrl.path }}"
+      class="red-text errors"
+      ng-if="$ctrl.error"
+      ng-bind-html="$ctrl.error | arrayToHtmlList">
+    </div >
     <object-properties
       schema="$ctrl.propertySchema"
       object="$ctrl.object[$ctrl.key]"
