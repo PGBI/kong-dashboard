@@ -48,6 +48,9 @@ describe('Acl plugin testing', () => {
       expect(createdPlugin.name).toEqual('acl');
       expect(createdPlugin.api_id).toBeUndefined();
       expect(createdPlugin.config).toEqual({'blacklist': ['foo', 'bar']});
+
+      // making sure form got reinitialized.
+      expect(PropertyInput.getElement('config-blacklist').isPresent()).toBeFalsy();
       done();
     });
   });

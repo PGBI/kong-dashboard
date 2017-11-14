@@ -1,4 +1,4 @@
-angular.module('app').controller("PluginController", ["$scope", "Kong", "$location", "$routeParams", "plugins", "apis", "consumers", "plugin", "Alert", function ($scope, Kong, $location, $routeParams, plugins, apis, consumers, plugin, Alert)
+angular.module('app').controller("PluginController", ["$scope", "Kong", "$location", "$routeParams", "plugins", "apis", "consumers", "plugin", "Alert", "$route", function ($scope, Kong, $location, $routeParams, plugins, apis, consumers, plugin, Alert, $route)
 {
     var mode;
     if (plugin) {
@@ -68,15 +68,7 @@ angular.module('app').controller("PluginController", ["$scope", "Kong", "$locati
 
         Kong.put(endpoint, data).then(function (response) {
             Alert.success('Plugin saved!');
-            $scope.errors = {};
-            if ($scope.mode === 'create') {
-                $scope.plugin = {};
-            } else {
-                $scope.plugin = response;
-                if (!$scope.plugin.hasOwnProperty('api_id')) {
-                    $scope.plugin.api_id = null;
-                }
-            }
+            $route.reload();
         }, function (response) {
             if (!response) {
                 // unexpected error message already displayed by Kong service.
