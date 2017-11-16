@@ -106,15 +106,14 @@ angular.module('app').controller("PluginController", ["$scope", "Kong", "$locati
                 delete $scope.plugin.consumer_id;
             }
 
-            $scope.schemaBefore = response;
-            $scope.schemaAfter = convertPluginSchema(response);
-
             $scope.schema.properties.config = convertPluginSchema(response);
             $scope.plugin_schema_loaded = true;
             $scope.plugin_schema_loading = false;
             if ($scope.mode === 'create') {
                 $scope.plugin.config = {};
             }
+
+            $scope.errors = {};
         });
     };
 

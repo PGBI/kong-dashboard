@@ -9,7 +9,7 @@
 
     vm.$onChanges = function(object) {
       if (object.errors) {
-        vm.error = vm.errors[vm.key];
+        vm.error = vm.errors[vm.key] || '';
       }
     };
 
