@@ -139,7 +139,7 @@ angular.module('app').controller("PluginController", ["$scope", "Kong", "$locati
             if (result.properties[propertyName].type === 'table') {
                 result.properties[propertyName].type = 'object';
                 if (schema.fields[propertyName].schema.flexible) {
-                    result.properties[propertyName].additionalProperties = convertPluginSchema(schema.fields[propertyName].schema).properties;
+                    result.properties[propertyName].additionalProperties = convertPluginSchema(schema.fields[propertyName].schema);
                 } else {
                     result.properties[propertyName].properties = convertPluginSchema(schema.fields[propertyName].schema).properties;
                 }

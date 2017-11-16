@@ -12,6 +12,9 @@
         return;
       }
 
+      $event.preventDefault();
+      $event.stopPropagation();
+
       vm.newPropertyName = vm.newPropertyName.trim();
       if (vm.newPropertyName.length == 0) {
         return;
