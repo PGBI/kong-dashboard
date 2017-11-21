@@ -1,5 +1,4 @@
 var PropertyInput = require('./PropertyInput');
-var PluginPage = require
 
 var ObjectProperties = {
 
