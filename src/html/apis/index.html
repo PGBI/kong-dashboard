@@ -25,9 +25,11 @@
         <thead>
         <tr>
             <th>Name</th>
-            <th>Host(s)</th>
-            <th>Uri(s)</th>
-            <th>Method(s)</th>
+            <th ng-if="env.schemas.api.properties.request_host">Host</th>
+            <th ng-if="env.schemas.api.properties.request_path">Request path</th>
+            <th ng-if="env.schemas.api.properties.hosts">Host(s)</th>
+            <th ng-if="env.schemas.api.properties.uris">Uri(s)</th>
+            <th ng-if="env.schemas.api.properties.methods">Method(s)</th>
             <th>Upstream url</th>
             <th>Created</th>
             <th></th>
@@ -37,40 +39,59 @@
         <tbody>
         <tr ng-repeat="api in apis">
             <td>{{api.name}}</td>
-            <td ng-if="api.hosts.length == 1">
-                <a href="{{ api.https_only ? 'https' : 'http' }}://{{ api.hosts[0] }}" target="_blank">{{ api.hosts[0] }}</a>
+
+            <td ng-if="env.schemas.api.properties.request_host">
+                <a href="{{ api.https_only ? 'https' : 'http' }}://{{ api.request_host }}" target="_blank">{{ api.request_host }}</a>
             </td>
-            <td ng-if="api.hosts.length != 1">
-                <ul class="browser-default">
+
+            <td ng-if="env.schemas.api.properties.request_path">
+                {{ api.request_path }}
+            </td>
+
+            <td ng-if="env.schemas.api.properties.hosts">
+                <ul ng-if="api.hosts.length != 1"
+                    class="browser-default">
                     <li ng-repeat="host in api.hosts">
                         <a href="{{ api.https_only ? 'https' : 'http' }}://{{ host }}" target="_blank">{{ host }}</a>
                     </li>
                 </ul>
+                <a ng-if="api.hosts.length == 1"
+                   href="{{ api.https_only ? 'https' : 'http' }}://{{ api.hosts[0] }}"
+                   target="_blank">
+                    {{ api.hosts[0] }}
+                </a>
             </td>
-            <td ng-if="api.uris.length == 1">
-                {{ api.uris[0] }}
-            </td>
-            <td ng-if="api.uris.length != 1">
-                <ul class="browser-default">
+
+            <td ng-if="env.schemas.api.properties.uris">
+                <ul ng-if="api.uris.length != 1"
+                    class="browser-default">
                     <li ng-repeat="uri in api.uris">
                         {{ uri }}
                     </li>
                 </ul>
+                <span ng-if="api.uris.length == 1">
+                    {{ api.uris[0] }}
+                </span>
             </td>
-            <td ng-if="api.methods.length == 1">
-                {{ api.methods[0] }}
-            </td>
-            <td ng-if="api.methods.length != 1">
-                <ul class="browser-default">
+
+            <td ng-if="env.schemas.api.properties.methods">
+                <ul ng-if="api.methods.length != 1"
+                    class="browser-default">
                     <li ng-repeat="method in api.methods">
                         {{ method }}
                     </li>
                 </ul>
+                <span ng-if="api.methods.length == 1">
+                    {{ api.methods[0] }}
+                </span>
             </td>
+
             <td>
                 <a href="{{ api.upstream_url }}" target="_blank">{{ api.upstream_url }}</a>
             </td>
+
             <td>{{api.created_at | date}}</td>
+
             <td class="right">
                 <a class="btn-floating waves-effect waves-light" href="#!/apis/{{api.id}}">
                     <i class="material-icons">mode_edit</i>
