@@ -2,7 +2,7 @@
 
   <ul ng-show="targets.length >= 1" class="horizontal right">
     <li class="search" style="width:300px;">
-        
+
             <div class="switch">
                 <label>
                     All Targets
@@ -10,10 +10,10 @@
                     Active Targets
                 </label>
             </div>
-        
+
     </li>
     <li>
-      <a href="#/upstreams/{{ upstream.id }}/targets/add" class="btn-floating btn-large waves-effect waves-light">
+      <a href="#!/upstreams/{{ upstream.id }}/targets/add" class="btn-floating btn-large waves-effect waves-light">
         <i class="material-icons">add</i>
       </a>
     </li>
@@ -32,7 +32,7 @@
             You haven't defined any Target for {{upstream.name}}
         </p>
         <p class="center">
-            <a href="#/upstreams/{{ upstream.id }}/targets/add" class="waves-effect waves-light btn">
+            <a href="#!/upstreams/{{ upstream.id }}/targets/add" class="waves-effect waves-light btn">
                 <i class="material-icons left">add_box</i>
                 Add Target
             </a>
@@ -67,7 +67,7 @@
 
     <div class="row">
         <div class="input-field col s6 " >
-            <a href="#/upstreams/{{upstream.id}}" class="waves-effect waves-light btn" >
+            <a href="#!/upstreams/{{upstream.id}}" class="waves-effect waves-light btn" >
                 <i class="material-icons left">arrow_back</i>
                 Upstream
             </a>

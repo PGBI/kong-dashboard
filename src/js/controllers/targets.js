@@ -11,7 +11,7 @@ angular.module('app').controller("TargetsController", ["$scope", "Kong", "$route
   var loaded_pages = [];
 
   onInit();
-  
+
   function onInit() {
     $scope.title = 'Targets of ' + upstream.name;
   }
@@ -20,7 +20,7 @@ angular.module('app').controller("TargetsController", ["$scope", "Kong", "$route
     var page = '/upstreams/' + upstream.id + '/targets';
     if ($scope.active) {
       page += "/active";
-    } 
+    }
     if ($scope.offset) {
       page += '?offset=' + $scope.offset + '&';
     }
@@ -54,15 +54,15 @@ angular.module('app').controller("TargetsController", ["$scope", "Kong", "$route
 
   $scope.showDeleteModal = function (id, name, upstream_id) {
     $scope.current = {id: id, name: name, upstream_id : upstream_id};
-    $('#deleteTarget').openModal();
+    $('#deleteTarget').modal('open');
   };
 
   $scope.abortDelete = function () {
-    $('#deleteTarget').closeModal();
+    $('#deleteTarget').modal('close');
   };
 
   $scope.performDelete = function () {
-    $('#deleteTarget').closeModal();
+    $('#deleteTarget').modal('close');
     Kong.delete('/upstreams/' + $scope.current.upstream_id + '/targets/' + $scope.current.id ).then(function (response) {
       $scope.total -= 1;
       $scope.targets.forEach(function(element, index) {

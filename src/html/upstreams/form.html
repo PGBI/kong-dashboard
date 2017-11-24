@@ -22,26 +22,26 @@
                     <app-field-error error="error.id"></app-field-error>
                 </div>
                 <div class="input-field col s12">
-                    <input id="name" autofocus ng-required="true" ng-model="upstream.name" type="text" 
+                    <input id="name" autofocus ng-required="true" ng-model="upstream.name" type="text"
                         ng-class="{invalid: error.name}" class="validate" >
                     <label for="name" ng-class="{active:upstream.name}">Name</label>
                     <app-field-error error="error.name"></app-field-error>
                 </div>
                 <div class="input-field col s12">
-                    <input id="slots" autofocus ng-required="true" ng-model="upstream.slots" type="text" 
+                    <input id="slots" autofocus ng-required="true" ng-model="upstream.slots" type="text"
                         ng-class="{invalid: error.slots}" class="validate" >
                     <label for="slots" ng-class="{active:upstream.slots}">Slot</label>
                     <app-field-error error="error.slots"></app-field-error>
                 </div>
 
                 <div class="input-field col s4">
-                    <a href="#/upstreams/{{upstream.id}}/targets/add" class="waves-effect waves-light btn" ng-show="isEdit()">
+                    <a href="#!/upstreams/{{upstream.id}}/targets/add" class="waves-effect waves-light btn" ng-show="isEdit()">
                         <i class="material-icons left">add_box</i>
                         Add Target
                     </a>
                 </div>
                 <div class="input-field col s4">
-                    <a href="#/upstreams/{{upstream.id}}/targets" class="waves-effect waves-light btn" ng-show="isEdit()">
+                    <a href="#!/upstreams/{{upstream.id}}/targets" class="waves-effect waves-light btn" ng-show="isEdit()">
                         <i class="material-icons left">list</i>
                         List Target
                     </a>

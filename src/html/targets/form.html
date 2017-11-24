@@ -29,19 +29,19 @@
                     <app-field-error error="error.id"></app-field-error>
                 </div>
                 <div class="input-field col s12">
-                    <input id="name" autofocus ng-required="true" ng-model="target.target" type="text" 
+                    <input id="name" autofocus ng-required="true" ng-model="target.target" type="text"
                         ng-class="{invalid: error.target}" class="validate" placeholder="127.0.0.1:8080" >
                     <label for="name" ng-class="{active:target.target}">Target</label>
                     <app-field-error error="error.target"></app-field-error>
                 </div>
                 <div class="input-field col s12">
-                    <input id="weight" autofocus ng-required="true" ng-model="target.weight" type="text" 
+                    <input id="weight" autofocus ng-required="true" ng-model="target.weight" type="text"
                         ng-class="{invalid: error.weight}" class="validate" >
                     <label for="weight" ng-class="{active:target.weight}">Weight</label>
                     <app-field-error error="error.weight"></app-field-error>
                 </div>
                 <div class="input-field col s6">
-                    <a href="#/upstreams/{{upstream.id}}/targets" class="waves-effect waves-light btn">
+                    <a href="#!/upstreams/{{upstream.id}}/targets" class="waves-effect waves-light btn">
                         <i class="material-icons left">list</i>
                         List Targets
                     </a>
