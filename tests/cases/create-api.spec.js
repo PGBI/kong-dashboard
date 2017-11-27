@@ -27,7 +27,7 @@ describe('API creation testing', () => {
       HomePage.visit();
       Sidebar.clickOn('APIs');
       ListAPIsPage.clickAddButton();
-      request.get('http://127.0.0.1:8080/config').then((response) => {
+      request.get('http://127.0.0.1:8081/config').then((response) => {
         eval(response.body);
         apiSchema = __env.schemas.api;
         done();
@@ -40,7 +40,7 @@ describe('API creation testing', () => {
   });
 
   it('should recognize and display an input for every field', () => {
-    expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/#!/apis/add');
+    expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/#!/apis/add');
     Object.keys(apiSchema.properties).forEach((fieldName) => {
       expect(PropertyInput.getElement(fieldName).isPresent()).toBeTruthy('Form section for ' + fieldName + ' is missing');
     })

@@ -57,13 +57,6 @@ describe('Starting Kong-dashboard', function () {
     });
   });
 
-  it("should successfully start", (done) => {
-    kd.start({'--kong-url': 'http://127.0.0.1:8001'}, () => {
-      expect(kd.stdout).toContain("Kong Dashboard has started on port 8080");
-      done();
-    });
-  });
-
   it("should successfully start on a custom port", (done) => {
     kd.start({'--kong-url': 'http://127.0.0.1:8001', '-p': '8082'}, () => {
       expect(kd.stdout).toContain("Kong Dashboard has started on port 8082");
@@ -79,22 +72,22 @@ describe('Starting Kong-dashboard', function () {
 
     function kongStarted() {
       expect(kd.stdout).toContain('Invalid value "user" for --basic-auth option. Ignoring.');
-      expect(kd.stdout).toContain("Kong Dashboard has started on port 8080");
+      expect(kd.stdout).toContain("Kong Dashboard has started on port 8081");
 
       var opts = {auth: {user: 'user2', pass: 'password2', sendImmediately: true}};
 
-      request.get('http://localhost:8080/proxy', opts)
+      request.get('http://localhost:8081/proxy', opts)
         .then((response) => {
           expect(response.statusCode).toBe(200);
-          return request.get('http://localhost:8080', opts);
+          return request.get('http://localhost:8081', opts);
         })
         .then((response) => {
           expect(response.statusCode).toBe(200);
-          return request.get('http://localhost:8080/proxy');
+          return request.get('http://localhost:8081/proxy');
         })
         .then((response) => {
           expect(response.statusCode).toBe(401);
-          return request.get('http://localhost:8080');
+          return request.get('http://localhost:8081');
         })
         .then((response) => {
           expect(response.statusCode).toBe(401);
@@ -110,8 +103,8 @@ describe('Starting Kong-dashboard', function () {
       '--kong-password': 'password',
       '--insecure': ''
     }, () => {
-      expect(kd.stdout).toContain("Kong Dashboard has started on port 8080");
-      request.get('http://localhost:8080/proxy').then((response) => {
+      expect(kd.stdout).toContain("Kong Dashboard has started on port 8081");
+      request.get('http://localhost:8081/proxy').then((response) => {
         expect(response.statusCode).toBe(200);
         done();
       });

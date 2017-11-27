@@ -13,7 +13,8 @@ var KongDashboardHandler = function() {
     if (this.childProcess) {
       throw "Kong dashboard is already started";
     }
-    var port = options['-p'] || options['--port'] || 8080;
+    var port = options['-p'] || options['--port'] || '8081';
+    options['-p'] = port;
     var args = ['start'];
     for (var key in options) {
       args.push(key);

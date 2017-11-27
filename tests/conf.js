@@ -7,7 +7,8 @@ exports.config = {
   directConnect: true,
   framework: 'jasmine',
   jasmineNodeOpts: {
-    showColors: true
+    showColors: true,
+    defaultTimeoutInterval: 30000
   },
   specs: ['./**/*.spec.js'],
   capabilities: {
@@ -16,5 +17,5 @@ exports.config = {
       args: chromeArgs
     }
   },
-  baseUrl: 'http://localhost:8080'
+  baseUrl: 'http://localhost:8081'
 };

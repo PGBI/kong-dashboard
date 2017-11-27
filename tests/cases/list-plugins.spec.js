@@ -49,7 +49,7 @@ describe('Plugin listing page testing', () => {
       HomePage.visit();
       Sidebar.clickOn('Plugins');
       ListPluginsPage.clickEdit(0);
-      expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/#!/plugins/' + plugin.id);
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/#!/plugins/' + plugin.id);
       done();
     });
   });
