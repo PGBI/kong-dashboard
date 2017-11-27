@@ -1,5 +1,5 @@
 var request = require('../../lib/request');
-var KongDashboard = require('../util/kong-dashboard-handler');
+var KongDashboard = require('../util/KongDashboard');
 var Kong = require('../util/KongClient');
 
 var kd = new KongDashboard();

@@ -1,7 +1,7 @@
-var HomePage = require('../util/home-page');
+var HomePage = require('../util/HomePage');
 var Sidebar = require('../util/Sidebar');
 var ListPluginsPage = require('../util/ListPluginsPage');
-var KongDashboard = require('../util/kong-dashboard-handler');
+var KongDashboard = require('../util/KongDashboard');
 var Kong = require('../util/KongClient');
 
 var kd = new KongDashboard();
