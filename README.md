@@ -4,118 +4,73 @@
 Kong runs in front of any RESTful API and provide functionalities
 and services such as requests routing, authentication, rate limiting, etc.
 
-**Kong dashboard** is a UI tool that will let you manage your Kong Gateway setup.
+**Kong dashboard** is a GUI that will let you manage your Kong Gateway setup.
 
 ## Compatibility matrix
 
-| Kong-Dashboard version | Kong version | node version |
+| Kong-Dashboard versions | Kong versions | Node versions |
 |-----------|---------------------------|--------------|
 | 1.x.x     | 0.6.x, 0.7.x, 0.8.x, 0.9.x|              |
 | 2.x.x     | 0.10.x                    |              |
-| 3.x.x     | 0.9.x, 0.10.x             | >= 6.0.0     |
-
-
-## Presentation
-
-Click thumbnails to enlarge.
-
-### Managing APIs
-
-[![Listing APIs](screenshots/apis_list_thumbnail.jpg)](screenshots/apis_list.jpg?raw=true)
-[![Adding API](screenshots/api_add_thumbnail.jpg)](screenshots/api_add.jpg?raw=true)
-
-### Managing Consumers
-
-[![Listing Consumers](screenshots/consumers_list_thumbnail.jpg)](screenshots/consumers_list.jpg?raw=true)
-[![Editing Consumer](screenshots/consumer_edit_thumbnail.jpg)](screenshots/consumer_edit.jpg?raw=true)
-
-### Managin Plugins
-
-[![Listing Plugins](screenshots/plugins_list_thumbnail.jpg)](screenshots/plugins_list.jpg?raw=true)
-[![Adding Plugin](screenshots/plugin_add_thumbnail.jpg)](screenshots/plugin_add.jpg?raw=true)
+| 3.x.x     | 0.9.x, 0.10.x, 0.11.x     | >= 6.0.0     |
 
 ## Prerequisites
 
 You will need:
 
 1. a running Kong gateway. https://getkong.org/install/
-2. nodejs and npm.
+2. nodejs and npm, or docker
 
 ## Installation
 
-### With Npm
+### Using npm
 
 ```bash
 # Install Kong Dashboard
-npm install -g kong-dashboard@v2
+npm install -g kong-dashboard
 
 # Start Kong Dashboard
-kong-dashboard start
+kong-dashboard start --kong-url http://kong:8001
 
-# To start Kong Dashboard on a custom port
-kong-dashboard start -p [port]
+# Start Kong Dashboard on a custom port
+kong-dashboard start \
+  --kong-url http://kong:8001 \
+  --port [port]
 
-# To start Kong Dashboard with basic auth
-kong-dashboard start -a user=password
+# Start Kong Dashboard with basic auth
+kong-dashboard start \
+  --kong-url http://kong:8001 \
+  --basic-auth user1=password1 user2=password2
 
-# You can set basic auth user with environment variables
-# Do not set -a parameter or this will be overwritten
-export KONG_DASHBOARD_NAME=admin && export KONG_DASHBOARD_PASS=password && kong-dashboard start
+# See full list of start options
+kong-dashboard start --help
 ```
 
-### From sources
-
-```bash
-# Pull repository
-git clone https://github.com/PGBI/kong-dashboard.git
-cd kong-dashboard
-git checkout 2.0
-
-# Build Kong Dashboard
-npm install
-npm run build
-
-# Start Kong Dashboard
-npm start
-
-# To start Kong Dashboard on a custom port or with basic auth
-npm start -- [-p port] [-a user=password]
-```
-
-### With Docker
+### Using Docker
 
 [![](https://images.microbadger.com/badges/image/pgbi/kong-dashboard.svg)](https://microbadger.com/images/pgbi/kong-dashboard "Get your own image badge on microbadger.com")
 
 ```bash
 # Start Kong Dashboard
-docker run -d -p 8080:8080 pgbi/kong-dashboard:v2
+docker run --rm -p 8080:8080 pgbi/kong-dashboard start --kong-url http://kong:8001
 
 # Start Kong Dashboard on a custom port
-docker run -d -p [port]:8080 pgbi/kong-dashboard:v2
+docker run --rm -p [port]:8080 pgbi/kong-dashboard start --kong-url http://kong:8001
 
 # Start Kong Dashboard with basic auth
-docker run -d -p 8080:8080 pgbi/kong-dashboard:v2 -a user=password
+docker run --rm -p 8080:8080 pgbi/kong-dashboard start \
+  --kong-url http://kong:8001
+  --basic-auth user1=password1 user2=password2
+
+# See full list of start options
+docker run --rm -p 8080:8080 pgbi/kong-dashboard start --help
 ```
-
-
-### With Vagrant
-
-```bash
-# Pull repository
-git clone https://github.com/PGBI/kong-dashboard.git
-cd kong-dashboard
-git checkout 2.0
-
-# Start VM
-vagrant up
-```
-## Configuration
-
-When browsing Kong-Dashboard, you will be asked to provide the URL of your Kong node.
-
-If you're hosting Kong on your local machine, the "Kong node URL" is not "http://localhost:8001".
-It will be your machine/LAN IP, for example: "http://192.168.x.x:8001"
 
 ## Use
 
-You can now browse your kong dashboard at http://localhost:8080
+You can now browse Kong Dashboard at http://localhost:8080
+
+# Contributing
+
+If you consider contributing to Kong Dashboard by reporting a bug, or submitting a patch, please checkout the
+[contribution document](./CONTRIBUTING.md) for guidance.
