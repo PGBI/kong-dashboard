@@ -78,6 +78,15 @@ var Kong = {
   },
 
   /**
+   * Returns a promise that will resolve with the upstream whose ID is <id>
+   */
+  getUpstreamById: (id) => {
+    return request.get('http://127.0.0.1:8001/upstreams/' + id).then((response) => {
+      return JSON.parse(response.body);
+    });
+  },
+
+  /**
    * Returns a promise that will resolve with a plugin being created.
    */
   createPlugin: (data) => {
@@ -112,6 +121,15 @@ var Kong = {
       username: username,
       password: password
     }).then((response) => {
+      return response.body;
+    });
+  },
+
+  /**
+   * Returns a promise that will resolve with the creation of an upstream object.
+   */
+  createUpstream: (name) => {
+    return request.post('http://127.0.0.1:8001/upstreams', {name: name}).then((response) => {
       return response.body;
     });
   }

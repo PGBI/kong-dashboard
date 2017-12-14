@@ -30,15 +30,15 @@ angular.module('app').controller("UpstreamsController", ["$scope", "Kong", funct
 
   $scope.showDeleteModal = function (id, name) {
     $scope.current = {id: id, name: name};
-    $('#deleteUpstream').openModal();
+    $('#deleteUpstream').modal('open');
   };
 
   $scope.abortDelete = function () {
-    $('#deleteUpstream').closeModal();
+    $('#deleteUpstream').modal('close');
   };
 
   $scope.performDelete = function () {
-    $('#deleteUpstream').closeModal();
+    $('#deleteUpstream').modal('close');
     Kong.delete('/upstreams/' + $scope.current.id).then(function (response) {
       $scope.total -= 1;
       $scope.upstreams.forEach(function(element, index) {
