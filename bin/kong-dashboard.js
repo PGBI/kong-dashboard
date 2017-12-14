@@ -156,6 +156,7 @@ function start(argv) {
     var angularConfig = {
       kong_url: argv.kongUrl,
       kong_version: argv.kongVersion,
+      kong_dashboard_version: require('../package.json').version,
       gelato_integration: argv.gelato
     };
     startKongDashboard(argv, angularConfig);
