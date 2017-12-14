@@ -46,9 +46,15 @@ describe('Objects page index testing', () => {
     HomePage.visit();
     Sidebar.clickOn('Consumers');
     browser.executeScript('window.scrollTo(0,document.body.scrollHeight)');
+    var timeout = setTimeout(() => {
+      ListConsumersPage.getRows().count().then((count) => {
+        fail("counting " + count + " consumers rows instead of 150. Test is going to timeout");
+      })
+    }, 5000);
     var row101 = ListConsumersPage.getRow(101);
     browser.wait(until.presenceOf(row101)).then(() => {
       expect(ListConsumersPage.getRows().count()).toEqual(150);
+      clearTimeout(timeout);
       done();
     });
   });
@@ -57,9 +63,15 @@ describe('Objects page index testing', () => {
     HomePage.visit();
     Sidebar.clickOn('Plugins');
     browser.executeScript('window.scrollTo(0,document.body.scrollHeight)');
+    var timeout = setTimeout(() => {
+      ListPluginsPage.getRows().count().then((count) => {
+        fail("counting " + count + " plugin rows instead of 150. Test is going to timeout");
+      })
+    }, 5000);
     var row101 = ListPluginsPage.getRow(101);
     browser.wait(until.presenceOf(row101)).then(() => {
       expect(ListPluginsPage.getRows().count()).toEqual(150);
+      clearTimeout(timeout);
       done();
     });
   });
@@ -68,9 +80,15 @@ describe('Objects page index testing', () => {
     HomePage.visit();
     Sidebar.clickOn('APIs');
     browser.executeScript('window.scrollTo(0,document.body.scrollHeight)');
+    var timeout = setTimeout(() => {
+      ListAPIsPage.getRows().count().then((count) => {
+        fail("counting " + count + " api rows instead of 150. Test is going to timeout");
+      })
+    }, 5000);
     var row101 = ListAPIsPage.getRow(101);
     browser.wait(until.presenceOf(row101)).then(() => {
       expect(ListAPIsPage.getRows().count()).toEqual(150);
+      clearTimeout(timeout);
       done();
     });
   });
@@ -118,7 +136,6 @@ function createAPI(number) {
 
   throw new Error('Kong version not supported in unit tests.')
 }
-
 
 function create150Consumers() {
   var promise = Kong.createConsumer({
