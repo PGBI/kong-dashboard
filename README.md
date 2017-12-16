@@ -1,5 +1,7 @@
 # Kong Dashboard
 
+[![Build Status](https://travis-ci.org/PGBI/kong-dashboard.svg?branch=3.0)](https://travis-ci.org/PGBI/kong-dashboard)
+
 [**Kong**](https://getkong.org/) is a scalable, open source API Layer (also known as a API Gateway, or API Middleware).
 Kong runs in front of any RESTful API and provide functionalities
 and services such as requests routing, authentication, rate limiting, etc.
