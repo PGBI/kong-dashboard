@@ -1,6 +1,7 @@
-var app = angular.module('app', ['ngRoute', 'ngAnimate', 'ngSanitize', 'infinite-scroll'])
-  .constant('env', window.__env)
-  .config(['$routeProvider', function ($routeProvider) {
+(function() {
+  angular.module('app').config(['$routeProvider', router]);
+
+  function router($routeProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'html/home.html',
@@ -167,11 +168,5 @@ var app = angular.module('app', ['ngRoute', 'ngAnimate', 'ngSanitize', 'infinite
         controller: 'TargetController',
       })
       .otherwise({redirectTo: '/'});
-  }])
-  .run(['$rootScope', 'env', function($rootScope, env) {
-    $rootScope.Utils = {
-      keys : Object.keys
-    };
-
-    $rootScope.env = env;
-  }]);
+  }
+})()
