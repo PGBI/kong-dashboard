@@ -40,10 +40,6 @@ angular.module('app').controller("TargetsController", ["$scope", "Kong", "$route
   };
   $scope.loadMore();
 
-  $scope.test = function() {
-    console.log('active == ' + $scope.active);
-  }
-
   $scope.reloadList = function() {
     $scope.targets = [];
     $scope.total = null;
