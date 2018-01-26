@@ -106,7 +106,7 @@ describe('Acl plugin testing', () => {
       });
     }
 
-    if (process.env.KONG_VERSION === '0.10' || process.env.KONG_VERSION === '0.11') {
+    if (['0.10', '0.11', '0.12'].includes(process.env.KONG_VERSION)) {
       return Kong.createAPI({
         name: 'api_for_acl',
         hosts: ['host1.com', 'host2.com'],

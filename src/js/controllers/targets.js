@@ -1,4 +1,4 @@
-angular.module('app').controller("TargetsController", ["$scope", "Kong", "$routeParams", "upstream", function ($scope, Kong, $routeParams, upstream) {
+angular.module('app').controller("TargetsController", ["$scope", "Kong", "$routeParams", "upstream", "env", function ($scope, Kong, $routeParams, upstream, env) {
   $scope.targets = [];
   $scope.total = null;
   $scope.offset = null;
@@ -18,9 +18,20 @@ angular.module('app').controller("TargetsController", ["$scope", "Kong", "$route
 
   $scope.loadMore = function() {
     var page = '/upstreams/' + upstream.id + '/targets';
-    if ($scope.active) {
-      page += "/active";
+
+    // For Kong 0.12, the APIs for accessing active and all targets have changed
+    // https://getkong.org/docs/0.12.x/admin-api/#list-target
+    if (env.kong_version.startsWith("0.12")) {
+      if (!$scope.active) {
+        page += "/all";
+      }
+    } else {
+      // For Kong versions other than 0.12
+      if ($scope.active) {
+        page += "/active";
+      }
     }
+
     if ($scope.offset) {
       page += '?offset=' + $scope.offset + '&';
     }

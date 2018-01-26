@@ -11,10 +11,10 @@ and services such as requests routing, authentication, rate limiting, etc.
 ## Compatibility matrix
 
 | Kong-Dashboard versions | Kong versions | Node versions |
-|-----------|---------------------------|--------------|
-| 1.x.x     | 0.6.x, 0.7.x, 0.8.x, 0.9.x|              |
-| 2.x.x     | 0.10.x                    |              |
-| 3.x.x     | 0.9.x, 0.10.x, 0.11.x     | >= 6.0.0     |
+|-----------|------------------------------|--------------|
+| 1.x.x     | 0.6.x, 0.7.x, 0.8.x, 0.9.x   |              |
+| 2.x.x     | 0.10.x                       |              |
+| 3.x.x     | 0.9.x, 0.10.x, 0.11.x, 0.12.x| >= 6.0.0     |
 
 ## Prerequisites
 
