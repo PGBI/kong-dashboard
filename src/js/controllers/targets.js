@@ -21,15 +21,11 @@ angular.module('app').controller("TargetsController", ["$scope", "Kong", "$route
 
     // For Kong 0.12, the APIs for accessing active and all targets have changed
     // https://getkong.org/docs/0.12.x/admin-api/#list-target
-    if (env.kong_version.startsWith("0.12")) {
-      if (!$scope.active) {
-        page += "/all";
-      }
+
+    if (["0.9.", "0.10", "0.11"].includes(env.kong_version.substring(0,4))) {
+      page += $scope.active ? "/active" : "";
     } else {
-      // For Kong versions other than 0.12
-      if ($scope.active) {
-        page += "/active";
-      }
+      page += !$scope.active ? "/all" : "";
     }
 
     if ($scope.offset) {
