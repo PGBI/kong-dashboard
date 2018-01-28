@@ -68,10 +68,10 @@
 
         <tbody>
         <tr ng-repeat="consumer in consumers">
-            <td>{{consumer.username}} <p ng-show="!consumer.username">nope</p></td>
+            <td>{{consumer.username}} <p ng-show="!consumer.username">(none)</p></td>
             <td><a ng-show="gelato" href="https://gelato.io/app/developers/{{consumer.custom_id}}">{{consumer.custom_id}}</a>
                 <p ng-show="!gelato">{{consumer.custom_id}}</p>
-                <p ng-show="!consumer.custom_id">nope</p></td>
+                <p ng-show="!consumer.custom_id">(none)</p></td>
             <td>{{consumer.created_at | date}}</td>
             <td class="right">
                 <a class="btn-floating waves-effect waves-light" href="#!/consumers/{{consumer.id}}">

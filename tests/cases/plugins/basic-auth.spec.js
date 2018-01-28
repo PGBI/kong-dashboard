@@ -9,7 +9,7 @@ var ObjectProperties = require('../../util/ObjectProperties');
 
 var kd = new KongDashboard();
 
-describe('Basic Auth plugin testing', () => {
+describe('Basic Auth plugin testing:', () => {
 
   var api;
 
@@ -32,7 +32,7 @@ describe('Basic Auth plugin testing', () => {
     Kong.deleteAllPlugins().then(done);
   });
 
-  it('should be successfully create basic auth plugin for All APIs', (done) => {
+  it('should successfully create basic auth plugin for All APIs', (done) => {
     HomePage.visit();
     Sidebar.clickOn('Plugins');
     ListPluginsPage.clickAddButton();
@@ -78,7 +78,7 @@ describe('Basic Auth plugin testing', () => {
     });
   });
 
-  it('should be successfully create a basic-auth plugin for one API', (done) => {
+  it('should successfully create a basic-auth plugin for one API', (done) => {
     HomePage.visit();
     Sidebar.clickOn('Plugins');
     ListPluginsPage.clickAddButton();
