@@ -148,7 +148,7 @@ function createKongAPI() {
     });
   }
 
-  else if (process.env.KONG_VERSION === '0.10' || process.env.KONG_VERSION === '0.11') {
+  else if (['0.10', '0.11', '0.12'].includes(process.env.KONG_VERSION)) {
     apiPromise = Kong.createAPI({
       name: 'Kong',
       upstream_url: 'http://localhost:8001',

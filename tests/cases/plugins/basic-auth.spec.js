@@ -51,7 +51,7 @@ describe('Basic Auth plugin testing', () => {
         'config': {'hide_credentials': true},
         'enabled': true
       };
-    } else if (process.env.KONG_VERSION === '0.10' || process.env.KONG_VERSION === '0.11') {
+    } else if (['0.10', '0.11', '0.12'].includes(process.env.KONG_VERSION)) {
       inputs = {
         'name': 'basic-auth',
         'api_id': 'All',
@@ -95,7 +95,7 @@ describe('Basic Auth plugin testing', () => {
         'config': {'hide_credentials': true},
         'enabled': true
       };
-    } else if (process.env.KONG_VERSION === '0.10' || process.env.KONG_VERSION === '0.11') {
+    } else if (['0.10', '0.11', '0.12'].includes(process.env.KONG_VERSION)) {
       inputs = {
         'name': 'basic-auth',
         'api_id': api.name,
@@ -181,7 +181,7 @@ describe('Basic Auth plugin testing', () => {
       });
     }
 
-    if (process.env.KONG_VERSION === '0.10' || process.env.KONG_VERSION === '0.11') {
+    if (['0.10', '0.11', '0.12'].includes(process.env.KONG_VERSION)) {
       return Kong.createAPI({
         name: 'my_api',
         hosts: ['host1.com', 'host2.com'],

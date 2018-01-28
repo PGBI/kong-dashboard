@@ -109,7 +109,7 @@ function createAPI(number) {
     });
   }
 
-  if (process.env.KONG_VERSION === '0.10' || process.env.KONG_VERSION === '0.11') {
+  if (['0.10', '0.11', '0.12'].includes(process.env.KONG_VERSION)) {
     return Kong.createAPI({
       'name': 'api_' + number,
       'uris': ['/' + number],

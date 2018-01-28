@@ -126,7 +126,7 @@ describe('API creation testing', () => {
       ];
     }
 
-    if (process.env.KONG_VERSION === '0.10' || process.env.KONG_VERSION === '0.11') {
+    if (['0.10', '0.11', '0.12'].includes(process.env.KONG_VERSION)) {
       return [
         {
           inputs: {
@@ -169,7 +169,7 @@ describe('API creation testing', () => {
         }
       ];
     }
-    if (process.env.KONG_VERSION === '0.10' || process.env.KONG_VERSION === '0.11') {
+    if (['0.10', '0.11', '0.12'].includes(process.env.KONG_VERSION)) {
       return [
         {
           inputs: {},
