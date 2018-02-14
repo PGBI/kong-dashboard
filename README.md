@@ -45,6 +45,11 @@ kong-dashboard start \
   --kong-url http://kong:8001 \
   --basic-auth user1=password1 user2=password2
 
+# Start Kong Dashboard with api key
+kong-dashboard start \
+  --kong-url http://kong:8001 \
+  --api-key abcdefghijklmnopqrstuvxz1234567890
+
 # See full list of start options
 kong-dashboard start --help
 ```
@@ -64,6 +69,11 @@ docker run --rm -p [port]:8080 pgbi/kong-dashboard start --kong-url http://kong:
 docker run --rm -p 8080:8080 pgbi/kong-dashboard start \
   --kong-url http://kong:8001
   --basic-auth user1=password1 user2=password2
+
+# Start Kong Dashboard with api key
+docker run --rm -p 8080:8080 pgbi/kong-dashboard start \
+  --kong-url http://kong:8001
+  --api-key abcdefghijklmnopqrstuvxz1234567890
 
 # See full list of start options
 docker run --rm -p 8080:8080 pgbi/kong-dashboard start --help
