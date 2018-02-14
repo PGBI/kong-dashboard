@@ -15,6 +15,8 @@ program
   .example('$0 start \\\n--kong-url http://kong:8001 \\\n--port 8888', 'Start Kong Dashboard on port 8888')
   .example('','')
   .example('$0 start \\\n--kong-url http://kong:8001 \\\n--basic-auth u1=p1 u2=p2', 'Start Kong Dashboard on port 8080. Protect it with basic auth. Define two users, "u1" with password "p1" and "u2" with password "p2"')
+  .example('','')
+  .example('$0 start \\\n--kong-url http://kong:8001 \\\n--api-key abcdefghijklmnopqrstuvxz1234567890', 'Start Kong Dashboard with API KEY authentication')
 
   .command('start', 'Start serving Kong Dashboard', function (cmd) {
     return cmd
