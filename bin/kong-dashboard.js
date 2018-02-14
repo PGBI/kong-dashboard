@@ -40,6 +40,10 @@ program
         type: 'string',
         describe: 'Authentication API Key\n'
       })
+      .option('api-key-name', {
+        type: 'string',
+        describe: 'Authentication API Key header name\n'
+      })
       .option('g', {
         alias: 'gelato',
         type: 'boolean',
@@ -98,6 +102,7 @@ function start(argv) {
   argv.port = argv.port instanceof Array ? argv.port[0] : argv.port;
   argv.basicAuth = argv.basicAuth || [];
   argv.apiKey = argv.apiKey || '';
+  argv.apiKeyName = argv.apiKeyName || 'apikey';
 
   var basicAuth = {};
   argv.basicAuth.forEach((element) => {
@@ -121,7 +126,7 @@ function start(argv) {
   }
 
   if (argv.apiKey !== '') {
-    argv.kongRequestOpts.headers['apikey'] = argv.apiKey;
+    argv.kongRequestOpts.headers[argv.apiKeyName.toLowerCase()] = argv.apiKey;
   }
 
   terminal.info("Connecting to Kong on " + argv.kongUrl + " ...");
