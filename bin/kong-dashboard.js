@@ -34,6 +34,10 @@ program
         describe: 'Of the form "user1=password1 user2=password2 ...". If set, Kong Dashboard will be protected with basic auth.\n',
         type: 'array'
       })
+      .option('api-key', {
+        type: 'string',
+        describe: 'Authentication API Key\n'
+      })
       .option('g', {
         alias: 'gelato',
         type: 'boolean',
@@ -91,6 +95,7 @@ function start(argv) {
   argv.kongUrl = argv.kongUrl instanceof Array ? argv.kongUrl[0] : argv.kongUrl;
   argv.port = argv.port instanceof Array ? argv.port[0] : argv.port;
   argv.basicAuth = argv.basicAuth || [];
+  argv.apiKey = argv.apiKey || '';
 
   var basicAuth = {};
   argv.basicAuth.forEach((element) => {
@@ -111,6 +116,10 @@ function start(argv) {
     }
     var base64 = new Buffer(argv.kongUsername + ':' + argv.kongPassword).toString('base64');
     argv.kongRequestOpts.headers['Authorization'] = 'Basic ' + base64;
+  }
+
+  if (argv.apiKey !== '') {
+    argv.kongRequestOpts.headers['apikey'] = argv.apiKey;
   }
 
   terminal.info("Connecting to Kong on " + argv.kongUrl + " ...");
