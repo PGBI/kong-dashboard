@@ -15,8 +15,6 @@ program
   .example('$0 start \\\n--kong-url http://kong:8001 \\\n--port 8888', 'Start Kong Dashboard on port 8888')
   .example('','')
   .example('$0 start \\\n--kong-url http://kong:8001 \\\n--basic-auth u1=p1 u2=p2', 'Start Kong Dashboard on port 8080. Protect it with basic auth. Define two users, "u1" with password "p1" and "u2" with password "p2"')
-  .example('','')
-  .example('$0 start \\\n--kong-url http://kong:8001 \\\n--api-key abcdefgh123456789 \\\n--api-key-name x-apikey', 'Start Kong Dashboard with API KEY authentication and custom "apikey" header name')
 
   .command('start', 'Start serving Kong Dashboard', function (cmd) {
     return cmd
@@ -38,10 +36,11 @@ program
       })
       .option('api-key', {
         type: 'string',
-        describe: 'Authentication API Key\n'
+        describe: 'API Key to use to connect to Kong admin API if it is protected with key auth\n'
       })
       .option('api-key-name', {
         type: 'string',
+        default: 'apikey',
         describe: 'Authentication API Key header name\n'
       })
       .option('g', {
@@ -101,8 +100,6 @@ function start(argv) {
   argv.kongUrl = argv.kongUrl instanceof Array ? argv.kongUrl[0] : argv.kongUrl;
   argv.port = argv.port instanceof Array ? argv.port[0] : argv.port;
   argv.basicAuth = argv.basicAuth || [];
-  argv.apiKey = argv.apiKey || '';
-  argv.apiKeyName = argv.apiKeyName || 'apikey';
 
   var basicAuth = {};
   argv.basicAuth.forEach((element) => {
@@ -116,11 +113,14 @@ function start(argv) {
   argv.basicAuth = basicAuth;
 
   argv.kongRequestOpts = {'headers': {}};
-  if (argv.kongUsername && argv.kongPassword) {
+  if ((argv.kongUsername && argv.kongPassword) || argv.apiKey) {
     if (!argv.kongUrl.startsWith('https://') && !argv.insecure) {
       terminal.error("You should not connect to Kong admin API using credentials over an unsecured protocol (http).\nUse the --insecure option to ignore this error.");
       process.exit(1);
     }
+  }
+
+  if (argv.kongUsername && argv.kongPassword) {
     var base64 = new Buffer(argv.kongUsername + ':' + argv.kongPassword).toString('base64');
     argv.kongRequestOpts.headers['Authorization'] = 'Basic ' + base64;
   }
