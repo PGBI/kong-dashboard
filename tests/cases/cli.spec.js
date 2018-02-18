@@ -12,7 +12,8 @@ describe('Starting Kong-dashboard', function () {
       Kong.deleteAllPlugins()
     ]).then(() => {
       return Promise.all([
-        createKongAPI(),
+        createBasicAuthProtectedKongAPI(),
+        createKeyAuthProtectedKongAPI(),
         createConsumer()
       ]);
     }).then(done);
@@ -96,52 +97,96 @@ describe('Starting Kong-dashboard', function () {
     }
   });
 
-  it("should successfully start when Kong requires basic auth", (done) => {
-    kd.start({
-      '-u': 'http://localhost:8000/kong_with_basic_auth',
-      '--kong-username': 'test-user',
-      '--kong-password': 'password',
-      '--insecure': ''
-    }, () => {
-      expect(kd.stdout).toContain("Kong Dashboard has started on port 8081");
-      request.get('http://localhost:8081/proxy').then((response) => {
-        expect(response.statusCode).toBe(200);
+  describe('When Kong is protected with the basic-auth plugin', function () {
+
+    it("should successfully start when valid basic-auth creds are provided", (done) => {
+      kd.start({
+        '-u': 'http://localhost:8000/kong_with_basic_auth',
+        '--kong-username': 'test-user',
+        '--kong-password': 'password',
+        '--insecure': ''
+      }, () => {
+        expect(kd.stdout).toContain("Kong Dashboard has started on port 8081");
+        request.get('http://localhost:8081/proxy').then((response) => {
+          expect(response.statusCode).toBe(200);
+          done();
+        });
+      });
+    });
+
+    it("should error if basic auth credentials aren't correct", (done) => {
+      kd.start({
+        '-u': 'http://localhost:8000/kong_with_basic_auth',
+        '--kong-username': 'test-user',
+        '--kong-password': 'wrong',
+        '--insecure': ''
+      }, () => {
+      }, (code) => {
+        expect(code).toBe(1);
+        expect(kd.stderr).toContain("Can't connect to Kong: invalid authentication credentials");
+        done();
+      });
+    });
+
+    it("should error if Kong is protected with basic auth using http", (done) => {
+      kd.start({
+        '-u': 'http://localhost:8000/kong_with_basic_auth',
+        '--kong-username': 'test-user',
+        '--kong-password': 'whatever'
+      }, () => {
+      }, (code) => {
+        expect(code).toBe(1);
+        expect(kd.stderr).toContain("You should not connect to Kong admin API using credentials over an unsecured protocol (http)");
         done();
       });
     });
   });
 
-  it("should error if basic auth credentials aren't correct", (done) => {
-    kd.start({
-      '-u': 'http://localhost:8000/kong_with_basic_auth',
-      '--kong-username': 'test-user',
-      '--kong-password': 'wrong',
-      '--insecure': ''
-    }, () => {}, (code) => {
-      expect(code).toBe(1);
-      expect(kd.stderr).toContain("Can't connect to Kong: invalid authentication credentials");
-      done();
-    });
-  });
+  describe('When Kong is protected with the key-auth plugin', function () {
 
-  it("should error if Kong is protected with basic auth using http", (done) => {
-    kd.start({
-      '-u': 'http://localhost:8000/kong_with_basic_auth',
-      '--kong-username': 'test-user',
-      '--kong-password': 'whatever'
-    }, () => {}, (code) => {
-      expect(code).toBe(1);
-      expect(kd.stderr).toContain("You should not connect to Kong admin API using credentials over an unsecured protocol (http)");
-      done();
+    it("should error if no keys are provided", (done) => {
+      kd.start({
+        '-u': 'http://localhost:8000/kong_with_key_auth',
+      }, () => {}, (code) => {
+        expect(code).toBe(1);
+        expect(kd.stderr).toContain("Can't connect to Kong: authentication required");
+        done();
+      });
+    });
+
+    it("should error if the provided key is invalid", (done) => {
+      kd.start({
+        '-u': 'http://localhost:8000/kong_with_key_auth',
+        '--api-key': '123',
+        '--insecure': '',
+      }, () => {}, (code) => {
+        expect(code).toBe(1);
+        expect(kd.stderr).toContain("Can't connect to Kong: invalid authentication credentials");
+        done();
+      });
+    });
+
+    it("should successfully start if the provided key is valid", (done) => {
+      kd.start({
+        '-u': 'http://localhost:8000/kong_with_key_auth',
+        '--api-key': 'abcdefghi',
+        '--insecure': '',
+      }, () => {
+        expect(kd.stdout).toContain("Kong Dashboard has started on port 8081");
+        request.get('http://localhost:8081/proxy').then((response) => {
+          expect(response.statusCode).toBe(200);
+          done();
+        });
+      });
     });
   });
 });
 
-function createKongAPI() {
+function createBasicAuthProtectedKongAPI() {
   var apiPromise;
   if (process.env.KONG_VERSION === '0.9') {
     apiPromise = Kong.createAPI({
-      name: 'Kong',
+      name: 'KongWithBasicAuth',
       upstream_url: 'http://localhost:8001',
       request_path: '/kong_with_basic_auth',
       strip_request_path: true
@@ -150,7 +195,7 @@ function createKongAPI() {
 
   else if (['0.10', '0.11', '0.12'].includes(process.env.KONG_VERSION)) {
     apiPromise = Kong.createAPI({
-      name: 'Kong',
+      name: 'KongWithBasicAuth',
       upstream_url: 'http://localhost:8001',
       uris: ['/kong_with_basic_auth'],
       strip_uri: true
@@ -169,10 +214,49 @@ function createKongAPI() {
   })
 }
 
+function createKeyAuthProtectedKongAPI() {
+  let promise;
+
+  if (process.env.KONG_VERSION === '0.9') {
+    promise = Kong.createAPI({
+      name: 'KongWithKey',
+      upstream_url: 'http://localhost:8001',
+      request_path: '/kong_with_key_auth',
+      strip_request_path: true
+    });
+  }
+
+  else if (['0.10', '0.11', '0.12'].includes(process.env.KONG_VERSION)) {
+    promise = Kong.createAPI({
+      name: 'KongWithKey',
+      upstream_url: 'http://localhost:8001',
+      uris: ['/kong_with_key_auth'],
+      strip_uri: true
+    });
+  }
+
+  else {
+    throw new Error('Kong version not supported in unit tests.')
+  }
+
+  return promise.then((api) => {
+    return Kong.createPlugin({
+      api_id: api.id,
+      name: 'key-auth',
+      config: {
+        key_names: ['apikey']
+      }
+    });
+  })
+}
+
 function createConsumer() {
   return Kong.createConsumer({
     custom_id: Date.now().toString()
   }).then((consumer) => {
-    return Kong.createBasicAuthCreds(consumer, 'test-user', 'password');
+    return Promise.all([
+      Kong.createBasicAuthCreds(consumer, 'test-user', 'password'),
+      Kong.createKeyAuthCreds(consumer, 'abcdefghi')
+    ]);
   });
 }

@@ -34,6 +34,15 @@ program
         describe: 'Of the form "user1=password1 user2=password2 ...". If set, Kong Dashboard will be protected with basic auth.\n',
         type: 'array'
       })
+      .option('api-key', {
+        type: 'string',
+        describe: 'API Key to use to connect to Kong admin API if it is protected with key auth\n'
+      })
+      .option('api-key-name', {
+        type: 'string',
+        default: 'apikey',
+        describe: 'Authentication API Key header name\n'
+      })
       .option('g', {
         alias: 'gelato',
         type: 'boolean',
@@ -104,13 +113,20 @@ function start(argv) {
   argv.basicAuth = basicAuth;
 
   argv.kongRequestOpts = {'headers': {}};
-  if (argv.kongUsername && argv.kongPassword) {
+  if ((argv.kongUsername && argv.kongPassword) || argv.apiKey) {
     if (!argv.kongUrl.startsWith('https://') && !argv.insecure) {
       terminal.error("You should not connect to Kong admin API using credentials over an unsecured protocol (http).\nUse the --insecure option to ignore this error.");
       process.exit(1);
     }
+  }
+
+  if (argv.kongUsername && argv.kongPassword) {
     var base64 = new Buffer(argv.kongUsername + ':' + argv.kongPassword).toString('base64');
     argv.kongRequestOpts.headers['Authorization'] = 'Basic ' + base64;
+  }
+
+  if (argv.apiKey !== '') {
+    argv.kongRequestOpts.headers[argv.apiKeyName.toLowerCase()] = argv.apiKey;
   }
 
   terminal.info("Connecting to Kong on " + argv.kongUrl + " ...");

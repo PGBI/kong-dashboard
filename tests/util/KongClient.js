@@ -126,6 +126,17 @@ var Kong = {
   },
 
   /**
+   * Returns a promise that will resolve with the creation of key auth credentials for the consumer.
+   */
+  createKeyAuthCreds: (consumer, key) => {
+    return request.post('http://127.0.0.1:8001/consumers/' + consumer.id + '/key-auth', {
+      key: key,
+    }).then((response) => {
+      return response.body;
+    });
+  },
+
+  /**
    * Returns a promise that will resolve with the creation of an upstream object.
    */
   createUpstream: (name) => {
