@@ -131,7 +131,7 @@
             </div>
             <div class="input-field col s6 offset-s3">
               <input id="password" ng-model="new_basic_auth.password" type="password" class="validate"
-                     ng-class="{invalid: error.new_basic_auth.password}">
+                     ng-class="{invalid: error.new_basic_auth.password}" ng-init="new_basic_auth.password=''">
               <label for="password">Password</label>
               <app-field-error error="error.new_basic_auth.password"></app-field-error>
             </div>
