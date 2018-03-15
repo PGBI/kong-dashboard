@@ -37,7 +37,7 @@ services:
       kong-migration:
         condition: service_healthy
     healthcheck:
-      test: "curl localhost:8001"
+      test: "kong health"
       interval: 10s
       timeout: 5s
       retries: 5
