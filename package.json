@@ -1,8 +1,8 @@
 {
-  "name": "kong-dashboard",
+  "name": "kong-dashboard-tmp",
   "description": "Web UI for managing Kong gateway",
   "keywords": "UI, kong, gateway",
-  "version": "3.1.0",
+  "version": "0.1.199",
   "license": "MIT",
   "repository": {
     "type": "git",

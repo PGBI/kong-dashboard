@@ -20,7 +20,7 @@ describe('Sidebar testing', () => {
       expect(Sidebar.getLinkElement('SNIs').isPresent()).toBeFalsy();
       expect(Sidebar.getLinkElement('Certificates').isPresent()).toBeFalsy();
     }
-    else if (['0.10', '0.11', '0.12'].includes(process.env.KONG_VERSION)) {
+    else if (['0.10', '0.11', '0.12','0.13'].includes(process.env.KONG_VERSION)) {
       expect(Sidebar.getLinkElement('SNIs').isPresent()).toBeTruthy();
       expect(Sidebar.getLinkElement('Certificates').isPresent()).toBeTruthy();
     }
