@@ -18,6 +18,5 @@ request.get('http://localhost:8001').then((response) => {
   var kongVersion = semver.major(version) + '.' + semver.minor(version);
   return execSync('KONG_VERSION=' + kongVersion + ' node_modules/.bin/protractor tests/conf.js', {stdio: 'inherit'});
 }).catch((error) => {
-  terminal.error(error);
   process.exit(1);
 });
