@@ -12,13 +12,17 @@ var kd = new KongDashboard();
 describe('Basic Auth plugin testing:', () => {
 
   var api;
+  var anonymousConsumer;
 
   beforeAll((done) => {
     kd.start({'--kong-url': 'http://127.0.0.1:8001'}, () => {
-      Kong.deleteAllAPIs().then(() => {
+      Promise.all([Kong.deleteAllAPIs(), Kong.deleteAllConsumers()]).then(() => {
         return createAPI();
       }).then((response) => {
         api = response;
+        return Kong.createConsumer({'username': 'anonymous_consumer'});
+      }).then((response) => {
+        anonymousConsumer = response;
         done();
       });
     });
@@ -56,11 +60,11 @@ describe('Basic Auth plugin testing:', () => {
         'name': 'basic-auth',
         'api_id': 'All',
         'config-hide_credentials': true,
-        'config-anonymous': 'anonymous'
+        'config-anonymous': anonymousConsumer.id
       };
       expectedPluginParams = {
         'name': 'basic-auth',
-        'config': {'hide_credentials': true, 'anonymous': 'anonymous'},
+        'config': {'hide_credentials': true, 'anonymous': anonymousConsumer.id},
         'enabled': true
       };
     } else {
@@ -100,12 +104,12 @@ describe('Basic Auth plugin testing:', () => {
         'name': 'basic-auth',
         'api_id': api.name,
         'config-hide_credentials': true,
-        'config-anonymous': 'anonymous'
+        'config-anonymous': anonymousConsumer.id
       };
       expectedPluginParams = {
         'api_id': api.id,
         'name': 'basic-auth',
-        'config': {'hide_credentials': true, 'anonymous': 'anonymous'},
+        'config': {'hide_credentials': true, 'anonymous': anonymousConsumer.id},
         'enabled': true
       };
     } else {

@@ -9,7 +9,7 @@ var ObjectProperties = require('../../util/ObjectProperties');
 
 var kd = new KongDashboard();
 
-describe('Acl plugin testing', () => {
+describe('Acl plugin testing:', () => {
 
   var api;
 
