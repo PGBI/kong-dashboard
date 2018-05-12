@@ -9,7 +9,7 @@ var ObjectProperties = require('../../util/ObjectProperties');
 
 var kd = new KongDashboard();
 
-describe('Acl plugin testing', () => {
+describe('Acl plugin testing:', () => {
 
   var api;
 
@@ -106,7 +106,7 @@ describe('Acl plugin testing', () => {
       });
     }
 
-    if (['0.10', '0.11', '0.12'].includes(process.env.KONG_VERSION)) {
+    if (['0.10', '0.11', '0.12', '0.13'].includes(process.env.KONG_VERSION)) {
       return Kong.createAPI({
         name: 'api_for_acl',
         hosts: ['host1.com', 'host2.com'],

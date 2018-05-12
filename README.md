@@ -11,11 +11,16 @@ and services such as requests routing, authentication, rate limiting, etc.
 ## Compatibility matrix
 
 | Kong-Dashboard versions | Kong versions | Node versions |
-|-----------|------------------------------|--------------|
-| 1.x.x     | 0.6.x, 0.7.x, 0.8.x, 0.9.x   |              |
-| 2.x.x     | 0.10.x                       |              |
-| 3.0.x     | 0.9.x, 0.10.x, 0.11.x        | >= 6.0.0     |
-| 3.x.x     | 0.9.x, 0.10.x, 0.11.x, 0.12.x| >= 6.0.0     |
+|--------------|------------------------------|--------------|
+| 1.x.x        | 0.6, 0.7, 0.8, 0.9           |              |
+| 2.x.x        | 0.10                         |              |
+| 3.0.x        | 0.9, 0.10, 0.11              | >= 6.0.0     |
+| 3.1.x, 3.2.x | 0.9, 0.10, 0.11, 0.12        | >= 6.0.0     |
+| 3.3.x        | 0.9, 0.10, 0.11, 0.12, 0.13  | >= 6.0.0     |
+
+Notes:
+* Kong Dashboard 3.3.0 is only partially compatible with Kong 0.13. It does not support the new Service and Route
+objects introduced in Kong 0.13.
 
 ## Prerequisites
 
