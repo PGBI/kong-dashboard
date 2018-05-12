@@ -18,6 +18,10 @@ and services such as requests routing, authentication, rate limiting, etc.
 | 3.1.x     | 0.9, 0.10, 0.11, 0.12        | >= 6.0.0     |
 | 3.2.x     | 0.9, 0.10, 0.11, 0.12, 0.13  | >= 6.0.0     |
 
+Notes:
+* Kong Dashboard 3.2.0 is only partially compatible with Kong 0.13. It does not support the new Service and Route
+objects introduced in Kong 0.13.
+
 ## Prerequisites
 
 You will need:
