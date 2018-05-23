@@ -1,0 +1,60 @@
+<div class="container" infinite-scroll="loadMore()" infinite-scroll-distance="5" infinite-scroll-use-document-bottom="true">
+    <a href="#!/services/add" id="newService" class="btn-floating btn-large waves-effect waves-light right">
+        <i class="material-icons">add</i>
+    </a>
+
+    <h3 class="header">Services</h3>
+
+    <p class="flow-text center" ng-show="total === null" style="margin-top:50px;">
+        <app-loader></app-loader>
+    </p>
+
+    <div class ng-show="total === 0">
+        <p class="flow-text center">
+            You haven't created any Services in Kong yet.
+        </p>
+        <p class="center">
+            <a href="#!/services/add" class="waves-effect waves-light btn">
+                <i class="material-icons left">add_box</i>
+                Add Service
+            </a>
+        </p>
+    </div>
+
+    <table class="bordered" ng-show="total > 0">
+        <thead>
+        <tr>
+            <th ng-repeat="prop in env.schemas.service.properties">{{prop.display_name}}</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="service in services">
+            <td ng-repeat="(prop_key, prop_value) in env.schemas.service.properties">{{service[prop_key]}}</td>
+            <td>{{service.created_at | date}}</td>
+            <td>{{service.updated_at | date}}</td>
+
+            <td class="right">
+                <a class="btn-floating waves-effect waves-light" href="#!/services/{{service.id}}">
+                    <i class="material-icons">mode_edit</i>
+                </a>
+                <a class="btn-floating waves-effect waves-light red modal-trigger" ng-click="showDeleteModal(service.name, service.id)">
+                    <i class="material-icons">delete</i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Structure -->
+<div id="deleteService" class="modal">
+    <div class="modal-content">
+        <h5>Do you really want to delete the Service "{{current.name}}"?</h5>
+    </div>
+    <div class="modal-footer">
+        <a class="waves-effect waves-green btn" ng-click="abortDelete()">Noooooo!</a>
+        <a class="waves-effect waves-red btn red" ng-click="performDelete()" style="margin-right:10px">Yes</a>
+    </div>
+</div>

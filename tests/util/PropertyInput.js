@@ -21,6 +21,8 @@ var PropertyInput = {
     return elt.getTagName().then((tagName) => {
       if (tagName === 'select') {
        return elt.element(by.xpath("..")).element(by.css('input')).getAttribute('value');
+      } else if (tagName === 'input') {
+        return elt.getAttribute('value');
       }
       throw 'Not able to fetch values of form elements of type ' + tagName;
     });

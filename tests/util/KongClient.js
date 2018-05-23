@@ -3,6 +3,13 @@ var request = require('../../lib/request');
 var Kong = {
 
   /**
+   * Returns a promise that will resolve with all Services being deleted
+   */
+  deleteAllServices: function() {
+    return this.deleteAllObjectsOfType('services');
+  },
+
+  /**
    * Returns a promise that will resolve with all APIs being deleted
    */
   deleteAllAPIs: function() {
@@ -48,7 +55,17 @@ var Kong = {
     });
   },
 
-    /**
+  /**
+   * Returns a promise that will resolve with the first Service registered in Kong.
+   */
+  getFirstService: () => {
+    return request.get('http://127.0.0.1:8001/services').then((response) => {
+      var services = JSON.parse(response.body).data;
+      return services.length > 0 ? services[0] : null;
+    });
+  },
+
+  /**
    * Returns a promise that will resolve with the first API registered in Kong.
    */
   getFirstAPI: () => {
@@ -78,6 +95,15 @@ var Kong = {
   },
 
   /**
+   * Returns a promise that will resolve with the service whose ID is <id>
+   */
+  getServiceById: (id) => {
+    return request.get('http://127.0.0.1:8001/services/' + id).then((response) => {
+      return JSON.parse(response.body);
+    });
+  },
+
+  /**
    * Returns a promise that will resolve with the upstream whose ID is <id>
    */
   getUpstreamById: (id) => {
@@ -100,6 +126,15 @@ var Kong = {
    */
   createConsumer: (data) => {
     return request.post('http://127.0.0.1:8001/consumers', data).then((response) => {
+      return response.body;
+    });
+  },
+
+  /**
+   * Returns a promise that will resolve with the creation of a Service.
+   */
+  createService: (data) => {
+    return request.post('http://127.0.0.1:8001/services', data).then((response) => {
       return response.body;
     });
   },
