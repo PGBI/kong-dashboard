@@ -24,17 +24,20 @@
     <table class="bordered" ng-show="total > 0">
         <thead>
         <tr>
-            <th ng-repeat="prop in env.schemas.service.properties">{{prop.display_name}}</th>
-            <th>Created At</th>
-            <th>Updated At</th>
+            <th>Name</th>
+            <th>Protocol</th>
+            <th>Host</th>
+            <th>Port</th>
+            <th>Path</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="service in services">
-            <td ng-repeat="(prop_key, prop_value) in env.schemas.service.properties">{{service[prop_key]}}</td>
-            <td>{{service.created_at | date}}</td>
-            <td>{{service.updated_at | date}}</td>
-
+            <td>{{service.name}}</td>
+            <td>{{service.protocol}}</td>
+            <td>{{service.host}}</td>
+            <td>{{service.port}}</td>
+            <td>{{service.path}}</td>
             <td class="right">
                 <a class="btn-floating waves-effect waves-light" href="#!/services/{{service.id}}">
                     <i class="material-icons">mode_edit</i>
