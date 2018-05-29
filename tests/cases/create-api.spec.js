@@ -7,6 +7,7 @@ var Kong = require('../util/KongClient');
 var request = require('../../lib/request');
 var using = require('jasmine-data-provider');
 var PropertyInput = require('../util/PropertyInput');
+var semver = require('semver');
 
 var kd = new KongDashboard();
 
@@ -91,7 +92,7 @@ describe('API creation testing', () => {
   });
 
   function validApiInputsProvider() {
-    if (process.env.KONG_VERSION === '0.9') {
+    if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
       return [
         {
           inputs: {
@@ -126,7 +127,7 @@ describe('API creation testing', () => {
       ];
     }
 
-    if (['0.10', '0.11', '0.12', '0.13'].includes(process.env.KONG_VERSION)) {
+    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
       return [
         {
           inputs: {
@@ -161,7 +162,7 @@ describe('API creation testing', () => {
   }
 
   function invalidApiInputsProvider() {
-    if (process.env.KONG_VERSION === '0.9') {
+    if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
       return [
         {
           inputs: {},
@@ -169,7 +170,7 @@ describe('API creation testing', () => {
         }
       ];
     }
-    if (['0.10', '0.11', '0.12', '0.13'].includes(process.env.KONG_VERSION)) {
+    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
       return [
         {
           inputs: {},

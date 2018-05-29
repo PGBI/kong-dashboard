@@ -6,6 +6,7 @@ var KongDashboard = require('../../util/KongDashboard');
 var Kong = require('../../util/KongClient');
 var PropertyInput = require('../../util/PropertyInput');
 var ObjectProperties = require('../../util/ObjectProperties');
+var semver = require('semver');
 
 var kd = new KongDashboard();
 
@@ -44,7 +45,7 @@ describe('Basic Auth plugin testing:', () => {
     var inputs;
     var expectedPluginParams;
 
-    if (process.env.KONG_VERSION === '0.9') {
+    if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
       inputs = {
         'name': 'basic-auth',
         'api_id': 'All',
@@ -55,7 +56,7 @@ describe('Basic Auth plugin testing:', () => {
         'config': {'hide_credentials': true},
         'enabled': true
       };
-    } else if (['0.10', '0.11', '0.12', '0.13'].includes(process.env.KONG_VERSION)) {
+    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
       inputs = {
         'name': 'basic-auth',
         'api_id': 'All',
@@ -87,7 +88,7 @@ describe('Basic Auth plugin testing:', () => {
     Sidebar.clickOn('Plugins');
     ListPluginsPage.clickAddButton();
 
-    if (process.env.KONG_VERSION === '0.9') {
+    if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
       inputs = {
         'api_id': api.name,
         'name': 'basic-auth',
@@ -99,7 +100,7 @@ describe('Basic Auth plugin testing:', () => {
         'config': {'hide_credentials': true},
         'enabled': true
       };
-    } else if (['0.10', '0.11', '0.12', '0.13'].includes(process.env.KONG_VERSION)) {
+    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
       inputs = {
         'name': 'basic-auth',
         'api_id': api.name,
@@ -141,7 +142,7 @@ describe('Basic Auth plugin testing:', () => {
       expect(element(by.cssContainingText('div.toast', 'Plugin saved!')).isPresent()).toBeTruthy();
       return Kong.getFirstPlugin();
     }).then((updatedPlugin) => {
-      if (process.env.KONG_VERSION === '0.9') {
+      if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
         expect(updatedPlugin.config).toEqual({'hide_credentials': true});
       } else {
         expect(updatedPlugin.config).toEqual({'hide_credentials': true, 'anonymous': ''});
@@ -166,7 +167,7 @@ describe('Basic Auth plugin testing:', () => {
       config: {hide_credentials: false}
     });
     ObjectProperties.fillAndSubmit(inputs).then(() => {
-      if (process.env.KONG_VERSION === '0.9') {
+      if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
         // Kong 0.9 returns a non-json response, causing kong-dashboard to return this misleading message.
         expect(element(by.cssContainingText('div.toast', 'Oops, something wrong happened. Please refresh the page.')).isPresent()).toBeTruthy();
       } else {
@@ -177,7 +178,7 @@ describe('Basic Auth plugin testing:', () => {
   });
 
   function createAPI() {
-    if (process.env.KONG_VERSION === '0.9') {
+    if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
       return Kong.createAPI({
         'name': 'my_api',
         'request_path': '/my_api',
@@ -185,7 +186,7 @@ describe('Basic Auth plugin testing:', () => {
       });
     }
 
-    if (['0.10', '0.11', '0.12', '0.13'].includes(process.env.KONG_VERSION)) {
+    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
       return Kong.createAPI({
         name: 'my_api',
         hosts: ['host1.com', 'host2.com'],

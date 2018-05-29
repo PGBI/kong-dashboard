@@ -7,130 +7,134 @@ var Kong = require("../../util/KongClient");
 var request = require("../../../lib/request");
 var PropertyInput = require('../../util/PropertyInput');
 var using = require('jasmine-data-provider');
+var semver = require('semver');
 
 var kd = new KongDashboard();
 
 describe('Service Creation testing', () => {
-    // Only run tests if the Kong version is 0.13 as Services are supported in version 0.13 only
-    if (process.env.KONG_VERSION === '0.13') {
-        var serviceSchema;
 
-        beforeEach((done) => {
-            Kong.deleteAllServices().then(done);
-        });
+  if (semver.lt(process.env.KONG_VERSION, '0.13.0')) {
+    // Only run tests if the Kong version is 0.13.0 or higher as Services are supported starting version 0.13 only
+    return;
+  }
 
-        afterEach(() => {
-            browser.refresh();
-        })
+  var serviceSchema;
 
-        beforeAll((done) => {
-            kd.start({'--kong-url': 'http://127.0.0.1:8001'}, () => {
-                HomePage.visit();
-                Sidebar.clickOn('Services');
-                ListServicesPage.clickAddButton();
-                request.get('http://127.0.0.1:8081/config').then((response) => {
-                    eval(response.body);
-                    serviceSchema = __env.schemas.service;
-                    done();
-                });
-            });
-        });
+  beforeEach((done) => {
+    Kong.deleteAllServices().then(done);
+  });
 
-        afterAll((done) => {
-            kd.stop(done);
-        });
+  afterEach(() => {
+    browser.refresh();
+  })
 
-        it('displays input for every field', () => {
-            expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/#!/services/add');
-            Object.keys(serviceSchema.properties).forEach((fieldName) => {
-                expect(PropertyInput.getElement(fieldName).isPresent()).toBeTruthy('Form section for ' + fieldName + ' is missig');
-            });
-        });
+  beforeAll((done) => {
+    kd.start({'--kong-url': 'http://127.0.0.1:8001'}, () => {
+      HomePage.visit();
+      Sidebar.clickOn('Services');
+      ListServicesPage.clickAddButton();
+      request.get('http://127.0.0.1:8081/config').then((response) => {
+        eval(response.body);
+        serviceSchema = __env.schemas.service;
+        done();
+      });
+    });
+  });
 
-        using(validServiceInputsProvider, (data) => {
-            it('creates a Service', (done) => {
-                Object.keys(data.inputs).forEach((inputName) => {
-                    PropertyInput.set(inputName, data.inputs[inputName]);
-                });
-                CreateServicePage.submit().then(() => {
-                    expect(element(by.cssContainingText('div.toast', 'Service created')).isPresent()).toBeTruthy();
-                    return browser.waitForAngular();
-                }).then(() => {
-                    return Kong.getFirstService();
-                }).then((service) => {
-                    delete service.created_at
-                    delete service.updated_at
-                    delete service.id
-                    expect(service).toEqual(data.expectedCreatedService);
-                    done();
-                })
-            });
-        });
+  afterAll((done) => {
+    kd.stop(done);
+  });
 
-        using(invalidServiceInputsProvider, (data) => {
-            it('shows validation error on Service creation', (done) => {
-                Object.keys(data.inputs).forEach((inputName) => {
-                    PropertyInput.set(inputName, data.inputs[inputName]);
-                });
-                CreateServicePage.submit().then(() => {
-                    expect(element(by.cssContainingText('div.toast', 'Service created')).isPresent()).toBeFalsy();
-                    if (data.expectedErrors.globalError) {
-                        expect(element(by.cssContainingText('div.toast', data.expectedErrors.globalError)).isPresent()).toBeTruthy();
-                    }
-                    if (data.expectedErrors.properties) {
-                        Object.keys(serviceSchema.properties).forEach((fieldName) => {
-                            var expectHasErrorMessage = expect(PropertyInput.getElementErrorMsg(fieldName).isPresent());
-                            if (data.expectedErrors.properties.indexOf(fieldName) !== -1) {
-                                expectHasErrorMessage.toBeTruthy(fieldName + ' should have an error message.');
-                            } else {
-                                expectHasErrorMessage.toBeFalsy(fieldName + ' should not have an error message.');
-                            }
-                        });
-                    }
-                    done();
-                });
-            });
-        });
+  it('displays input for every field', () => {
+    expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/#!/services/add');
+    Object.keys(serviceSchema.properties).forEach((fieldName) => {
+      expect(PropertyInput.getElement(fieldName).isPresent()).toBeTruthy('Form section for ' + fieldName + ' is missig');
+    });
+  });
 
-        function validServiceInputsProvider() {
-            return [
-                {
-                    inputs: {
-                        name: 'my_awesome_Service',
-                        host: 'host1.com',
-                    },
-                    expectedCreatedService: {
-                        name: 'my_awesome_Service',
-                        protocol: "http",
-                        host: 'host1.com',
-                        path: null,
-                        port: 80,
-                        retries: 5,
-                        connect_timeout: 60000,
-                        write_timeout: 60000,
-                        read_timeout: 60000,
-                    }
-                }
-            ];
+  using(validServiceInputsProvider, (data) => {
+    it('creates a Service', (done) => {
+      Object.keys(data.inputs).forEach((inputName) => {
+        PropertyInput.set(inputName, data.inputs[inputName]);
+      });
+      CreateServicePage.submit().then(() => {
+        expect(element(by.cssContainingText('div.toast', 'Service created')).isPresent()).toBeTruthy();
+        return browser.waitForAngular();
+      }).then(() => {
+        return Kong.getFirstService();
+      }).then((service) => {
+        delete service.created_at
+        delete service.updated_at
+        delete service.id
+        expect(service).toEqual(data.expectedCreatedService);
+        done();
+      })
+    });
+  });
+
+  using(invalidServiceInputsProvider, (data) => {
+    it('shows validation error on Service creation', (done) => {
+      Object.keys(data.inputs).forEach((inputName) => {
+        PropertyInput.set(inputName, data.inputs[inputName]);
+      });
+      CreateServicePage.submit().then(() => {
+        expect(element(by.cssContainingText('div.toast', 'Service created')).isPresent()).toBeFalsy();
+        if (data.expectedErrors.globalError) {
+          expect(element(by.cssContainingText('div.toast', data.expectedErrors.globalError)).isPresent()).toBeTruthy();
         }
-
-        function invalidServiceInputsProvider() {
-            return [
-                {
-                    inputs: {},
-                    expectedErrors: {
-                        'globalError': 'schema violation (host: required field missing)',
-                        'properties': ['host']
-                    }
-                },
-                {
-                    inputs: {name: 'test_service'},
-                    expectedErrors: {
-                        'globalError': 'schema violation (host: required field missing)',
-                        'properties': ['host']
-                    }
-                }
-            ];
+        if (data.expectedErrors.properties) {
+          Object.keys(serviceSchema.properties).forEach((fieldName) => {
+            var expectHasErrorMessage = expect(PropertyInput.getElementErrorMsg(fieldName).isPresent());
+            if (data.expectedErrors.properties.indexOf(fieldName) !== -1) {
+              expectHasErrorMessage.toBeTruthy(fieldName + ' should have an error message.');
+            } else {
+              expectHasErrorMessage.toBeFalsy(fieldName + ' should not have an error message.');
+            }
+          });
         }
-    }
+        done();
+      });
+    });
+  });
+
+  function validServiceInputsProvider() {
+    return [
+      {
+        inputs: {
+          name: 'my_awesome_Service',
+          host: 'host1.com',
+        },
+        expectedCreatedService: {
+          name: 'my_awesome_Service',
+          protocol: "http",
+          host: 'host1.com',
+          path: null,
+          port: 80,
+          retries: 5,
+          connect_timeout: 60000,
+          write_timeout: 60000,
+          read_timeout: 60000,
+        }
+      }
+    ];
+  }
+
+  function invalidServiceInputsProvider() {
+    return [
+      {
+        inputs: {},
+        expectedErrors: {
+          'globalError': 'schema violation (host: required field missing)',
+          'properties': ['host']
+        }
+      },
+      {
+        inputs: {name: 'test_service'},
+        expectedErrors: {
+          'globalError': 'schema violation (host: required field missing)',
+          'properties': ['host']
+        }
+      }
+    ];
+  }
 });

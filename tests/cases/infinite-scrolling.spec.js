@@ -6,7 +6,7 @@ var ListPluginsPage = require('../util/ListPluginsPage');
 var ListAPIsPage = require('../util/ListAPIsPage');
 var Sidebar = require('../util/Sidebar');
 var until = protractor.ExpectedConditions;
-
+var semver = require('semver');
 
 var kd = new KongDashboard();
 
@@ -96,7 +96,7 @@ function create150APIs() {
 }
 
 function createAPI(number) {
-  if (process.env.KONG_VERSION === '0.9') {
+  if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
     return Kong.createAPI({
       'name': 'api_' + number,
       'request_path': '/' + number,
@@ -109,7 +109,7 @@ function createAPI(number) {
     });
   }
 
-  if (['0.10', '0.11', '0.12', '0.13'].includes(process.env.KONG_VERSION)) {
+  if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
     return Kong.createAPI({
       'name': 'api_' + number,
       'uris': ['/' + number],

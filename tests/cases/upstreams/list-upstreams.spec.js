@@ -3,12 +3,13 @@ var Sidebar = require('../../util/Sidebar');
 var ListUpstreamsPage = require('../../util/ListUpstreamsPage');
 var KongDashboard = require('../../util/KongDashboard');
 var Kong = require('../../util/KongClient');
+var semver = require('semver');
 
 var kd = new KongDashboard();
 
 describe('Upstreams listing page testing', () => {
 
-  if (process.env.KONG_VERSION === '0.9') {
+  if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
     // no upstream before Kong 0.10.
     return
   }

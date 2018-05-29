@@ -6,6 +6,7 @@ var KongDashboard = require('../../util/KongDashboard');
 var Kong = require('../../util/KongClient');
 var PropertyInput = require('../../util/PropertyInput');
 var ObjectProperties = require('../../util/ObjectProperties');
+var semver = require('semver');
 
 var kd = new KongDashboard();
 
@@ -98,7 +99,7 @@ describe('Acl plugin testing:', () => {
   });
 
   function createAPI() {
-    if (process.env.KONG_VERSION === '0.9') {
+    if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
       return Kong.createAPI({
         'name': 'api_for_acl',
         'request_path': '/api_for_acl',
@@ -106,7 +107,7 @@ describe('Acl plugin testing:', () => {
       });
     }
 
-    if (['0.10', '0.11', '0.12', '0.13'].includes(process.env.KONG_VERSION)) {
+    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
       return Kong.createAPI({
         name: 'api_for_acl',
         hosts: ['host1.com', 'host2.com'],
