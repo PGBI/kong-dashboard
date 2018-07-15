@@ -11,11 +11,8 @@ var terminal = require('./lib/terminal');
 
 // Define file path variables
 var paths = {
-  root:     'src/',
-  js_src:   'src/js',
+  root:     'src',
   sass_src: 'src/scss',
-  html_src: 'src/html',
-  css_src:  'src/scss',
   dist:     'public'
 };
 
@@ -38,13 +35,9 @@ gulp.task('build_js', function () {
     .pipe(gulp.dest(paths.dist + '/js'));
 });
 
-gulp.task('build_html', function() {
-  gulp.src([paths.html_src + '/index.html'])
+gulp.task('copy_assets', function() {
+  gulp.src(['src/**/*.html'])
     .pipe(gulp.dest(paths.dist));
-  gulp.src([paths.html_src + '/**/*'])
-    .pipe(gulp.dest(paths.dist + '/html'));
-  gulp.src([paths.root + '/components/**/*.html'])
-    .pipe(gulp.dest(paths.dist + '/components'));
   gulp.src([paths.root + '/images/**'])
     .pipe(gulp.dest(paths.dist + '/images'));
   gulp.src(['node_modules/materialize-css/dist/fonts/roboto/**/*'])
@@ -63,11 +56,11 @@ gulp.task('build_css', function() {
     .pipe(gulp.dest(paths.dist + '/css'));
 });
 
-gulp.task('build', ['build_js', 'build_css', 'build_html']);
+gulp.task('build', ['build_js', 'build_css', 'copy_assets']);
 
 gulp.task('watch', function() {
   gulp.watch(paths.root + '/**/*.js', ['build_js']);
-  gulp.watch(paths.root + '/**/*.html', ['build_html']);
+  gulp.watch(paths.root + '/**/*.html', ['copy_assets']);
   gulp.watch(paths.root + '/**/*.scss', ['build_css']);
 });
 

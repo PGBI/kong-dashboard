@@ -46,7 +46,7 @@
 
     indexRoutes.forEach(function (route) {
       $routeProvider.when(route.path, {
-        templateUrl: 'html/index_resources.view.html',
+        templateUrl: 'pages/index_resources/index_resources.view.html',
         controller: 'IndexResources',
         controllerAs: 'vm',
         resolve: {
@@ -73,7 +73,7 @@
 
     createUpdateRoutes.forEach(function (route) {
       $routeProvider.when(route.path, {
-        templateUrl: 'html/show_resource.view.html',
+        templateUrl: 'pages/create_or_update_resource/show_resource.view.html',
         controller: 'CreateOrUpdateResource',
         controllerAs: 'vm',
         resolve: {
@@ -107,7 +107,7 @@
 
     $routeProvider
       .when('/', {
-        templateUrl: 'html/home.html',
+        templateUrl: 'pages/home/home.html',
         controller: 'HomeController'
       })
       .when('/plugins/add', {
