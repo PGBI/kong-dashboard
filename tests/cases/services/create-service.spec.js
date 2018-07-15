@@ -58,7 +58,7 @@ describe('Service Creation testing', () => {
         PropertyInput.set(inputName, data.inputs[inputName]);
       });
       CreateServicePage.submit().then(() => {
-        expect(element(by.cssContainingText('div.toast', 'Service created')).isPresent()).toBeTruthy();
+        expect(element(by.cssContainingText('div.toast', 'service created')).isPresent()).toBeTruthy();
         return browser.waitForAngular();
       }).then(() => {
         return Kong.getFirstService();
@@ -78,7 +78,7 @@ describe('Service Creation testing', () => {
         PropertyInput.set(inputName, data.inputs[inputName]);
       });
       CreateServicePage.submit().then(() => {
-        expect(element(by.cssContainingText('div.toast', 'Service created')).isPresent()).toBeFalsy();
+        expect(element(by.cssContainingText('div.toast', 'service created')).isPresent()).toBeFalsy();
         if (data.expectedErrors.globalError) {
           expect(element(by.cssContainingText('div.toast', data.expectedErrors.globalError)).isPresent()).toBeTruthy();
         }
@@ -92,7 +92,6 @@ describe('Service Creation testing', () => {
             }
           });
         }
-        done();
       });
     });
   });

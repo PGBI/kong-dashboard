@@ -69,11 +69,11 @@ describe('Starting Kong-dashboard', function () {
   it("should successfully start with basic auth", (done) => {
     kd.start({
       '--kong-url': 'http://127.0.0.1:8001',
-      '--basic-auth': 'user user2=password2'
+      '--basic-auth-credential': 'user user2=password2'
     }, kongStarted);
 
     function kongStarted() {
-      expect(kd.stdout).toContain('Invalid value "user" for --basic-auth option. Ignoring.');
+      expect(kd.stdout).toContain('Invalid value "user" for --basic-auth-credential option. Ignoring.');
       expect(kd.stdout).toContain("Kong Dashboard has started on port 8081");
 
       var opts = {auth: {user: 'user2', pass: 'password2', sendImmediately: true}};
@@ -98,9 +98,9 @@ describe('Starting Kong-dashboard', function () {
     }
   });
 
-  describe('When Kong is protected with the basic-auth plugin', function () {
+  describe('When Kong is protected with the basic-auth-credential plugin', function () {
 
-    it("should successfully start when valid basic-auth creds are provided", (done) => {
+    it("should successfully start when valid basic-auth-credential creds are provided", (done) => {
       kd.start({
         '-u': 'http://localhost:8000/kong_with_basic_auth',
         '--kong-username': 'test-user',
@@ -143,7 +143,7 @@ describe('Starting Kong-dashboard', function () {
     });
   });
 
-  describe('When Kong is protected with the key-auth plugin', function () {
+  describe('When Kong is protected with the auth-key plugin', function () {
 
     it("should error if no keys are provided", (done) => {
       kd.start({
@@ -211,7 +211,7 @@ function createBasicAuthProtectedKongAPI() {
   return apiPromise.then((api) => {
     return Kong.createPlugin({
       api_id: api.id,
-      name: 'basic-auth'
+      name: 'basic-auth-credential'
     });
   })
 }
@@ -244,7 +244,7 @@ function createKeyAuthProtectedKongAPI() {
   return promise.then((api) => {
     return Kong.createPlugin({
       api_id: api.id,
-      name: 'key-auth',
+      name: 'auth-key',
       config: {
         key_names: ['apikey']
       }

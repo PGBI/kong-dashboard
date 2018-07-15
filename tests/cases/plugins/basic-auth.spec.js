@@ -47,24 +47,24 @@ describe('Basic Auth plugin testing:', () => {
 
     if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
       inputs = {
-        'name': 'basic-auth',
+        'name': 'basic-auth-credential',
         'api_id': 'All',
         'config-hide_credentials': true
       };
       expectedPluginParams = {
-        'name': 'basic-auth',
+        'name': 'basic-auth-credential',
         'config': {'hide_credentials': true},
         'enabled': true
       };
     } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
       inputs = {
-        'name': 'basic-auth',
+        'name': 'basic-auth-credential',
         'api_id': 'All',
         'config-hide_credentials': true,
         'config-anonymous': anonymousConsumer.id
       };
       expectedPluginParams = {
-        'name': 'basic-auth',
+        'name': 'basic-auth-credential',
         'config': {'hide_credentials': true, 'anonymous': anonymousConsumer.id},
         'enabled': true
       };
@@ -83,7 +83,7 @@ describe('Basic Auth plugin testing:', () => {
     });
   });
 
-  it('should successfully create a basic-auth plugin for one API', (done) => {
+  it('should successfully create a basic-auth-credential plugin for one API', (done) => {
     HomePage.visit();
     Sidebar.clickOn('Plugins');
     ListPluginsPage.clickAddButton();
@@ -91,25 +91,25 @@ describe('Basic Auth plugin testing:', () => {
     if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
       inputs = {
         'api_id': api.name,
-        'name': 'basic-auth',
+        'name': 'basic-auth-credential',
         'config-hide_credentials': true
       };
       expectedPluginParams = {
         'api_id': api.id,
-        'name': 'basic-auth',
+        'name': 'basic-auth-credential',
         'config': {'hide_credentials': true},
         'enabled': true
       };
     } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
       inputs = {
-        'name': 'basic-auth',
+        'name': 'basic-auth-credential',
         'api_id': api.name,
         'config-hide_credentials': true,
         'config-anonymous': anonymousConsumer.id
       };
       expectedPluginParams = {
         'api_id': api.id,
-        'name': 'basic-auth',
+        'name': 'basic-auth-credential',
         'config': {'hide_credentials': true, 'anonymous': anonymousConsumer.id},
         'enabled': true
       };
@@ -128,9 +128,9 @@ describe('Basic Auth plugin testing:', () => {
     });
   });
 
-  it('should be possible to edit a previously created basic-auth plugin', (done) => {
+  it('should be possible to edit a previously created basic-auth-credential plugin', (done) => {
     Kong.createPlugin({
-      name: 'basic-auth',
+      name: 'basic-auth-credential',
       config: {hide_credentials: false}
     }).then((createdPlugin) => {
       PluginPage.visit(createdPlugin.id);
@@ -151,19 +151,19 @@ describe('Basic Auth plugin testing:', () => {
     });
   });
 
-  it('should error when attempting to create a basic-auth plugin if an other one already exists', (done) => {
+  it('should error when attempting to create a basic-auth-credential plugin if an other one already exists', (done) => {
     HomePage.visit();
     Sidebar.clickOn('Plugins');
     ListPluginsPage.clickAddButton();
 
     var inputs = {
-      'name': 'basic-auth',
+      'name': 'basic-auth-credential',
       'api_id': 'All',
       'config-hide_credentials': true
     };
 
     Kong.createPlugin({
-      name: 'basic-auth',
+      name: 'basic-auth-credential',
       config: {hide_credentials: false}
     });
     ObjectProperties.fillAndSubmit(inputs).then(() => {

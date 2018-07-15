@@ -8,7 +8,7 @@ var Page = {
    * Returns a promise which will resolve with the rows displayed in the "list consumers" page
    */
   getRows: () => {
-    return element.all(by.repeater('consumer in consumers'));
+    return element.all(by.repeater('resource in vm.resources'));
   },
 
   /**

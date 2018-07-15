@@ -22,6 +22,11 @@ describe('Upstreams listing page testing', () => {
     kd.stop(done);
   });
 
+  beforeEach((done) => {
+    Kong.deleteAllUpstreams().then(done);
+  });
+
+
   it('should be possible to delete an upstream', (done) => {
     var upstream;
     Kong.createUpstream('foo.bar').then((u) => {
@@ -31,7 +36,7 @@ describe('Upstreams listing page testing', () => {
       ListUpstreamsPage.clickDelete(0);
       return element(by.css('.modal h5')).getText();
     }).then((message) => {
-      expect(message).toEqual('Do you really want to delete the Upstream "foo.bar"?');
+      expect(message).toEqual('Do you really want to delete the upstream "foo.bar"?');
       return ListUpstreamsPage.confirmDeletion();
     }).then(() => {
       expect(element(by.css('.modal')).isDisplayed()).toBeFalsy();

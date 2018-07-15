@@ -31,6 +31,13 @@ var Kong = {
   },
 
   /**
+   * Returns a promise that will resolve with all Upstreams being deleted
+   */
+  deleteAllUpstreams: function() {
+    return this.deleteAllObjectsOfType('upstreams');
+  },
+
+  /**
    * Returns a promise that will resolve with all Objects of type objectType being deleted
    */
   deleteAllObjectsOfType: function(objectType) {
@@ -152,7 +159,7 @@ var Kong = {
    * Returns a promise that will resolve with the creation of basic auth credentials for the consumer.
    */
   createBasicAuthCreds: (consumer, username, password) => {
-    return request.post('http://127.0.0.1:8001/consumers/' + consumer.id + '/basic-auth', {
+    return request.post('http://127.0.0.1:8001/consumers/' + consumer.id + '/basic-auth-credential', {
       username: username,
       password: password
     }).then((response) => {
@@ -164,7 +171,7 @@ var Kong = {
    * Returns a promise that will resolve with the creation of key auth credentials for the consumer.
    */
   createKeyAuthCreds: (consumer, key) => {
-    return request.post('http://127.0.0.1:8001/consumers/' + consumer.id + '/key-auth', {
+    return request.post('http://127.0.0.1:8001/consumers/' + consumer.id + '/auth-key', {
       key: key,
     }).then((response) => {
       return response.body;

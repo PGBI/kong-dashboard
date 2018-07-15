@@ -1,14 +1,14 @@
 var Page = {
 
   clickAddButton: () => {
-    element(by.css('#newAPI')).click();
+    element(by.cssContainingText('a', 'Add API')).click();
   },
 
   /**
    * Returns a promise which will resolve with the rows displayed
    */
   getRows: () => {
-    return element.all(by.repeater('api in apis'));
+    return element.all(by.repeater('api in vm.resources'));
   },
 
   /**

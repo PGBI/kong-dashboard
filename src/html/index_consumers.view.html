@@ -1,0 +1,51 @@
+<table class="bordered" ng-show="vm.resources.length > 0">
+  <tr>
+    <th>Username</th>
+    <th>Custom id</th>
+    <th>Created</th>
+    <th>Auth</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr ng-repeat="resource in vm.resources">
+    <td ng-bind-html="resource.username | objectProperty"></td>
+    <td>
+      <a ng-show="gelato && resource.custom_id" href="https://gelato.io/app/developers/{{resource.custom_id}}">{{resource.custom_id}}</a>
+      <p ng-show="!gelato" ng-bind-html="resource.custom_id | objectProperty"></p>
+    </td>
+    <td>{{resource.created_at | date}}</td>
+    <td>
+      <a class="btn-floating" href="#!/consumers/{{resource.id}}/basic-auth-credentials">
+        <img src="images/basic-authentication.png" width="100%" />
+      </a>
+      <a class="btn-floating" href="#!/consumers/{{resource.id}}/auth-keys">
+        <img src="images/key-authentication.png" width="100%" />
+      </a>
+      <a class="btn-floating" href="#!/consumers/{{resource.id}}/oauth2-credentials">
+        <img src="images/oauth2-authentication.png" width="100%" />
+      </a>
+      <a class="btn-floating" href="#!/consumers/{{resource.id}}/jwt-credentials">
+        <img src="images/jwt.png" width="100%" />
+      </a>
+      <a class="btn-floating" href="#!/consumers/{{resource.id}}/hmac-credentials">
+        <img src="images/hmac-authentication.png" width="100%" />
+      </a>
+      <a class="btn-floating" href="#!/consumers/{{resource.id}}/groups">
+        <img src="images/acl.png" width="100%" />
+      </a>
+    </td>
+    <td class="right">
+      <a class="btn-floating waves-effect waves-light" href="#!/consumers/{{resource.id}}">
+        <i class="material-icons">mode_edit</i>
+      </a>
+      <a class="btn-floating waves-effect waves-light blue" href="#!/consumers/{{resource.id}}/plugins">
+        <i class="material-icons">extension</i>
+      </a>
+      <a class="btn-floating waves-effect waves-light red modal-trigger" ng-click="vm.showDeleteModal(resource.username, resource.id)">
+        <i class="material-icons">delete</i>
+      </a>
+    </td>
+  </tr>
+  </tbody>
+</table>

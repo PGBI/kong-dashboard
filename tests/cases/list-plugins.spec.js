@@ -23,7 +23,7 @@ describe('Plugin listing page testing', () => {
   it('should display a "no plugin" message when there is not plugin configured', () => {
     HomePage.visit();
     Sidebar.clickOn('Plugins');
-    expect(element(by.cssContainingText('p', ' There are no plugin configured yet.')).isDisplayed()).toBeTruthy();
+    expect(element(by.cssContainingText('p', 'You haven\'t created any plugins yet.')).isDisplayed()).toBeTruthy();
   });
 
   it('should list created plugins', (done) => {

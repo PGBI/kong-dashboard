@@ -15,14 +15,12 @@ describe('Sidebar testing', () => {
     kd.stop(done);
   });
 
-  it('should display SNIs and Certificates links depending on Kong version', () => {
+  it('should display Certificates links depending on Kong version', () => {
     HomePage.visit();
     if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
-      expect(Sidebar.getLinkElement('SNIs').isPresent()).toBeFalsy();
       expect(Sidebar.getLinkElement('Certificates').isPresent()).toBeFalsy();
     }
     else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
-      expect(Sidebar.getLinkElement('SNIs').isPresent()).toBeTruthy();
       expect(Sidebar.getLinkElement('Certificates').isPresent()).toBeTruthy();
     }
     else {

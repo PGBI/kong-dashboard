@@ -1,0 +1,67 @@
+<table class="bordered" ng-show="vm.resources.length > 0">
+  <tr>
+    <th>Name</th>
+    <th ng-if="env.schemas.api.properties.request_host">Host</th>
+    <th ng-if="env.schemas.api.properties.request_path">Request path</th>
+    <th ng-if="env.schemas.api.properties.hosts">Host(s)</th>
+    <th ng-if="env.schemas.api.properties.uris">Uri(s)</th>
+    <th ng-if="env.schemas.api.properties.methods">Method(s)</th>
+    <th>Upstream url</th>
+    <th>Created</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr ng-repeat="api in vm.resources">
+    <td>{{api.name}}</td>
+
+    <td ng-if="env.schemas.api.properties.request_host">
+      <a href="{{ api.https_only ? 'https' : 'http' }}://{{ api.request_host }}" target="_blank">{{ api.request_host }}</a>
+    </td>
+
+    <td ng-if="env.schemas.api.properties.request_path">
+      {{ api.request_path }}
+    </td>
+
+    <td ng-if="env.schemas.api.properties.hosts">
+      <ul ng-if="api.hosts.length != 1"
+          class="browser-default">
+        <li ng-repeat="host in api.hosts">
+          <a href="{{ api.https_only ? 'https' : 'http' }}://{{ host }}" target="_blank">{{ host }}</a>
+        </li>
+      </ul>
+      <a ng-if="api.hosts.length == 1"
+         href="{{ api.https_only ? 'https' : 'http' }}://{{ api.hosts[0] }}"
+         target="_blank">
+        {{ api.hosts[0] }}
+      </a>
+    </td>
+
+    <td
+      ng-if="env.schemas.api.properties.uris"
+      ng-bind-html="api.uris | objectProperty"></td>
+
+    <td
+      ng-if="env.schemas.api.properties.methods"
+      ng-bind-html="api.methods | objectProperty"></td>
+
+    <td>
+      <a href="{{ api.upstream_url }}" target="_blank">{{ api.upstream_url }}</a>
+    </td>
+
+    <td>{{api.created_at | date}}</td>
+
+    <td class="right">
+      <a class="btn-floating waves-effect waves-light" href="#!/apis/{{api.id}}">
+        <i class="material-icons">mode_edit</i>
+      </a>
+      <a class="btn-floating waves-effect waves-light blue" href="#!/apis/{{api.id}}/plugins">
+        <i class="material-icons">extension</i>
+      </a>
+      <a class="btn-floating waves-effect waves-light red modal-trigger" ng-click="vm.showDeleteModal(api.name, api.id)">
+        <i class="material-icons">delete</i>
+      </a>
+    </td>
+  </tr>
+  </tbody>
+</table>

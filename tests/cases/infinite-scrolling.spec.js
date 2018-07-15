@@ -103,7 +103,7 @@ function createAPI(number) {
       'upstream_url': 'http://foo'
     }).then((api) => {
       return Kong.createPlugin({
-        'name': 'basic-auth',
+        'name': 'basic-auth-credential',
         'api_id': api.id
       })
     });
@@ -116,7 +116,7 @@ function createAPI(number) {
       'upstream_url': 'http://foo'
     }).then((api) => {
       return Kong.createPlugin({
-        'name': 'basic-auth',
+        'name': 'basic-auth-credential',
         'api_id': api.id
       })
     });

@@ -1,14 +1,14 @@
 var Page = {
 
     clickAddButton: () => {
-        element(by.css('#newService')).click();
+      element(by.cssContainingText('a', 'Add service')).click();
     },
 
     /**
     * Returns a promise which will resolve with the rows displayed in the "list servicess" page
     */
     getRows: () => {
-        return element.all(by.repeater('service in services'));
+        return element.all(by.repeater('resource in vm.resources'));
     },
 
     /**

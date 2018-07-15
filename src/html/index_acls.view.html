@@ -1,0 +1,19 @@
+<table class="bordered" ng-show="vm.resources.length > 0">
+  <tr>
+    <th>Group name</th>
+    <th>Joined on</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr ng-repeat="resource in vm.resources">
+    <td ng-bind-html="resource.group | objectProperty"></td>
+    <td>{{resource.created_at | date}}</td>
+    <td class="right">
+      <a class="btn-floating waves-effect waves-light red modal-trigger" ng-click="vm.showDeleteModal(resource.group, resource.id)">
+        <i class="material-icons">delete</i>
+      </a>
+    </td>
+  </tr>
+  </tbody>
+</table>

@@ -10,7 +10,7 @@ exports.config = {
     showColors: true,
     defaultTimeoutInterval: 30000
   },
-  specs: ['./**/*.spec.js'],
+  specs: ['./cases/services/create-service.spec.js'],
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {

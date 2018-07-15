@@ -1,0 +1,27 @@
+<table class="bordered" ng-show="vm.resources.length > 0">
+  <tr>
+    <th>Name</th>
+    <th>Slots</th>
+    <th>Created</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr ng-repeat="resource in vm.resources">
+    <td ng-bind-html="resource.name | objectProperty"></td>
+    <td ng-bind-html="resource.slots | objectProperty"></td>
+    <td ng-bind-html="resource.created_at | date"></td>
+    <td class="right">
+      <a class="btn-floating waves-effect waves-light" href="#!/upstreams/{{ resource.id }}/targets" alt="List Targets">
+        <i class="material-icons tooltipped" data-position="bottom" data-tooltip="List Targets" data-delay="0" >input</i>
+      </a>
+      <a class="btn-floating waves-effect waves-light" href="#!/upstreams/{{resource.id}}">
+        <i class="material-icons">mode_edit</i>
+      </a>
+      <a class="btn-floating waves-effect waves-light red modal-trigger" ng-click="vm.showDeleteModal(resource.name, resource.id)">
+        <i class="material-icons">delete</i>
+      </a>
+    </td>
+  </tr>
+  </tbody>
+</table>

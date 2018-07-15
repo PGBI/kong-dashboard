@@ -45,6 +45,8 @@ gulp.task('build_html', function() {
     .pipe(gulp.dest(paths.dist + '/html'));
   gulp.src([paths.root + '/components/**/*.html'])
     .pipe(gulp.dest(paths.dist + '/components'));
+  gulp.src([paths.root + '/images/**'])
+    .pipe(gulp.dest(paths.dist + '/images'));
   gulp.src(['node_modules/materialize-css/dist/fonts/roboto/**/*'])
     .pipe(gulp.dest(paths.dist + '/fonts/roboto'));
 });

@@ -1,0 +1,35 @@
+<div class="container">
+  <h3 class="header">{{ vm.title }}</h3>
+  <div class="row">
+    <div class="col s5">
+      <div class="card-panel teal lighten-2">
+        <h5 class="white-text">
+          <i class="material-icons small">highlight</i>
+          About {{ vm.resourceName }}s
+        </h5>
+        <p class="white-text">
+          {{ vm.schema.description }}
+        </p>
+        <p class="white-text">
+          <a href="{{ vm.schema.documentation }}" target="_blank">Official Kong documentation.</a>
+        </p>
+      </div>
+    </div>
+
+    <form class="col s7" novalidate ng-submit="vm.saveResource()">
+      <object-properties
+          schema="vm.schema"
+          object="vm.resource"
+          errors="vm.errors"
+      ></object-properties>
+      <div class="row">
+        <div class="input-field col s12">
+          <button type="submit" class="waves-effect waves-light btn right">
+            {{ vm.action }}
+          </button>
+        </div>
+      </div>
+      <input type="hidden" ng-model="vm.resource.id" value="{{ vm.resource.id }}" />
+    </form>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+<div class="input-field">
+  <input
+    id="{{ 'property-' + $ctrl.path }}"
+    type="{{ $ctrl.type }}"
+    ng-attr-placeholder="{{ $ctrl.schema.default }}"
+    ng-disabled="{{ $ctrl.schema.readonly }}"
+    class="validate"
+    ng-model="$ctrl.object[$ctrl.key]"
+    ng-class="{invalid: $ctrl.error}">
+
+  <label
+    for="{{ 'property-' + $ctrl.path }}"
+    ng-class="{ 'active': $ctrl.object[$ctrl.key] || $ctrl.schema.default }"
+    style="margin-bottom: 15px">
+    {{ $ctrl.label }}
+  </label>
+
+  <div
+    style="margin-top: -15px;"
+    id="{{ 'error-' + $ctrl.path }}"
+    class="red-text errors"
+    ng-if="$ctrl.error"
+    ng-bind-html="$ctrl.error | arrayToHtmlList">
+  </div >
+
+  <p ng-if="$ctrl.schema.description"
+     class="grey-text"
+     style="margin-top: 0; margin-bottom: 30px; font-size: 85%">
+    <em>{{ $ctrl.schema.description }}</em>
+  </p>
+</div>

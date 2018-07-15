@@ -1,0 +1,31 @@
+<table class="bordered" ng-show="vm.resources.length > 0">
+  <tr>
+    <th>Name</th>
+    <th>Protocol</th>
+    <th>Host</th>
+    <th>Port</th>
+    <th>Path</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr ng-repeat="resource in vm.resources">
+    <td>{{resource.name}}</td>
+    <td>{{resource.protocol}}</td>
+    <td>{{resource.host}}</td>
+    <td>{{resource.port}}</td>
+    <td>{{resource.path}}</td>
+    <td class="right">
+      <a class="btn-floating waves-effect waves-light blue" href="#!/services/{{resource.id}}/routes">
+        <i class="material-icons">call_split</i>
+      </a>
+      <a class="btn-floating waves-effect waves-light" href="#!/services/{{resource.id}}">
+        <i class="material-icons">mode_edit</i>
+      </a>
+      <a class="btn-floating waves-effect waves-light red modal-trigger" ng-click="vm.showDeleteModal(resource.name, resource.id)">
+        <i class="material-icons">delete</i>
+      </a>
+    </td>
+  </tr>
+  </tbody>
+</table>

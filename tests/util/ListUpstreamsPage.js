@@ -4,7 +4,7 @@ var Page = {
    * Returns a promise which will resolve with the rows displayed in the "list upstreams" page
    */
   getRows: () => {
-    return element.all(by.repeater('upstream in upstreams'));
+    return element.all(by.repeater('resource in vm.resources'));
   },
 
   /**

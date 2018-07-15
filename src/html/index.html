@@ -15,6 +15,11 @@
       <i class="material-icons">home</i> Home
     </a>
   </li>
+  <li ng-if="env.schemas.route">
+    <a href="#!/routes" class="waves-effect">
+      <i class="material-icons">call_split</i> Routes
+    </a>
+  </li>
   <li ng-if="env.schemas.service">
     <a href="#!/services" class="waves-effect">
       <i class="material-icons">dvr</i> Services
@@ -33,11 +38,6 @@
   <li>
     <a href="#!/plugins" class="waves-effect">
       <i class="material-icons">extension</i> Plugins
-    </a>
-  </li>
-  <li ng-if="env.schemas.sni">
-    <a href="#!/snis" class="waves-effect">
-      <i class="material-icons">dns</i> SNIs
     </a>
   </li>
   <li ng-if="env.schemas.certificate">

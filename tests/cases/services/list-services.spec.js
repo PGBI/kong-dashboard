@@ -48,7 +48,7 @@ describe('Service Listing page testing', () => {
       ListServicesPage.clickDelete(0);
       return element(by.css('.modal h5')).getText();
     }).then((message) => {
-      expect(message).toEqual('Do you really want to delete the Service "test_service"?');
+      expect(message).toEqual('Do you really want to delete the service "test_service"?');
       return ListServicesPage.confirmDeletion();
     }).then(() => {
       expect(element(by.css('.modal')).isDisplayed()).toBeFalsy();

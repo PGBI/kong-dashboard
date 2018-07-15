@@ -52,8 +52,9 @@ describe('API creation testing', () => {
       Object.keys(data.inputs).forEach((inputName) => {
         PropertyInput.set(inputName, data.inputs[inputName]);
       });
+
       CreateAPIPage.submit().then(() => {
-        expect(element(by.cssContainingText('div.toast', 'Api created')).isPresent()).toBeTruthy();
+        expect(element(by.cssContainingText('div.toast', 'API created')).isPresent()).toBeTruthy();
         return browser.waitForAngular(); // waiting for ajax call to create API to be finished.
       }).then(() => {
         return Kong.getFirstAPI();

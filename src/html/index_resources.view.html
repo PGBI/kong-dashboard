@@ -1,0 +1,49 @@
+<div
+    class="container"
+    infinite-scroll="vm.loadNextPage()"
+    infinite-scroll-distance="5"
+    infinite-scroll-use-document-bottom="true">
+  <a
+      ng-if="vm.createLink"
+      href="{{ vm.createLink }}"
+      id="newResource"
+      class="btn-floating btn-large waves-effect waves-light right">
+    <i class="material-icons">add</i>
+  </a>
+
+  <h3 class="header">{{ vm.title }}</h3>
+
+  <p class="flow-text center" ng-show="vm.resources === null" style="margin-top:50px;">
+    <app-loader></app-loader>
+  </p>
+
+  <div class ng-show="vm.resources.length === 0">
+    <p class="flow-text center">
+      You haven't created any {{ vm.resourceName + 's' }} yet.
+    </p>
+    <p class="center">
+      <a
+        href="{{ vm.createLink }}"
+        ng-if="vm.createLink"
+        class="waves-effect waves-light btn"
+      >
+        <i class="material-icons left">add_box</i>
+        Add {{ vm.resourceName }}
+      </a>
+    </p>
+  </div>
+
+  <ng-include src="'html/index_' + vm.resourceType + 's.view.html'"></ng-include>
+
+</div>
+
+<!-- Modal Structure -->
+<div id="deleteResource" class="modal">
+  <div class="modal-content">
+    <h5>Do you really want to delete the {{ vm.resourceName }} "{{vm.current.name}}"?</h5>
+  </div>
+  <div class="modal-footer">
+    <a class="waves-effect waves-green btn" ng-click="vm.abortDelete()">Noooooo!</a>
+    <a class="waves-effect waves-red btn red" ng-click="vm.performDelete()" style="margin-right:10px">Yes</a>
+  </div>
+</div>

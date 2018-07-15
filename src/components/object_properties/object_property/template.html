@@ -34,18 +34,18 @@
     schema="$ctrl.propertySchema"
     object="$ctrl.object"
     ></input-property>
-
-  <input-property
-    ng-if="$ctrl.propertySchema.type == 'array' && $ctrl.propertySchema.items.type == 'string' && !$ctrl.propertySchema.items.enum"
-    type="'text'"
-    style="display:block"
-    error="$ctrl.error"
-    label="$ctrl.label"
-    key="$ctrl.key"
-    path="$ctrl.path"
-    schema="$ctrl.propertySchema"
-    object="$ctrl.object"
-    ></input-property>
+  
+  <inline-array-property
+      ng-if="$ctrl.propertySchema.type == 'array' && ['string', 'number'].indexOf($ctrl.propertySchema.items.type) > -1 && !$ctrl.propertySchema.items.enum"
+      type="'text'"
+      style="display:block"
+      error="$ctrl.error"
+      label="$ctrl.label"
+      key="$ctrl.key"
+      path="$ctrl.path"
+      schema="$ctrl.propertySchema"
+      object="$ctrl.object"
+  ></inline-array-property>
 
   <select-property
     ng-if="$ctrl.propertySchema.type == 'string' && $ctrl.propertySchema.enum"
