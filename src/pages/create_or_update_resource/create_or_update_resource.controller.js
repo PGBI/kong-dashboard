@@ -128,6 +128,9 @@
       else if (vm.resourceType == 'jwt-credential') {
         endpoint = '/consumers/' + parent.id + '/jwt';
       }
+      else if (vm.resourceType == 'target') {
+        endpoint = '/upstreams/' + parent.id + '/targets';
+      }
 
       return endpoint;
     }

@@ -147,10 +147,6 @@
           }]
         }
       })
-      .when('/upstreams/:upstream_id/targets/add', {
-        templateUrl: 'html/targets/form.html',
-        controller: 'TargetController',
-      })
       .otherwise({redirectTo: '/'});
   }
 })()
