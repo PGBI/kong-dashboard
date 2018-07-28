@@ -46,7 +46,7 @@
 
     indexRoutes.forEach(function (route) {
       $routeProvider.when(route.path, {
-        templateUrl: 'pages/index_resources/index_resources.view.html',
+        templateUrl: 'pages/index_resources/base.view.html',
         controller: 'IndexResources',
         controllerAs: 'vm',
         resolve: {

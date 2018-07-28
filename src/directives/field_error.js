@@ -4,6 +4,6 @@ angular.module('app').directive("appFieldError", function () {
         scope: {
             error: '='
         },
-        templateUrl: 'html/directives_templates/field_error.html'
+        templateUrl: 'directives/field_error.html'
     };
 });
