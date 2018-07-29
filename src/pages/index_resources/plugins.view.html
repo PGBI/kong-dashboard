@@ -3,6 +3,8 @@
     <th>Name</th>
     <th>API</th>
     <th>Consumer</th>
+    <th ng-if="env.schemas.service">Service</th>
+    <th ng-if="env.schemas.route">Route</th>
     <th>Status</th>
     <th>Created</th>
     <th></th>
@@ -18,6 +20,14 @@
     <td>
       <a ng-if="plugin.consumer_id" href="#!/consumers/{{plugin.consumer_id}}">{{plugin.consumer.username || plugin.consumer.custom_id}}</a>
       <span ng-if="!plugin.consumer_id">All</span>
+    </td>
+    <td ng-if="env.schemas.service">
+      <a ng-if="plugin.service_id" href="#!/services/{{plugin.service_id}}">{{plugin.service.name}}</a>
+      <span ng-if="!plugin.service_id">All</span>
+    </td>
+    <td ng-if="env.schemas.route">
+      <a ng-if="plugin.route_id" href="#!/routes/{{plugin.route_id}}">{{plugin.route.id}}</a>
+      <span ng-if="!plugin.route_id">All</span>
     </td>
     <td>
       <div class="switch">

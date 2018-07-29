@@ -36,6 +36,7 @@
       { path: '/consumers/:parent_id/jwt-credentials/add', resourceType: 'jwt-credential', resourceName: 'jwt credential', parentType: 'consumer' },
       { path: '/consumers/:parent_id/hmac-credentials/add', resourceType: 'hmac-credential', resourceName: 'hmac credential', parentType: 'consumer'},
       { path: '/consumers/:parent_id/oauth2-credentials/add', resourceType: 'oauth2-credential', resourceName: 'oauth2 credential', parentType: 'consumer' },
+      { path: '/routes/:id', resourceType: 'route'},
       { path: '/services/add', resourceType: 'service'},
       { path: '/services/:id', resourceType: 'service'},
       { path: '/services/:parent_id/routes/add', resourceType: 'route', parentType: 'service'},
@@ -111,8 +112,9 @@
         controller: 'HomeController'
       })
       .when('/plugins/add', {
-        templateUrl: 'html/plugins/form.html',
+        templateUrl: 'pages/create_or_update_plugin/plugin.view.html',
         controller: 'PluginController',
+        controllerAs: 'vm',
         resolve: {
           plugin: function() {
             return null;
@@ -120,17 +122,32 @@
           plugins: ['Kong', function (Kong) {
             return Kong.get('/plugins/enabled');
           }],
-          apis: ['Kong', '$location', function(Kong) {
-            return Kong.get('/apis');
+          apis: ['Kong', function(Kong) {
+            return Kong.get('/apis?size=1000');
           }],
-          consumers: ['Kong', '$location', function(Kong) {
+          consumers: ['Kong', function(Kong) {
             return Kong.get('/consumers?size=1000');
+          }],
+          services: ['Kong', 'env', function(Kong, env) {
+            if (env.schemas.service) {
+              return Kong.get('/services?size=1000');
+            } else {
+              return null;
+            }
+          }],
+          routes: ['Kong', 'env', function(Kong, env) {
+            if (env.schemas.route) {
+              return Kong.get('/routes?size=1000');
+            } else {
+              return null;
+            }
           }]
         }
       })
       .when('/plugins/:id', {
-        templateUrl: 'html/plugins/form.html',
+        templateUrl: 'pages/create_or_update_plugin/plugin.view.html',
         controller: 'PluginController',
+        controllerAs: 'vm',
         resolve: {
           plugin: ['Kong', '$route', function (Kong, $route) {
             var id = $route.current.params.id;
@@ -144,6 +161,20 @@
           }],
           consumers: ['Kong', '$location', function(Kong) {
             return Kong.get('/consumers');
+          }],
+          services: ['Kong', 'env', function(Kong, env) {
+            if (env.schemas.service) {
+              return Kong.get('/services?size=1000');
+            } else {
+              return null;
+            }
+          }],
+          routes: ['Kong', 'env', function(Kong, env) {
+            if (env.schemas.route) {
+              return Kong.get('/routes?size=1000');
+            } else {
+              return null;
+            }
           }]
         }
       })

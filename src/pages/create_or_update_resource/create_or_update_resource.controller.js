@@ -60,7 +60,9 @@
       case 'route':
         vm.title = resource ? 'Update Route' : 'Create Route for Service "' + parent.name + '"';
         delete vm.schema.properties.service;
-        vm.resource.service = {id: parent.id};
+        if (parent) {
+          vm.resource.service = {id: parent.id};
+        }
         break;
       case 'service':
         vm.title = resource ? 'Update Service' : 'Create Service';

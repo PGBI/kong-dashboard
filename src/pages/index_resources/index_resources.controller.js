@@ -173,6 +173,16 @@
               resource.service = service;
             });
           }
+          if (!resource.service && resource.service_id) {
+            Kong.get('/services/' + resource.service_id).then(function(service) {
+              resource.service = service;
+            });
+          }
+          if (!resource.route && resource.route_id) {
+            Kong.get('/routes/' + resource.route_id).then(function(route) {
+              resource.route = route;
+            });
+          }
         });
       });
     }
