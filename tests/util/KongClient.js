@@ -159,10 +159,10 @@ var Kong = {
    * Returns a promise that will resolve with the creation of basic auth credentials for the consumer.
    */
   createBasicAuthCreds: (consumer, username, password) => {
-    return request.post('http://127.0.0.1:8001/consumers/' + consumer.id + '/basic-auth-credential', {
-      username: username,
-      password: password
-    }).then((response) => {
+     return request.post('http://127.0.0.1:8001/consumers/' + consumer.id + '/basic-auth', {
+       username: username,
+       password: password
+     }).then((response) => {
       return response.body;
     });
   },
@@ -171,9 +171,7 @@ var Kong = {
    * Returns a promise that will resolve with the creation of key auth credentials for the consumer.
    */
   createKeyAuthCreds: (consumer, key) => {
-    return request.post('http://127.0.0.1:8001/consumers/' + consumer.id + '/auth-key', {
-      key: key,
-    }).then((response) => {
+    return request.post('http://127.0.0.1:8001/consumers/' + consumer.id + '/key-auth', {key: key}).then((response) => {
       return response.body;
     });
   },

@@ -69,11 +69,11 @@ describe('Starting Kong-dashboard', function () {
   it("should successfully start with basic auth", (done) => {
     kd.start({
       '--kong-url': 'http://127.0.0.1:8001',
-      '--basic-auth-credential': 'user user2=password2'
+      '--basic-auth': 'user user2=password2'
     }, kongStarted);
 
     function kongStarted() {
-      expect(kd.stdout).toContain('Invalid value "user" for --basic-auth-credential option. Ignoring.');
+      expect(kd.stdout).toContain('Invalid value "user" for --basic-auth option. Ignoring.');
       expect(kd.stdout).toContain("Kong Dashboard has started on port 8081");
 
       var opts = {auth: {user: 'user2', pass: 'password2', sendImmediately: true}};
@@ -211,7 +211,7 @@ function createBasicAuthProtectedKongAPI() {
   return apiPromise.then((api) => {
     return Kong.createPlugin({
       api_id: api.id,
-      name: 'basic-auth-credential'
+      name: 'basic-auth'
     });
   })
 }
@@ -244,7 +244,7 @@ function createKeyAuthProtectedKongAPI() {
   return promise.then((api) => {
     return Kong.createPlugin({
       api_id: api.id,
-      name: 'auth-key',
+      name: 'key-auth',
       config: {
         key_names: ['apikey']
       }
