@@ -11,4 +11,4 @@
 
     $rootScope.env = env;
   }
-})()
+})();

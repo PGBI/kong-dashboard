@@ -36,7 +36,7 @@ describe('Upstreams listing page testing', () => {
       ListUpstreamsPage.clickDelete(0);
       return element(by.css('.modal h5')).getText();
     }).then((message) => {
-      expect(message).toEqual('Do you really want to delete the upstream "foo.bar"?');
+      expect(message).toEqual('Do you really want to delete the Upstream "foo.bar"?');
       return ListUpstreamsPage.confirmDeletion();
     }).then(() => {
       expect(element(by.css('.modal')).isDisplayed()).toBeFalsy();

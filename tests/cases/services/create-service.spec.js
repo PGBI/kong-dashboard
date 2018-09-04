@@ -30,9 +30,6 @@ describe('Service Creation testing', () => {
 
   beforeAll((done) => {
     kd.start({'--kong-url': 'http://127.0.0.1:8001'}, () => {
-      HomePage.visit();
-      Sidebar.clickOn('Services');
-      ListServicesPage.clickAddButton();
       request.get('http://127.0.0.1:8081/config').then((response) => {
         eval(response.body);
         serviceSchema = __env.schemas.service;
@@ -46,6 +43,9 @@ describe('Service Creation testing', () => {
   });
 
   it('displays input for every field', () => {
+    HomePage.visit();
+    Sidebar.clickOn('Services');
+    ListServicesPage.clickAddButton();
     expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/#!/services/add');
     Object.keys(serviceSchema.properties).forEach((fieldName) => {
       expect(PropertyInput.getElement(fieldName).isPresent()).toBeTruthy('Form section for ' + fieldName + ' is missig');
@@ -54,11 +54,15 @@ describe('Service Creation testing', () => {
 
   using(validServiceInputsProvider, (data) => {
     it('creates a Service', (done) => {
+      HomePage.visit();
+      Sidebar.clickOn('Services');
+      ListServicesPage.clickAddButton();
+
       Object.keys(data.inputs).forEach((inputName) => {
         PropertyInput.set(inputName, data.inputs[inputName]);
       });
       CreateServicePage.submit().then(() => {
-        expect(element(by.cssContainingText('div.toast', 'service created')).isPresent()).toBeTruthy();
+        expect(element(by.cssContainingText('div.toast', 'Service created')).isPresent()).toBeTruthy();
         return browser.waitForAngular();
       }).then(() => {
         return Kong.getFirstService();
@@ -73,12 +77,16 @@ describe('Service Creation testing', () => {
   });
 
   using(invalidServiceInputsProvider, (data) => {
-    it('shows validation error on Service creation', (done) => {
+    it('shows validation error on Service creation', () => {
+      HomePage.visit();
+      Sidebar.clickOn('Services');
+      ListServicesPage.clickAddButton();
+
       Object.keys(data.inputs).forEach((inputName) => {
         PropertyInput.set(inputName, data.inputs[inputName]);
       });
       CreateServicePage.submit().then(() => {
-        expect(element(by.cssContainingText('div.toast', 'service created')).isPresent()).toBeFalsy();
+        expect(element(by.cssContainingText('div.toast', 'Service created')).isPresent()).toBeFalsy();
         if (data.expectedErrors.globalError) {
           expect(element(by.cssContainingText('div.toast', data.expectedErrors.globalError)).isPresent()).toBeTruthy();
         }

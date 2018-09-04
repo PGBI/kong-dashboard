@@ -33,7 +33,7 @@ describe('Acl plugin testing:', () => {
     Kong.deleteAllPlugins().then(done);
   });
 
-  it('should be successfully create acl plugin for All APIs', (done) => {
+  it('should successfully create acl plugin for All APIs', (done) => {
     HomePage.visit();
     Sidebar.clickOn('Plugins');
     ListPluginsPage.clickAddButton();
@@ -56,7 +56,7 @@ describe('Acl plugin testing:', () => {
     });
   });
 
-  it('should be successfully create acl plugin for one API', (done) => {
+  it('should successfully create acl plugin for one API', (done) => {
     HomePage.visit();
     Sidebar.clickOn('Plugins');
     ListPluginsPage.clickAddButton();
@@ -71,6 +71,69 @@ describe('Acl plugin testing:', () => {
     }).then((createdPlugin) => {
       expect(createdPlugin.name).toEqual('acl');
       expect(createdPlugin.api_id).toEqual(api.id);
+      expect(createdPlugin.config).toEqual({'whitelist': ['foo']});
+      done();
+    });
+  });
+
+  it('should successfully create acl plugin for a service', (done) => {
+    if (semver.lt(process.env.KONG_VERSION, '0.13.0')) {
+      return done();
+    }
+    var service;
+    Kong.deleteAllServices().then(() => {
+      return Kong.createService({name: 'test_service', host: 'a.com'});
+    }).then((s) => {
+      service = s;
+      HomePage.visit();
+      Sidebar.clickOn('Plugins');
+      ListPluginsPage.clickAddButton();
+      var inputs = {
+        'name': 'acl',
+        'service_id': s.name,
+        'config-whitelist': ['foo']
+      };
+      return ObjectProperties.fillAndSubmit(inputs);
+    }).then(() => {
+      expect(element(by.cssContainingText('div.toast', 'Plugin saved!')).isPresent()).toBeTruthy();
+      return Kong.getFirstPlugin();
+    }).then((createdPlugin) => {
+      expect(createdPlugin.name).toEqual('acl');
+      expect(createdPlugin.service_id).toEqual(service.id);
+      expect(createdPlugin.config).toEqual({'whitelist': ['foo']});
+      done();
+    });
+  });
+
+  it('should successfully create acl plugin for a route', (done) => {
+    if (semver.lt(process.env.KONG_VERSION, '0.13.0')) {
+      return done();
+    }
+    var route;
+    Kong.createService({name: 'service_with_route', host: 'a.com'}).then((service) => {
+      return Kong.deleteAllRoutes().then(() => {
+        return Kong.createRoute({
+          service: {id: service.id},
+          methods: ['GET']
+        });
+      })
+    }).then((r) => {
+      route = r;
+      HomePage.visit();
+      Sidebar.clickOn('Plugins');
+      ListPluginsPage.clickAddButton();
+      var inputs = {
+        'name': 'acl',
+        'route_id': route.id,
+        'config-whitelist': ['foo']
+      };
+      return ObjectProperties.fillAndSubmit(inputs);
+    }).then(() => {
+      expect(element(by.cssContainingText('div.toast', 'Plugin saved!')).isPresent()).toBeTruthy();
+      return Kong.getFirstPlugin();
+    }).then((createdPlugin) => {
+      expect(createdPlugin.name).toEqual('acl');
+      expect(createdPlugin.route_id).toEqual(route.id);
       expect(createdPlugin.config).toEqual({'whitelist': ['foo']});
       done();
     });
@@ -119,5 +182,4 @@ describe('Acl plugin testing:', () => {
 
     throw new Error('Kong version not supported in unit tests.')
   }
-
 });

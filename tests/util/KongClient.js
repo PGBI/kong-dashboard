@@ -6,7 +6,17 @@ var Kong = {
    * Returns a promise that will resolve with all Services being deleted
    */
   deleteAllServices: function() {
-    return this.deleteAllObjectsOfType('services');
+    // A service can't be deleted if a route references it.
+    return this.deleteAllRoutes().then(() => {
+      return this.deleteAllObjectsOfType('services');
+    });
+  },
+
+  /**
+   * Returns a promise that will resolve with all Routes being deleted
+   */
+  deleteAllRoutes: function() {
+    return this.deleteAllObjectsOfType('routes');
   },
 
   /**
@@ -142,6 +152,15 @@ var Kong = {
    */
   createService: (data) => {
     return request.post('http://127.0.0.1:8001/services', data).then((response) => {
+      return response.body;
+    });
+  },
+
+  /**
+   * Returns a promise that will resolve with the creation of a Route.
+   */
+  createRoute: (data) => {
+    return request.post('http://127.0.0.1:8001/routes', data).then((response) => {
       return response.body;
     });
   },

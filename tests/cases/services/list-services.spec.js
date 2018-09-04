@@ -29,7 +29,7 @@ describe('Service Listing page testing', () => {
   it ('displays the services', (done) => {
     var serviceData = {name: 'test_service', host: 'a.com'};
 
-    Kong.createService(serviceData).then((service) => {
+    Kong.createService(serviceData).then(() => {
       HomePage.visit();
       Sidebar.clickOn("Services");
       expect(ListServicesPage.getRows().count()).toEqual(1);
@@ -48,7 +48,7 @@ describe('Service Listing page testing', () => {
       ListServicesPage.clickDelete(0);
       return element(by.css('.modal h5')).getText();
     }).then((message) => {
-      expect(message).toEqual('Do you really want to delete the service "test_service"?');
+      expect(message).toEqual('Do you really want to delete the Service "test_service"?');
       return ListServicesPage.confirmDeletion();
     }).then(() => {
       expect(element(by.css('.modal')).isDisplayed()).toBeFalsy();

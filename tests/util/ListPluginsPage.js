@@ -1,7 +1,7 @@
 var Page = {
 
   clickAddButton: () => {
-    return element(by.css('#newPlugin')).click();
+    return element(by.css('#newResource')).click();
   },
 
   /**

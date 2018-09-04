@@ -1,7 +1,7 @@
 var Page = {
 
     clickAddButton: () => {
-      element(by.cssContainingText('a', 'Add service')).click();
+      element(by.cssContainingText('a', 'Add Service')).click();
     },
 
     /**

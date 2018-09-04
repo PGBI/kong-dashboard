@@ -23,7 +23,7 @@ describe('Plugin listing page testing', () => {
   it('should display a "no plugin" message when there is not plugin configured', () => {
     HomePage.visit();
     Sidebar.clickOn('Plugins');
-    expect(element(by.cssContainingText('p', 'You haven\'t created any plugins yet.')).isDisplayed()).toBeTruthy();
+    expect(element(by.cssContainingText('p', 'You haven\'t created any Plugins yet.')).isDisplayed()).toBeTruthy();
   });
 
   it('should list created plugins', (done) => {
@@ -64,7 +64,7 @@ describe('Plugin listing page testing', () => {
       ListPluginsPage.clickDelete(0);
       return element(by.css('.modal h5')).getText();
     }).then((message) => {
-      expect(message).toEqual('Do you really want to delete the plugin "acl"?');
+      expect(message).toEqual('Do you really want to delete the Plugin "acl"?');
       return ListPluginsPage.abortDeletion();
     }).then(() => {
       expect(element(by.css('.modal')).isDisplayed()).toBeFalsy();
@@ -84,7 +84,7 @@ describe('Plugin listing page testing', () => {
       ListPluginsPage.clickDelete(0);
       return element(by.css('.modal h5')).getText();
     }).then((message) => {
-      expect(message).toEqual('Do you really want to delete the plugin "acl"?');
+      expect(message).toEqual('Do you really want to delete the Plugin "acl"?');
       return ListPluginsPage.confirmDeletion();
     }).then(() => {
       expect(element(by.css('.modal')).isDisplayed()).toBeFalsy();

@@ -2,7 +2,7 @@
  * This factory handles CRUD requests to the backend API.
  */
 angular.module('app')
-  .factory('Kong', ['$http', '$q', 'Request', 'Alert', 'env', function ($http, $q, Request, Alert, env) {
+  .factory('Kong', ['$http', '$q', 'Request', 'Alert', function ($http, $q, Request, Alert) {
     var factory = {
       handleError: function (response, deferred, muteErrors) {
         if (response && response.data) {
@@ -19,8 +19,8 @@ angular.module('app')
     };
 
     ['get', 'delete', 'head'].forEach(function (method) {
-      factory[method] = function (endpoint, muteErrors) {
-        var deferred = $q.defer();
+      factory[method] = function (endpoint, muteErrors, deferred) {
+        deferred = deferred || $q.defer();
         try {
           Request({
             endpoint: endpoint,
@@ -28,6 +28,10 @@ angular.module('app')
           }).then(function (response) {
             deferred.resolve(response.data);
           }, function (response) {
+            if (response.status == 500) {
+              // Kong internal error. Let's retry.
+              return factory[method](endpoint, muteErrors, deferred);
+            }
             factory.handleError(response, deferred, muteErrors);
           });
         } catch(err) {
@@ -75,8 +79,13 @@ angular.module('app')
       if (Object(kongResponseBody) !== kongResponseBody || Array.isArray(kongResponseBody)) {
         return kongResponseBody;
       }
+
+      // In case of 400 error, Kong response is inconsistent. Sometimes the errored fields are wrapped within an
+      // object whose key is "fields", sometimes not.
+      var errors = kongResponseBody.fields || kongResponseBody;
+
       var result = {}, cur, prop, idx, last, temp;
-      for(var p in kongResponseBody) {
+      for(var p in errors) {
         cur = result, prop = "", last = 0;
         do {
           idx = p.indexOf(".", last);
@@ -85,7 +94,7 @@ angular.module('app')
           prop = temp;
           last = idx + 1;
         } while(idx >= 0);
-        cur[prop] = kongResponseBody[p];
+        cur[prop] = errors[p];
       }
       return result[""];
     };

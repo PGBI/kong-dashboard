@@ -36,12 +36,6 @@ describe('Objects page index testing', () => {
     expect(ListPluginsPage.getRows().count()).toEqual(100);
   });
 
-  it('should display 100 apis by default', () => {
-    HomePage.visit();
-    Sidebar.clickOn('APIs');
-    expect(ListAPIsPage.getRows().count()).toEqual(100);
-  });
-
   it('should reveal more consumers when scrolling down', (done) => {
     HomePage.visit();
     Sidebar.clickOn('Consumers');
@@ -67,19 +61,6 @@ describe('Objects page index testing', () => {
       done();
     });
   });
-
-  it('should reveal more apis when scrolling down', (done) => {
-    HomePage.visit();
-    Sidebar.clickOn('APIs');
-    browser.waitForAngular().then(() => {
-      browser.executeScript('window.scrollTo(0,document.body.scrollHeight)');
-    });
-    var row101 = ListAPIsPage.getRow(101);
-    browser.wait(until.presenceOf(row101)).then(() => {
-      expect(ListAPIsPage.getRows().count()).toEqual(150);
-      done();
-    });
-  });
 });
 
 function create150APIs() {
@@ -96,33 +77,31 @@ function create150APIs() {
 }
 
 function createAPI(number) {
+  let apiPromise;
   if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
-    return Kong.createAPI({
-      'name': 'api_' + number,
-      'request_path': '/' + number,
-      'upstream_url': 'http://foo'
-    }).then((api) => {
-      return Kong.createPlugin({
-        'name': 'basic-auth-credential',
-        'api_id': api.id
-      })
+    apiPromise = Kong.createAPI({
+      name: 'api_' + number,
+      request_path: '/' + number,
+      upstream_url: 'http://foo'
     });
   }
-
-  if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
-    return Kong.createAPI({
-      'name': 'api_' + number,
-      'uris': ['/' + number],
-      'upstream_url': 'http://foo'
-    }).then((api) => {
-      return Kong.createPlugin({
-        'name': 'basic-auth-credential',
-        'api_id': api.id
-      })
+  else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
+    apiPromise =  Kong.createAPI({
+      name: 'api_' + number,
+      uris: ['/' + number],
+      upstream_url: 'http://foo'
     });
   }
+  else {
+    throw new Error('Kong version not supported in unit tests.')
+  }
 
-  throw new Error('Kong version not supported in unit tests.')
+  return apiPromise.then((api) => {
+    return Kong.createPlugin({
+      name: 'basic-auth',
+      api_id: api.id
+    })
+  });
 }
 
 function create150Consumers() {

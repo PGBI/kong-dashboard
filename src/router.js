@@ -180,4 +180,4 @@
       })
       .otherwise({redirectTo: '/'});
   }
-})()
+})();

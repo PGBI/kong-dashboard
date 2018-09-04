@@ -39,27 +39,15 @@
       consumersOptions[consumer.username] = consumer.id
     });
 
-
-    var routesOptions = {'All': null};
-    routes.data.forEach(function (route) {
-      routesOptions[route.username] = route.id
-    });
-
     vm.schema = {
       properties: {
-        'api_id': {
+        api_id: {
           required: false,
           type: 'string',
           'enum': apisOptions,
           label: 'Which API(s) should this plugin apply to?'
         },
-        'route_id': {
-          required: false,
-          type: 'string',
-          'enum': routesOptions,
-          label: 'Which Route(s) should this plugin apply to?'
-        },
-        'name': {
+        name: {
           required: true,
           type: 'string',
           'enum': enabledPlugins.sort(),
@@ -68,6 +56,19 @@
         }
       }
     };
+
+    if (routes) {
+      var routesOptions = {'All': null};
+      routes.data.forEach(function (route) {
+        routesOptions[route.username] = route.id
+      });
+      vm.schema.route_id = {
+        required: false,
+        type: 'string',
+        'enum': routesOptions,
+        label: 'Which Route(s) should this plugin apply to?'
+      };
+    }
 
     if (services) {
       var servicesOptions = {'All': null};
