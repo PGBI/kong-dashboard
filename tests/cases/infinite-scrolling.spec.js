@@ -36,6 +36,12 @@ describe('Objects page index testing', () => {
     expect(ListPluginsPage.getRows().count()).toEqual(100);
   });
 
+  it('should display 100 apis by default', () => {
+    HomePage.visit();
+    Sidebar.clickOn('APIs');
+    expect(ListAPIsPage.getRows().count()).toEqual(100);
+  });
+
   it('should reveal more consumers when scrolling down', (done) => {
     HomePage.visit();
     Sidebar.clickOn('Consumers');
@@ -58,6 +64,19 @@ describe('Objects page index testing', () => {
     var row101 = ListPluginsPage.getRow(101);
     browser.wait(until.presenceOf(row101)).then(() => {
       expect(ListPluginsPage.getRows().count()).toEqual(150);
+      done();
+    });
+  });
+
+  it('should reveal more apis when scrolling down', (done) => {
+    HomePage.visit();
+    Sidebar.clickOn('APIs');
+    browser.waitForAngular().then(() => {
+      browser.executeScript('window.scrollTo(0,document.body.scrollHeight)');
+    });
+    var row101 = ListAPIsPage.getRow(101);
+    browser.wait(until.presenceOf(row101)).then(() => {
+      expect(ListAPIsPage.getRows().count()).toEqual(150);
       done();
     });
   });
