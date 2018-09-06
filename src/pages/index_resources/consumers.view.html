@@ -1,3 +1,26 @@
+<div class="search-wrapper card"
+     ng-show="vm.resources.length >= 1">
+  <input class="search" placeholder="Search consumer" value=""
+         ng-focus="searchBarFocused = true"
+         ng-blur="searchBarFocused = false"
+         ng-model="vm.searchInput"
+         ng-change="vm.searchConsumers()">
+  <i class="material-icons">search</i>
+  <div class="search-results collection" ng-show="searchBarFocused || viewingResults" ng-mouseover="viewingResults = true" ng-mouseout="viewingResults = false">
+    <p class="collection-item grey-text" ng-if="!vm.searchInput">
+      <small>
+        Search consumer by ID, custom ID, username, or Oauth2 client_id.
+      </small>
+    </p>
+    <p class="collection-item grey-text" ng-if="vm.searching && Utils.keys(vm.searchResults).length == 0">
+      No results found.
+    </p>
+    <a class="collection-item" ng-repeat="(id, name) in vm.searchResults" href="#!/consumers/{{ id }}">
+      {{ name }}
+    </a>
+  </div>
+</div>
+
 <table class="bordered" ng-show="vm.resources.length > 0">
   <tr>
     <th>Username</th>

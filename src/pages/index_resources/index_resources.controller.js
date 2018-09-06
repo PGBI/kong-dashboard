@@ -199,5 +199,32 @@
         }
       });
     }
+
+    vm.searchResults = {};
+    vm.searchConsumers = function() {
+      vm.searchResults = {};
+      var input = vm.searchInput;
+      if (!input) {
+        vm.searching = false;
+        return;
+      }
+
+      vm.searching = true;
+
+      var populateResults = function(response) {
+        angular.forEach(response.data, function(value) {
+          vm.searchResults[value.id] = value.username || value.custom_id;
+        });
+      };
+
+      Kong.get('/consumers?username=' + input).then(populateResults);
+      Kong.get('/consumers?id=' + input).then(populateResults);
+      Kong.get('/consumers?custom_id=' + input).then(populateResults);
+      Kong.get('/oauth2?client_id=' + input).then(function(response) {
+        angular.forEach(response.data, function(value) {
+          Kong.get('/consumers?id=' + value.consumer_id).then(populateResults);
+        });
+      });
+    };
   }
 })();
