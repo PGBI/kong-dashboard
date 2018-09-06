@@ -17,7 +17,11 @@ describe('Basic Auth plugin testing:', () => {
 
   beforeAll((done) => {
     kd.start({'--kong-url': 'http://127.0.0.1:8001'}, () => {
-      Promise.all([Kong.deleteAllAPIs(), Kong.deleteAllConsumers()]).then(() => {
+      Promise.all([
+        Kong.deleteAllAPIs(),
+        Kong.deleteAllConsumers(),
+        Kong.deleteAllPlugins()
+      ]).then(() => {
         return createAPI();
       }).then((response) => {
         api = response;

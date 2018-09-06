@@ -41,6 +41,13 @@ var Kong = {
   },
 
   /**
+   * Returns a promise that will resolve with all Certificates being deleted
+   */
+  deleteAllCertificates: function() {
+    return this.deleteAllObjectsOfType('certificates');
+  },
+
+  /**
    * Returns a promise that will resolve with all Upstreams being deleted
    */
   deleteAllUpstreams: function() {
@@ -89,6 +96,16 @@ var Kong = {
     return request.get('http://127.0.0.1:8001/apis').then((response) => {
       var apis = JSON.parse(response.body).data;
       return apis.length > 0 ? apis[0] : null;
+    });
+  },
+
+  /**
+   * Returns a promise that will resolve with the first API registered in Kong.
+   */
+  getFirstCertificate: () => {
+    return request.get('http://127.0.0.1:8001/certificates').then((response) => {
+      var certificates = JSON.parse(response.body).data;
+      return certificates.length > 0 ? certificates[0] : null;
     });
   },
 
