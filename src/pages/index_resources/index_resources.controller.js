@@ -16,7 +16,7 @@
 
     var fetchEndpoint = '/' + resourceType.toLowerCase() + 's?';
     if (parent) {
-      fetchEndpoint = '/' + parentType.toLowerCase() + 's/' + parent.id + fetchEndpoint + '?';
+      fetchEndpoint = '/' + parentType.toLowerCase() + 's/' + parent.id + fetchEndpoint;
     }
 
     switch(resourceType) {
