@@ -8,7 +8,7 @@ var semver = require('semver');
 terminal.info('------------------------');
 terminal.info('-- Updating webdriver --');
 terminal.info('------------------------');
-execSync('node_modules/.bin/webdriver-manager update', {stdio: 'inherit'});
+execSync('node_modules/.bin/webdriver-manager update --gecko=false', {stdio: 'inherit'});
 
 terminal.info('-------------------');
 terminal.info('-- Running tests --');
