@@ -35,13 +35,14 @@ gulp.task('build_js', function () {
     .pipe(gulp.dest(paths.dist + '/js'));
 });
 
-gulp.task('copy_assets', function() {
+gulp.task('copy_assets', function(done) {
   gulp.src(['src/**/*.html'])
     .pipe(gulp.dest(paths.dist));
   gulp.src([paths.root + '/images/**'])
     .pipe(gulp.dest(paths.dist + '/images'));
   gulp.src(['node_modules/materialize-css/dist/fonts/roboto/**/*'])
     .pipe(gulp.dest(paths.dist + '/fonts/roboto'));
+  done();
 });
 
 gulp.task('build_css', function() {
@@ -49,22 +50,34 @@ gulp.task('build_css', function() {
   if (fs.existsSync(paths.sass_src + '/custom_app.scss')) {
     src_file = 'custom_app.scss';
   }
-  gulp.src([paths.sass_src + '/' + src_file])
+  return gulp.src([paths.sass_src + '/' + src_file])
     .pipe(plumber())
     .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(concat('app.min.css'))
     .pipe(gulp.dest(paths.dist + '/css'));
 });
 
-gulp.task('build', ['build_js', 'build_css', 'copy_assets']);
+gulp.task('build', gulp.parallel('build_js', 'build_css', 'copy_assets'));
 
-gulp.task('watch', function() {
-  gulp.watch(paths.root + '/**/*.js', ['build_js']);
-  gulp.watch(paths.root + '/**/*.html', ['copy_assets']);
-  gulp.watch(paths.root + '/**/*.scss', ['build_css']);
+gulp.task('watch:js', function(done) {
+  gulp.watch(paths.root + '/**/*.js', gulp.parallel('build_js'));
+  done();
 });
 
-gulp.task('serve', ['build', 'watch'], function() {
+gulp.task('watch:assets', function(done) {
+  gulp.watch(paths.root + '/**/*.html', gulp.parallel('copy_assets'));
+  done();
+});
+
+gulp.task('watch:css', function(done) {
+  gulp.watch(paths.root + '/**/*.scss', gulp.parallel('build_css'));
+  done();
+});
+
+gulp.task('watch', gulp.parallel('watch:js', 'watch:assets', 'watch:css'));
+
+gulp.task('serve', gulp.series('build', 'watch', function() {
+  console.log('serving');
   var args = process.argv;
   args = args.slice(3);
   args.unshift('start');
@@ -78,4 +91,4 @@ gulp.task('serve', ['build', 'watch'], function() {
   kd.on('close', function(code) {
     terminal.error('kong-dashboard exited');
   });
-});
+}));

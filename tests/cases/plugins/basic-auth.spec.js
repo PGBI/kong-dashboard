@@ -17,7 +17,11 @@ describe('Basic Auth plugin testing:', () => {
 
   beforeAll((done) => {
     kd.start({'--kong-url': 'http://127.0.0.1:8001'}, () => {
-      Promise.all([Kong.deleteAllAPIs(), Kong.deleteAllConsumers()]).then(() => {
+      Promise.all([
+        Kong.deleteAllAPIs(),
+        Kong.deleteAllConsumers(),
+        Kong.deleteAllPlugins()
+      ]).then(() => {
         return createAPI();
       }).then((response) => {
         api = response;
@@ -56,7 +60,7 @@ describe('Basic Auth plugin testing:', () => {
         'config': {'hide_credentials': true},
         'enabled': true
       };
-    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
+    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
       inputs = {
         'name': 'basic-auth',
         'api_id': 'All',
@@ -100,7 +104,7 @@ describe('Basic Auth plugin testing:', () => {
         'config': {'hide_credentials': true},
         'enabled': true
       };
-    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
+    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
       inputs = {
         'name': 'basic-auth',
         'api_id': api.name,
@@ -186,7 +190,7 @@ describe('Basic Auth plugin testing:', () => {
       });
     }
 
-    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
+    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
       return Kong.createAPI({
         name: 'my_api',
         hosts: ['host1.com', 'host2.com'],

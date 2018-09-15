@@ -42,13 +42,20 @@ describe('Acl plugin testing:', () => {
       'api_id': 'All',
       'config-blacklist': ['foo', 'bar']
     };
+    if (semver.satisfies(process.env.KONG_VERSION, '>= 0.14.0')) {
+      inputs['config-hide_groups_header'] = true;
+    }
     ObjectProperties.fillAndSubmit(inputs).then(() => {
       expect(element(by.cssContainingText('div.toast', 'Plugin saved!')).isPresent()).toBeTruthy();
       return Kong.getFirstPlugin();
     }).then((createdPlugin) => {
       expect(createdPlugin.name).toEqual('acl');
       expect(createdPlugin.api_id).toBeUndefined();
-      expect(createdPlugin.config).toEqual({'blacklist': ['foo', 'bar']});
+      if (semver.satisfies(process.env.KONG_VERSION, '>= 0.14.0')) {
+        expect(createdPlugin.config).toEqual({'blacklist': ['foo', 'bar'], 'hide_groups_header': true});
+      } else {
+        expect(createdPlugin.config).toEqual({'blacklist': ['foo', 'bar']});
+      }
 
       // making sure form got reinitialized.
       expect(PropertyInput.getElement('config-blacklist').isPresent()).toBeFalsy();
@@ -65,13 +72,20 @@ describe('Acl plugin testing:', () => {
       'api_id': api.name,
       'config-whitelist': ['foo']
     };
+    if (semver.satisfies(process.env.KONG_VERSION, '>= 0.14.0')) {
+      inputs['config-hide_groups_header'] = true;
+    }
     ObjectProperties.fillAndSubmit(inputs).then(() => {
       expect(element(by.cssContainingText('div.toast', 'Plugin saved!')).isPresent()).toBeTruthy();
       return Kong.getFirstPlugin();
     }).then((createdPlugin) => {
       expect(createdPlugin.name).toEqual('acl');
       expect(createdPlugin.api_id).toEqual(api.id);
-      expect(createdPlugin.config).toEqual({'whitelist': ['foo']});
+      if (semver.satisfies(process.env.KONG_VERSION, '>= 0.14.0')) {
+        expect(createdPlugin.config).toEqual({'whitelist': ['foo'], 'hide_groups_header': true});
+      } else {
+        expect(createdPlugin.config).toEqual({'whitelist': ['foo']});
+      }
       done();
     });
   });
@@ -93,6 +107,9 @@ describe('Acl plugin testing:', () => {
         'service_id': s.name,
         'config-whitelist': ['foo']
       };
+      if (semver.satisfies(process.env.KONG_VERSION, '>= 0.14.0')) {
+        inputs['config-hide_groups_header'] = true;
+      }
       return ObjectProperties.fillAndSubmit(inputs);
     }).then(() => {
       expect(element(by.cssContainingText('div.toast', 'Plugin saved!')).isPresent()).toBeTruthy();
@@ -100,7 +117,11 @@ describe('Acl plugin testing:', () => {
     }).then((createdPlugin) => {
       expect(createdPlugin.name).toEqual('acl');
       expect(createdPlugin.service_id).toEqual(service.id);
-      expect(createdPlugin.config).toEqual({'whitelist': ['foo']});
+      if (semver.satisfies(process.env.KONG_VERSION, '>= 0.14.0')) {
+        expect(createdPlugin.config).toEqual({'whitelist': ['foo'], 'hide_groups_header': true});
+      } else {
+        expect(createdPlugin.config).toEqual({'whitelist': ['foo']});
+      }
       done();
     });
   });
@@ -127,6 +148,9 @@ describe('Acl plugin testing:', () => {
         'route_id': route.id,
         'config-whitelist': ['foo']
       };
+      if (semver.satisfies(process.env.KONG_VERSION, '>= 0.14.0')) {
+        inputs['config-hide_groups_header'] = true;
+      }
       return ObjectProperties.fillAndSubmit(inputs);
     }).then(() => {
       expect(element(by.cssContainingText('div.toast', 'Plugin saved!')).isPresent()).toBeTruthy();
@@ -134,7 +158,11 @@ describe('Acl plugin testing:', () => {
     }).then((createdPlugin) => {
       expect(createdPlugin.name).toEqual('acl');
       expect(createdPlugin.route_id).toEqual(route.id);
-      expect(createdPlugin.config).toEqual({'whitelist': ['foo']});
+      if (semver.satisfies(process.env.KONG_VERSION, '>= 0.14.0')) {
+        expect(createdPlugin.config).toEqual({'whitelist': ['foo'], 'hide_groups_header': true});
+      } else {
+        expect(createdPlugin.config).toEqual({'whitelist': ['foo']});
+      }
       done();
     });
   });
@@ -156,7 +184,11 @@ describe('Acl plugin testing:', () => {
     }).then((updatedPlugin) => {
       expect(updatedPlugin.name).toEqual('acl');
       expect(updatedPlugin.api_id).toBeUndefined();
-      expect(updatedPlugin.config).toEqual({'whitelist': ['admin'], 'blacklist': {}});
+      if (semver.satisfies(process.env.KONG_VERSION, '>= 0.14.0')) {
+        expect(updatedPlugin.config).toEqual({'whitelist': ['admin'], 'blacklist': {}, 'hide_groups_header': false});
+      } else {
+        expect(updatedPlugin.config).toEqual({'whitelist': ['admin'], 'blacklist': {}});
+      }
       done();
     });
   });
@@ -170,7 +202,7 @@ describe('Acl plugin testing:', () => {
       });
     }
 
-    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
+    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
       return Kong.createAPI({
         name: 'api_for_acl',
         hosts: ['host1.com', 'host2.com'],
