@@ -104,7 +104,7 @@ function createAPI(number) {
       upstream_url: 'http://foo'
     });
   }
-  else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
+  else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
     apiPromise =  Kong.createAPI({
       name: 'api_' + number,
       uris: ['/' + number],

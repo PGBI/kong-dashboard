@@ -137,7 +137,7 @@ describe('API creation testing', () => {
       ];
     }
 
-    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
+    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
       return [
         {
           inputs: {
@@ -180,7 +180,7 @@ describe('API creation testing', () => {
         }
       ];
     }
-    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
+    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
       return [
         {
           inputs: {},

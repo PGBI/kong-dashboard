@@ -31,7 +31,7 @@ describe('Starting Kong-dashboard', function () {
     kd.start({}, () => {}, (code) => {
       expect(code).toBe(1);
       expect(kd.stderr).toContain('Missing required argument: kong-url');
-      done()
+      done();
     });
   });
 
@@ -195,7 +195,7 @@ function createBasicAuthProtectedKongAPI() {
     });
   }
 
-  else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
+  else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
     apiPromise = Kong.createAPI({
       name: 'KongWithBasicAuth',
       upstream_url: 'http://localhost:8001',
@@ -228,7 +228,7 @@ function createKeyAuthProtectedKongAPI() {
     });
   }
 
-  else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.14.0')) {
+  else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
     promise = Kong.createAPI({
       name: 'KongWithKey',
       upstream_url: 'http://localhost:8001',
