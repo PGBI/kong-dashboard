@@ -153,7 +153,7 @@
           vm.resources = [];
         }
         vm.resources.push.apply(vm.resources, response.data);
-        nextPage = response.offset ? fetchEndpoint + '&offset=' + response.offset : null;
+        nextPage = response.offset ? fetchEndpoint + '&offset=' + encodeURIComponent(response.offset) : null;
         nextPageLoading = false;
 
         // appending related resources, if any.
