@@ -25,9 +25,9 @@
       <i class="material-icons">dvr</i> Services
     </a>
   </li>
-  <li>
+  <li ng-if="env.schemas.api">
     <a href="#!/apis" class="waves-effect">
-      <i class="material-icons">apps</i> APIs <span ng-if="env.schemas.service">(deprecated)</span>
+      <i class="material-icons">apps</i> APIs
     </a>
   </li>
   <li>

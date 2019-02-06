@@ -13,7 +13,7 @@
   <tbody>
   <tr ng-repeat="plugin in vm.resources">
     <td>{{plugin.name}}</td>
-    <td>
+    <td ng-if="env.schemas.api">
       <a ng-if="plugin.api_id" href="#!/apis/{{plugin.api_id}}">{{plugin.api.name}}</a>
       <span ng-if="!plugin.api_id">All</span>
     </td>

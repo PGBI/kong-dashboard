@@ -29,11 +29,6 @@
       plugins.enabled_plugins :
       Object.keys(plugins.enabled_plugins); // Happens with kong 0.9.0. See issue #52
 
-    var apisOptions = {'All': null};
-    apis.data.forEach(function (api) {
-      apisOptions[api.name] = api.id
-    });
-
     var consumersOptions = {'All': null};
     consumers.data.forEach(function (consumer) {
       consumersOptions[consumer.username] = consumer.id
@@ -41,12 +36,6 @@
 
     vm.schema = {
       properties: {
-        api_id: {
-          required: false,
-          type: 'string',
-          'enum': apisOptions,
-          label: 'Which API(s) should this plugin apply to?'
-        },
         name: {
           required: true,
           type: 'string',
@@ -56,6 +45,19 @@
         }
       }
     };
+
+    if (apis) {
+      var apisOptions = {'All': null};
+      apis.data.forEach(function (api) {
+        apisOptions[api.name] = api.id
+      });
+      vm.schema.properties['api_id'] = {
+        required: false,
+        type: 'string',
+        'enum': apisOptions,
+        label: 'Which API(s) should this plugin apply to?'
+      };
+    }
 
     if (routes) {
       var routesOptions = {'All': null};
