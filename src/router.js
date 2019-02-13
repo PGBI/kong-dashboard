@@ -160,14 +160,14 @@
           plugins: ['Kong', function (Kong) {
             return Kong.get('/plugins/enabled');
           }],
-          apis: ['Kong', '$location', function(Kong) {
+          apis: ['Kong', 'env', function(Kong, env) {
             if (env.schemas.api) {
-              return Kong.get('/apis');
+              return Kong.get('/apis?size=1000');
             } else {
               return null;
             }
           }],
-          consumers: ['Kong', '$location', function(Kong) {
+          consumers: ['Kong', function(Kong) {
             return Kong.get('/consumers');
           }],
           services: ['Kong', 'env', function(Kong, env) {

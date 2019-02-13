@@ -5,9 +5,9 @@
     .module('app')
     .controller("PluginController", PluginController);
 
-  PluginController.$inject = ["Kong","plugins","apis","consumers", "services", "routes", "plugin","Alert","$route", "$scope"];
+  PluginController.$inject = ["Kong","plugins","apis","consumers", "services", "routes", "plugin", "env", "Alert","$route", "$scope"];
 
-  function PluginController (Kong, plugins, apis, consumers, services, routes, plugin, Alert, $route, $scope) {
+  function PluginController (Kong, plugins, apis, consumers, services, routes, plugin, env, Alert, $route, $scope) {
     var vm = this;
     vm.errors = {};
     vm.consumers = consumers;
@@ -96,10 +96,20 @@
         'enum': routesOptions,
         label: 'Which Routes(s) should this plugin apply to?'
       };
+    }    
+
+    if(isKong1xVersion(env.kong_version)){
+      var runOnOptions = {'first': 'first', 'second': 'second', 'all': 'all'};
+      
+      vm.schema.properties['run_on'] = {
+        required: true,
+        type: 'string',
+        'enum': runOnOptions,
+        label: 'Control on which Kong nodes this plugin will run, given a Service Mesh scenario.'
+      };
     }
 
     $scope.$watch('vm.plugin.name', loadSchema);
-
 
     vm.save = function () {
       var plugin = angular.copy(vm.plugin);
@@ -111,10 +121,11 @@
         Alert.error("You must choose a plugin.");
         return;
       }
-      var endpoint = '/plugins';
+      var action = vm.plugin.id? Kong.patch : Kong.post;
+      var endpoint = vm.plugin.id? '/plugins/' + vm.plugin.id : '/plugins';
       var data = vm.plugin;
 
-      Kong.put(endpoint, data).then(function (response) {
+      action(endpoint, data).then(function (response) {
         Alert.success('Plugin saved!');
         $route.reload();
       }, function (response) {
@@ -152,8 +163,7 @@
         } else {
           delete vm.schema.properties.consumer_id;
           delete vm.plugin.consumer_id;
-        }
-
+        }        
         vm.schema.properties.config = convertPluginSchema(response);
         vm.plugin_schema_loaded = true;
         vm.plugin_schema_loading = false;
@@ -171,36 +181,45 @@
      */
     function convertPluginSchema(schema) {
       var result = {properties: {}, type: 'object'};
-      Object.keys(schema.fields).forEach(function (propertyName) {
-        result.properties[propertyName] = {
-          type: schema.fields[propertyName].type
+      Object.keys(schema.fields).forEach(function (fieldIndexName) {
+        var field = schema.fields[fieldIndexName];
+        var fieldName = Object.keys(field)[0];
+        var fieldData = field[fieldName];
+        
+        result.properties[fieldName] = {
+          type: fieldData.type
         };
-        if (schema.fields[propertyName].enum) {
-          result.properties[propertyName].enum = schema.fields[propertyName].enum;
+
+        if (fieldData.enum) {
+          result.properties[fieldName].enum = fieldData.enum;
         }
-        if (schema.fields[propertyName].hasOwnProperty('default')) {
-          result.properties[propertyName].default = schema.fields[propertyName].default;
+        if (fieldData.hasOwnProperty('default')) {
+          result.properties[fieldName].default =fieldData.default;
         }
-        if (schema.fields[propertyName].hasOwnProperty('required')) {
-          result.properties[propertyName].required = schema.fields[propertyName].required;
+        if (fieldData.hasOwnProperty('required')) {
+          result.properties[fieldName].required = fieldData.required;
         }
-        if (result.properties[propertyName].type === 'table') {
-          result.properties[propertyName].type = 'object';
-          if (schema.fields[propertyName].schema.flexible) {
-            result.properties[propertyName].additionalProperties = convertPluginSchema(schema.fields[propertyName].schema);
+        if (result.properties[fieldName].type === 'table') {
+          result.properties[fieldName].type = 'object';
+          if (fieldData.schema.flexible) {
+            result.properties[fieldName].additionalProperties = convertPluginSchema(fieldData.schema);
           } else {
-            result.properties[propertyName].properties = convertPluginSchema(schema.fields[propertyName].schema).properties;
+            result.properties[fieldName].properties = convertPluginSchema(fieldData.schema).properties;
           }
         }
 
-        if (result.properties[propertyName].type === 'array') {
+        if (result.properties[fieldName].type === 'array') {
           // by default, assuming the elements of a property of type array is a string, since it's
           // the case most of the time, and Kong doesn't provide the types of the elements of array properties :(
-          result.properties[propertyName].items = {type: 'string'}
+          result.properties[fieldName].items = {type: 'string'}
         }
 
       });
       return result;
+    }
+
+    function isKong1xVersion(versionStr){
+      return versionStr >= "1.0.0"? true : false
     }
   }
 })();
