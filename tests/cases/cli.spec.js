@@ -10,11 +10,14 @@ describe('Starting Kong-dashboard', function () {
   beforeAll((done) => {
     Promise.all([
       Kong.deleteAllAPIs(),
+      Kong.deleteAllServices(),
       Kong.deleteAllPlugins()
     ]).then(() => {
       return Promise.all([
         createBasicAuthProtectedKongAPI(),
         createKeyAuthProtectedKongAPI(),
+        createBasicAuthProtectedKongServiceAndRoute(),
+        createKeyAuthProtectedKongServiceAndRoute(),
         createConsumer()
       ]);
     }).then(done);
@@ -47,14 +50,6 @@ describe('Starting Kong-dashboard', function () {
     kd.start({'--kong-url': 'http://www.google.com'}, () => {}, (code) => {
       expect(code).toBe(1);
       expect(kd.stderr).toContain("What\'s on http://www.google.com isn\'t Kong");
-      done();
-    });
-  });
-
-  it("should error if Kong requires basic authentication and credentials aren't set", (done) => {
-    kd.start({'--kong-url': 'http://localhost:8000/kong_with_basic_auth'}, () => {}, (code) => {
-      expect(code).toBe(1);
-      expect(kd.stderr).toContain("Can\'t connect to Kong: authentication required");
       done();
     });
   });
@@ -112,6 +107,19 @@ describe('Starting Kong-dashboard', function () {
           expect(response.statusCode).toBe(200);
           done();
         });
+      }, (code) => {
+        // failing test on error instead of keeping it stuck till timeout ends
+        expect(kd.stderr).toBe("");
+        expect(code).toBeFalsy();
+        done();
+      });
+    });
+
+    it("should error if basic auth credentials aren't set", (done) => {
+      kd.start({'--kong-url': 'http://localhost:8000/kong_with_basic_auth'}, () => {}, (code) => {
+        expect(code).toBe(1);
+        expect(kd.stderr).toContain("Can\'t connect to Kong: authentication required");
+        done();
       });
     });
 
@@ -178,6 +186,11 @@ describe('Starting Kong-dashboard', function () {
           expect(response.statusCode).toBe(200);
           done();
         });
+      }, (code) => {
+        // failing test on error instead of keeping it stuck till timeout ends
+        expect(kd.stderr).toBe("");
+        expect(code).toBeFalsy();
+        done();
       });
     });
   });
@@ -194,7 +207,6 @@ function createBasicAuthProtectedKongAPI() {
       strip_request_path: true
     });
   }
-
   else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
     apiPromise = Kong.createAPI({
       name: 'KongWithBasicAuth',
@@ -203,9 +215,12 @@ function createBasicAuthProtectedKongAPI() {
       strip_uri: true
     });
   }
+  else if (semver.gte(process.env.KONG_VERSION, '0.15.0')) {
+    return Promise.resolve(0); // use the service/route based tests instead
+  }
 
   else {
-    throw new Error('Kong version not supported in unit tests.')
+    throw new Error('Kong version not supported in unit tests: ' + process.env.KONG_VERSION)
   }
 
   return apiPromise.then((api) => {
@@ -213,6 +228,45 @@ function createBasicAuthProtectedKongAPI() {
       api_id: api.id,
       name: 'basic-auth'
     });
+  })
+}
+
+function createBasicAuthProtectedKongServiceAndRoute() {
+  if (semver.lt(process.env.KONG_VERSION, '0.15.0')) {
+    return Promise.resolve(0); // use legacy API-based tests
+  }
+
+  var service;
+  var route;
+
+  var servicePromise =  Kong.createService({
+    name: 'KongWithBasicAuth',
+    protocol: `http`,
+    host: `localhost`,
+    port: 8001
+  });
+
+  var routePromise =  servicePromise.then((svc) => {
+    service = svc;
+
+    return Kong.createRoute({
+      service: { id: svc.id },
+      name: 'KongWithBasicAuth',
+      protocols: ['http', 'https'],
+      paths: ['/kong_with_basic_auth'],
+      strip_path: true
+    })
+  });
+
+  return routePromise.then((rt) => {
+    route = rt;
+
+    return Kong.createPlugin({
+      name: 'basic-auth',
+      run_on: `first`,
+      route: {id: route.id},
+      service: {id: service.id}
+    });      
   })
 }
 
@@ -227,7 +281,6 @@ function createKeyAuthProtectedKongAPI() {
       strip_request_path: true
     });
   }
-
   else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
     promise = Kong.createAPI({
       name: 'KongWithKey',
@@ -236,9 +289,12 @@ function createKeyAuthProtectedKongAPI() {
       strip_uri: true
     });
   }
+  else if (semver.gte(process.env.KONG_VERSION, '0.15.0')) {
+    return Promise.resolve(0); // use the service/route based tests instead
+  }
 
   else {
-    throw new Error('Kong version not supported in unit tests.')
+    throw new Error('Kong version not supported in unit tests: ' + process.env.KONG_VERSION)
   }
 
   return promise.then((api) => {
@@ -250,6 +306,46 @@ function createKeyAuthProtectedKongAPI() {
       }
     });
   })
+}
+
+function createKeyAuthProtectedKongServiceAndRoute() {
+  if (semver.lt(process.env.KONG_VERSION, '0.15.0')) {
+    return Promise.resolve(0); // use legacy API-based tests
+  }
+
+  var service;
+  var route;
+
+  var servicePromise =  Kong.createService({
+    name: 'KongWithKey',
+    protocol: `http`,
+    host: `localhost`,
+    port: 8001
+  });
+
+  var routePromise =  servicePromise.then((svc) => {
+    service = svc;
+    
+    return Kong.createRoute({
+      service: { id: svc.id },
+      name: 'KongWithKey',
+      protocols: ['http', 'https'],
+      paths: ['/kong_with_key_auth'],
+      strip_path: true
+    })
+  });
+
+  return routePromise.then((rt) => {
+    route = rt;
+
+    return Kong.createPlugin({
+      name: 'key-auth',
+      run_on: `first`,
+      route: {id: route.id},
+      service: {id: service.id},
+      config: {key_names: ['apikey']}
+    });      
+  })  
 }
 
 function createConsumer() {

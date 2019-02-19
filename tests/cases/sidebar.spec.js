@@ -20,7 +20,7 @@ describe('Sidebar testing', () => {
     if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
       expect(Sidebar.getLinkElement('Certificates').isPresent()).toBeFalsy();
     }
-    else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
+    else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 1.1.0')) {
       expect(Sidebar.getLinkElement('Certificates').isPresent()).toBeTruthy();
     }
     else {

@@ -20,10 +20,14 @@ describe('Plugin listing page testing', () => {
     Kong.deleteAllPlugins().then(done);
   });
 
-  it('should display a "no plugin" message when there is not plugin configured', () => {
-    HomePage.visit();
-    Sidebar.clickOn('Plugins');
-    expect(element(by.cssContainingText('p', 'You haven\'t created any Plugins yet.')).isDisplayed()).toBeTruthy();
+  it('should display a "no plugin" message when there is not plugin configured', (done) => {
+    Kong.deleteAllPlugins().then(() => {
+      HomePage.visit();
+      Sidebar.clickOn('Plugins');
+      var regExp = new RegExp('.*You haven\'t created any Plugins yet..*')
+      expect(element(by.cssContainingText('p', regExp)).isDisplayed()).toBeTruthy();
+      done();
+    });
   });
 
   it('should list created plugins', (done) => {
