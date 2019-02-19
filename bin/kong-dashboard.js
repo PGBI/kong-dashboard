@@ -125,7 +125,7 @@ function start(argv) {
     argv.kongRequestOpts.headers['Authorization'] = 'Basic ' + base64;
   }
 
-  if (argv.apiKey !== '') {
+  if (argv.apiKey !== '' && typeof argv.apiKey !== 'undefined') {
     argv.kongRequestOpts.headers[argv.apiKeyName.toLowerCase()] = argv.apiKey;
   }
 
