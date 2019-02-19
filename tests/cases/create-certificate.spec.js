@@ -64,19 +64,11 @@ describe('Certificate creation testing:', () => {
     Sidebar.clickOn('Certificates');
     ListCertificatesPage.clickAddButton();
 
-    var cert = ''
-
     const inputs = {
       cert: 'abc',
-      key: 'def'
+      key: 'def',
+      snis: 'aaa.com,bbb.com'
     };
-  
-    if (semver.lt(process.env.KONG_VERSION, '0.14.0')) {
-      inputs.snis = 'aaa.com,bbb.com'
-    } else {
-      inputs.snis = ['aaa.com', 'bbb.com']
-    }
-
     Object.keys(inputs).forEach((inputName) => {
       PropertyInput.set(inputName, inputs[inputName]);
     });

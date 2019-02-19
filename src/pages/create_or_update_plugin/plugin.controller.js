@@ -179,8 +179,14 @@
         } else {
           delete vm.schema.properties.consumer_id;
           delete vm.plugin.consumer_id;
-        }        
-        vm.schema.properties.config = convertPluginSchema(response);
+        }
+
+        if(isKong1xVersion(env.kong_version)){
+          vm.schema.properties.config = convertPluginSchema(response);
+        } else {
+          vm.schema.properties.config = convertLegacyPluginSchema(response);
+        }
+
         vm.plugin_schema_loaded = true;
         vm.plugin_schema_loading = false;
         if (vm.mode === 'create') {
@@ -228,6 +234,44 @@
           // by default, assuming the elements of a property of type array is a string, since it's
           // the case most of the time, and Kong doesn't provide the types of the elements of array properties :(
           result.properties[fieldName].items = {type: 'string'}
+        }
+
+      });
+      return result;
+    }
+
+    /**
+     * Convert a "kong" schema to a schema compatible with http://json-schema.org
+     * @param schema
+     */
+    function convertLegacyPluginSchema(schema) {
+      var result = {properties: {}, type: 'object'};
+      Object.keys(schema.fields).forEach(function (propertyName) {
+        result.properties[propertyName] = {
+          type: schema.fields[propertyName].type
+        };
+        if (schema.fields[propertyName].enum) {
+          result.properties[propertyName].enum = schema.fields[propertyName].enum;
+        }
+        if (schema.fields[propertyName].hasOwnProperty('default')) {
+          result.properties[propertyName].default = schema.fields[propertyName].default;
+        }
+        if (schema.fields[propertyName].hasOwnProperty('required')) {
+          result.properties[propertyName].required = schema.fields[propertyName].required;
+        }
+        if (result.properties[propertyName].type === 'table') {
+          result.properties[propertyName].type = 'object';
+          if (schema.fields[propertyName].schema.flexible) {
+            result.properties[propertyName].additionalProperties = convertLegacyPluginSchema(schema.fields[propertyName].schema);
+          } else {
+            result.properties[propertyName].properties = convertLegacyPluginSchema(schema.fields[propertyName].schema).properties;
+          }
+        }
+
+        if (result.properties[propertyName].type === 'array') {
+          // by default, assuming the elements of a property of type array is a string, since it's
+          // the case most of the time, and Kong doesn't provide the types of the elements of array properties :(
+          result.properties[propertyName].items = {type: 'string'}
         }
 
       });

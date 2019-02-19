@@ -1,7 +1,8 @@
 var Page = {
 
   clickAddButton: () => {
-    element(by.cssContainingText('a', 'Add Certificate')).click();
+    var regExp = new RegExp('.*Add Certificate.*');
+    element(by.cssContainingText('a', regExp)).click();
   },
 
   /**
