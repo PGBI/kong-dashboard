@@ -29,11 +29,6 @@
       plugins.enabled_plugins :
       Object.keys(plugins.enabled_plugins); // Happens with kong 0.9.0. See issue #52
 
-    var consumersOptions = {'All': null};
-    consumers.data.forEach(function (consumer) {
-      consumersOptions[consumer.username] = consumer.id
-    });
-
     vm.schema = {
       properties: {
         name: {
@@ -45,68 +40,61 @@
         }
       }
     };
-
-    if (apis) {
-      var apisOptions = {'All': null};
-      apis.data.forEach(function (api) {
-        apisOptions[api.name] = api.id
-      });
-      vm.schema.properties['api_id'] = {
-        required: false,
-        type: 'string',
-        'enum': apisOptions,
-        label: 'Which API(s) should this plugin apply to?'
-      };
-    }
-
-    if (routes) {
-      var routesOptions = {'All': null};
-      routes.data.forEach(function (route) {
-        routesOptions[route.username] = route.id
-      });
-      vm.schema.route_id = {
-        required: false,
-        type: 'string',
-        'enum': routesOptions,
-        label: 'Which Route(s) should this plugin apply to?'
-      };
-    }
-
-    if (services) {
-      var servicesOptions = {'All': null};
-      services.data.forEach(function (service) {
-        servicesOptions[service.name] = service.id
-      });
-      vm.schema.properties['service_id'] = {
-        required: false,
-        type: 'string',
-        'enum': servicesOptions,
-        label: 'Which Service(s) should this plugin apply to?'
-      };
-    }
-
-    if (routes) {
-      var routesOptions = {'All': null};
-      routes.data.forEach(function (route) {
-        routesOptions[route.id] = route.id
-      });
-      vm.schema.properties['route_id'] = {
-        required: false,
-        type: 'string',
-        'enum': routesOptions,
-        label: 'Which Routes(s) should this plugin apply to?'
-      };
-    }    
-
+    
     if(isKong1xVersion(env.kong_version)){
-      var runOnOptions = {'first': 'first', 'second': 'second', 'all': 'all'};
-      
+      var runOnOptions = {'first': 'first', 'second': 'second', 'all': 'all'};      
       vm.schema.properties['run_on'] = {
         required: true,
         type: 'string',
         'enum': runOnOptions,
         label: 'Control on which Kong nodes this plugin will run, given a Service Mesh scenario.'
       };
+
+      if (services) {
+        vm.schema.properties.service = getObjectPropertyWithIdList(services.data, 'name', 'Service');
+      }  
+      if (routes) {
+        vm.schema.properties.route = getObjectPropertyWithIdList(routes.data, 'id', 'Route');
+      }
+    } else {
+      if (apis) {
+        var apisOptions = {'All': null};
+        apis.data.forEach(function (api) {
+          apisOptions[api.name] = api.id
+        });
+        vm.schema.properties['api_id'] = {
+          required: false,
+          type: 'string',
+          'enum': apisOptions,
+          label: 'Which API(s) should this plugin apply to?'
+        };
+      }
+
+      if (services) {
+        var servicesOptions = {'All': null};
+        services.data.forEach(function (service) {
+          servicesOptions[service.name] = service.id
+        });
+        vm.schema.properties['service_id'] = {
+          required: false,
+          type: 'string',
+          'enum': servicesOptions,
+          label: 'Which Service(s) should this plugin apply to?'
+        };
+      }
+  
+      if (routes) {
+        var routesOptions = {'All': null};
+        routes.data.forEach(function (route) {
+          routesOptions[route.id] = route.id
+        });
+        vm.schema.properties['route_id'] = {
+          required: false,
+          type: 'string',
+          'enum': routesOptions,
+          label: 'Which Routes(s) should this plugin apply to?'
+        };
+      }    
     }
 
     $scope.$watch('vm.plugin.name', loadSchema);
@@ -142,6 +130,24 @@
       });
     };
 
+    function getObjectPropertyWithIdList(objectsList, nameField, objectName){
+      var objectOptions = {'All': null};
+      objectsList.forEach(function (object) {
+        objectOptions[object[nameField]] = object.id
+      });
+
+      var result = {properties: {}, type: 'object', required: false};
+      var fieldName = 'id';
+
+      result.properties[fieldName] = {
+        required: false,
+        type: 'string',
+        'enum': objectOptions,
+        label: 'Which' + objectName + '(s) should this plugin apply to?'
+      };
+      return result;
+    }
+
     function loadSchema(pluginName) {
       if (typeof pluginName === 'undefined') {
         return;
@@ -154,11 +160,21 @@
         delete(vm.schema.properties.config);
 
         if (!response.no_consumer) {
-          vm.schema.properties.consumer_id = {
-            required: false,
-            type: 'string',
-            'enum': consumersOptions,
-            label: 'Which Consumers(s) should this plugin apply to?'
+          if(isKong1xVersion(env.kong_version)){
+            if (consumers) {
+              vm.schema.properties.consumer = getObjectPropertyWithIdList(consumers.data, 'username', 'Consumer');
+            }
+          } else {
+            var consumersOptions = {'All': null};
+            consumers.data.forEach(function (consumer) {
+              consumersOptions[consumer.username] = consumer.id
+            });
+            vm.schema.properties.consumer_id = {
+              required: false,
+              type: 'string',
+              'enum': consumersOptions,
+              label: 'Which Consumers(s) should this plugin apply to?'
+            }
           }
         } else {
           delete vm.schema.properties.consumer_id;
@@ -219,7 +235,8 @@
     }
 
     function isKong1xVersion(versionStr){
-      return versionStr >= "1.0.0"? true : false
+      // 0.15 is the replica version for 1.0.0
+      return versionStr >= "0.15.0"? true : false
     }
   }
 })();
