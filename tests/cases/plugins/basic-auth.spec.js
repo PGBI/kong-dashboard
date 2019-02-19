@@ -88,6 +88,10 @@ describe('Basic Auth plugin testing:', () => {
         'consumer': null,
         'route': null
       };
+
+      if (semver.satisfies(process.env.KONG_VERSION, '>=0.15.0 < 1.0.0')) {
+        expectedPluginParams['api'] = null;
+      }
     } else {
       throw new Error('Kong version not supported in unit tests.')
     }
