@@ -280,7 +280,7 @@
 
     function isKong1xVersion(versionStr){
       // 0.15 is the replica version for 1.0.0
-      return versionStr >= "0.15.0"? true : false
+      return versionStr >= "1.0.0" || versionStr.substring(0, 4) === "0.15"? true : false
     }
   }
 })();
