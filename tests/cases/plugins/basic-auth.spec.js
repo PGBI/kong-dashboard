@@ -72,7 +72,7 @@ describe('Basic Auth plugin testing:', () => {
         'config': {'hide_credentials': true, 'anonymous': anonymousConsumer.id},
         'enabled': true
       };
-    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.15.0 < 1.1.0')) {
+    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.15.0 < 2.0.0')) {
       inputs = {
         'name': 'basic-auth',        
         'run_on' : 'first',
@@ -195,7 +195,7 @@ describe('Basic Auth plugin testing:', () => {
         'api_id': 'All',
         'config-hide_credentials': true
       };
-    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.15.0 < 1.1.0')) {
+    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.15.0 < 2.0.0')) {
       inputs = {
         'name': 'basic-auth',        
         'run_on' : 'first',
@@ -210,7 +210,7 @@ describe('Basic Auth plugin testing:', () => {
         name: 'basic-auth',
         config: {hide_credentials: false}
       });
-    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.15.0 < 1.1.0')) {
+    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.15.0 < 2.0.0')) {
       Kong.createPlugin({
         name: 'basic-auth',
         run_on: 'first',
