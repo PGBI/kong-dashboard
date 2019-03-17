@@ -2,6 +2,10 @@ var chromeArgs = [];
 if (process.env.TRAVIS) {
   chromeArgs = ["--headless", "--disable-gpu"];
 }
+else if (process.env.PATH != null && process.env.PATH.search(/[Ww]indows/g) != -1) {
+  // override flags when running from WSL on windows station
+  chromeArgs = ["--disable-gpu"];
+}
 
 exports.config = {
   directConnect: true,

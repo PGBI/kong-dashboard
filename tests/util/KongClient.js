@@ -1,4 +1,5 @@
 var request = require('../../lib/request');
+var semver = require('semver');
 
 var Kong = {
 
@@ -6,6 +7,9 @@ var Kong = {
    * Returns a promise that will resolve with all Services being deleted
    */
   deleteAllServices: function() {
+    if (semver.lt(process.env.KONG_VERSION, '0.13.0')) {
+      return Promise.resolve(0); // first introduced in 0.13.0
+    }
     // A service can't be deleted if a route references it.
     return this.deleteAllRoutes().then(() => {
       return this.deleteAllObjectsOfType('services');
@@ -16,6 +20,9 @@ var Kong = {
    * Returns a promise that will resolve with all Routes being deleted
    */
   deleteAllRoutes: function() {
+    if (semver.lt(process.env.KONG_VERSION, '0.13.0')) {
+      return Promise.resolve(0); // first introduced in 0.13.0
+    }
     return this.deleteAllObjectsOfType('routes');
   },
 
@@ -23,6 +30,9 @@ var Kong = {
    * Returns a promise that will resolve with all APIs being deleted
    */
   deleteAllAPIs: function() {
+    if (semver.gte(process.env.KONG_VERSION, '0.15.0')) {
+      return Promise.resolve(0); // legacy since 0.15.0
+    }
     return this.deleteAllObjectsOfType('apis');
   },
 

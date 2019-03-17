@@ -12,12 +12,14 @@ node_js:
   - "6"
 
 env:
-  - KONG_VERSION=0.9  POSTGRES_VERSION=9.4
-  - KONG_VERSION=0.10 POSTGRES_VERSION=9.4
-  - KONG_VERSION=0.11 POSTGRES_VERSION=9.4
-  - KONG_VERSION=0.12 POSTGRES_VERSION=9.4
-  - KONG_VERSION=0.13 POSTGRES_VERSION=9.4
-  - KONG_VERSION=0.14 POSTGRES_VERSION=9.5
+  - KONG_VERSION=0.9  POSTGRES_VERSION=9.4 MIGRATIONS_VERB=up
+  - KONG_VERSION=0.10 POSTGRES_VERSION=9.4 MIGRATIONS_VERB=up
+  - KONG_VERSION=0.11 POSTGRES_VERSION=9.4 MIGRATIONS_VERB=up
+  - KONG_VERSION=0.12 POSTGRES_VERSION=9.4 MIGRATIONS_VERB=up
+  - KONG_VERSION=0.13 POSTGRES_VERSION=9.4 MIGRATIONS_VERB=up
+  - KONG_VERSION=0.14 POSTGRES_VERSION=9.5 MIGRATIONS_VERB=up
+  - KONG_VERSION=0.15 POSTGRES_VERSION=9.5 MIGRATIONS_VERB=bootstrap
+  - KONG_VERSION=1.0 POSTGRES_VERSION=9.5 MIGRATIONS_VERB=bootstrap
 
 services:
   - docker
@@ -25,7 +27,7 @@ services:
 before_install:
   - docker run -d --name kong-database -e "POSTGRES_USER=kong" -e "POSTGRES_DB=kong" postgres:${POSTGRES_VERSION}-alpine
   - sleep 5
-  - docker run --rm --link kong-database:kong-database -e "KONG_DATABASE=postgres" -e "KONG_PG_HOST=kong-database" kong:$KONG_VERSION kong migrations up
+  - docker run --rm --link kong-database:kong-database -e "KONG_DATABASE=postgres" -e "KONG_PG_HOST=kong-database" kong:$KONG_VERSION kong migrations $MIGRATIONS_VERB
   - docker run -d --name kong --link kong-database:kong-database -e "KONG_DATABASE=postgres" -e "KONG_PG_HOST=kong-database" -e "KONG_ADMIN_LISTEN=0.0.0.0:8001" -p 8001:8001 -p8000:8000 kong:$KONG_VERSION
   - sleep 5
 

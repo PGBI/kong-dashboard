@@ -12,6 +12,9 @@ var semver = require('semver');
 var kd = new KongDashboard();
 
 describe('API creation testing', () => {
+  if (semver.gte(process.env.KONG_VERSION, '0.15.0')) {
+    return; // legacy since 0.15.0
+  }
 
   var apiSchema;
 
@@ -136,8 +139,7 @@ describe('API creation testing', () => {
         }
       ];
     }
-
-    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
+    else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
       return [
         {
           inputs: {
@@ -180,7 +182,7 @@ describe('API creation testing', () => {
         }
       ];
     }
-    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
+    else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
       return [
         {
           inputs: {},
@@ -192,6 +194,7 @@ describe('API creation testing', () => {
         }
       ];
     }
+
     throw new Error('Kong version not supported in unit tests.')
   }
 });

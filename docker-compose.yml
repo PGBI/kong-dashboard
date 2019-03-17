@@ -23,7 +23,8 @@ services:
     environment:
       - KONG_DATABASE=postgres
       - KONG_PG_HOST=kong-database
-    command: sh -c "kong migrations up && touch migrations_run && sleep 30"
+    # command: sh -c "kong migrations up && touch migrations_run && sleep 30" # for kong < 0.15
+    command: sh -c "kong migrations bootstrap && touch migrations_run && sleep 30" # for kong >= 0.15
     healthcheck:
       test: "if [[ -f migrations_run ]] ; then exit 0; else exit 1; fi"
       interval: 10s

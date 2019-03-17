@@ -41,7 +41,7 @@ describe('Basic Auth plugin testing:', () => {
     Kong.deleteAllPlugins().then(done);
   });
 
-  it('should successfully create basic auth plugin for All APIs', (done) => {
+  it('should successfully create basic auth plugin for All APIs or Services', (done) => {
     HomePage.visit();
     Sidebar.clickOn('Plugins');
     ListPluginsPage.clickAddButton();
@@ -72,6 +72,26 @@ describe('Basic Auth plugin testing:', () => {
         'config': {'hide_credentials': true, 'anonymous': anonymousConsumer.id},
         'enabled': true
       };
+    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.15.0 < 2.0.0')) {
+      inputs = {
+        'name': 'basic-auth',        
+        'run_on' : 'first',
+        'config-hide_credentials': true,
+        'config-anonymous': anonymousConsumer.id
+      };
+      expectedPluginParams = {
+        'name': 'basic-auth',
+        'run_on': 'first',
+        'config': {'hide_credentials': true, 'anonymous': anonymousConsumer.id},
+        'enabled': true,
+        'service': null,
+        'consumer': null,
+        'route': null
+      };
+
+      if (semver.satisfies(process.env.KONG_VERSION, '>=0.15.0 < 1.0.0')) {
+        expectedPluginParams['api'] = null;
+      }
     } else {
       throw new Error('Kong version not supported in unit tests.')
     }
@@ -88,6 +108,10 @@ describe('Basic Auth plugin testing:', () => {
   });
 
   it('should successfully create a basic-auth plugin for one API', (done) => {
+    if (semver.gte(process.env.KONG_VERSION, '0.15.0')) {
+      return done(); // legacy since 0.15.0
+    }
+
     HomePage.visit();
     Sidebar.clickOn('Plugins');
     ListPluginsPage.clickAddButton();
@@ -148,8 +172,12 @@ describe('Basic Auth plugin testing:', () => {
     }).then((updatedPlugin) => {
       if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
         expect(updatedPlugin.config).toEqual({'hide_credentials': true});
-      } else {
+      } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
         expect(updatedPlugin.config).toEqual({'hide_credentials': true, 'anonymous': ''});
+      } else if (semver.gte(process.env.KONG_VERSION, '0.15.0')) {
+        expect(updatedPlugin.config).toEqual({'hide_credentials': true, 'anonymous': null});
+      } else {
+        throw new Error('Kong version not supported in unit tests.')
       }
       done();
     });
@@ -160,16 +188,36 @@ describe('Basic Auth plugin testing:', () => {
     Sidebar.clickOn('Plugins');
     ListPluginsPage.clickAddButton();
 
-    var inputs = {
-      'name': 'basic-auth',
-      'api_id': 'All',
-      'config-hide_credentials': true
-    };
+    var inputs;
+    if (semver.satisfies(process.env.KONG_VERSION, '>=0.9.0 < 0.15.0')) {
+      inputs = {
+        'name': 'basic-auth',
+        'api_id': 'All',
+        'config-hide_credentials': true
+      };
+    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.15.0 < 2.0.0')) {
+      inputs = {
+        'name': 'basic-auth',        
+        'run_on' : 'first',
+        'config-hide_credentials': true
+      };
+    } else {
+      throw new Error('Kong version not supported in unit tests.')
+    }
 
-    Kong.createPlugin({
-      name: 'basic-auth',
-      config: {hide_credentials: false}
-    });
+    if (semver.satisfies(process.env.KONG_VERSION, '>=0.9.0 < 0.15.0')) {
+      Kong.createPlugin({
+        name: 'basic-auth',
+        config: {hide_credentials: false}
+      });
+    } else if (semver.satisfies(process.env.KONG_VERSION, '>=0.15.0 < 2.0.0')) {
+      Kong.createPlugin({
+        name: 'basic-auth',
+        run_on: 'first',
+        config: {hide_credentials: false}
+      });
+    }
+    
     ObjectProperties.fillAndSubmit(inputs).then(() => {
       if (semver.satisfies(process.env.KONG_VERSION, '0.9.x')) {
         // Kong 0.9 returns a non-json response, causing kong-dashboard to return this misleading message.
@@ -189,8 +237,7 @@ describe('Basic Auth plugin testing:', () => {
         'upstream_url': 'http://foo'
       });
     }
-
-    if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
+    else if (semver.satisfies(process.env.KONG_VERSION, '>=0.10.0 < 0.15.0')) {
       return Kong.createAPI({
         name: 'my_api',
         hosts: ['host1.com', 'host2.com'],
@@ -198,6 +245,9 @@ describe('Basic Auth plugin testing:', () => {
         methods: ['GET', 'POST'],
         upstream_url: 'http://upstream.loc',
       });
+    }
+    else if (semver.gte(process.env.KONG_VERSION, '0.15.0')) {
+      return Promise.resolve(0); // legacy since 0.15.0
     }
 
     throw new Error('Kong version not supported in unit tests.')
